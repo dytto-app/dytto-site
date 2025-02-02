@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Your Personal Journalist</title>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css" rel="stylesheet" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.9.1/gsap.min.js"></script>
+  <style>
+    :root {
+      --teal-primary: #008080;
+      --teal-dark: #005353;
+      --teal-light: #40E0D0;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: linear-gradient(135deg, var(--teal-dark) 0%, var(--teal-primary) 100%);
+    }
+
+    .nav-header {
+      background: white;
+      box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+    }
+
+    .glass {
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(12px);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      border-radius: 24px;
+      transition: all 0.3s ease;
+    }
+
+    .glass:hover {
+      background: rgba(255, 255, 255, 0.15);
+      transform: translateY(-5px);
+    }
+
+    .btn-primary {
+      background: white;
+      color: var(--teal-primary);
+      padding: 12px 28px;
+      border-radius: 50px;
+      font-weight: 600;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+    }
+
+    .btn-secondary {
+      background: rgba(255, 255, 255, 0.1);
+      color: white;
+      padding: 12px 28px;
+      border-radius: 50px;
+      font-weight: 600;
+      transition: all 0.3s ease;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+
+    .btn-secondary:hover {
+      background: rgba(255, 255, 255, 0.2);
+    }
+
+    .feature-icon {
+      width: 64px;
+      height: 64px;
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 20px;
+    }
+
+    .floating {
+      animation: floating 3s ease-in-out infinite;
+    }
+
+    @keyframes floating {
+      0% { transform: translateY(0px); }
+      50% { transform: translateY(-10px); }
+      100% { transform: translateY(0px); }
+    }
+
+    .pulse {
+      animation: pulse 2s ease-in-out infinite;
+    }
+
+    @keyframes pulse {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.05); }
+      100% { transform: scale(1); }
+    }
+    
+    .feature-image-container {
+      width: 100%;
+      overflow: hidden;
+      border-radius: 16px;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+    }
+
+    .feature-image-container img {
+      transition: transform 0.3s ease;
+    }
+
+    .feature-image-container img:hover {
+      transform: scale(1.05);
+    }
+  </style>
+</head>
+<body>
+  <nav class="nav-header fixed w-full z-50 px-6 py-5">
+    <div class="container mx-auto flex justify-between items-center">
+      <div class="text-2xl font-bold text-teal-600">dytto</div>
+      <div class="hidden md:flex space-x-6 items-center">
+        <a href="#features" class="text-teal-600 hover:text-teal-800 transition-colors py-2">Features</a>
+        <a href="#how-it-works" class="text-teal-600 hover:text-teal-800 transition-colors py-2">How It Works</a>
+        <button class="btn-primary">Download App</button>
+      </div>
+    </div>
+  </nav>
+  
+  <section class="hero-section min-h-screen flex items-center justify-center px-6 pt-24">
+    <div class="container mx-auto text-center text-white">
+      <h1 class="text-5xl md:text-7xl font-bold mb-6 floating">Meet Your Personal Journalist</h1>
+      <p class="text-xl md:text-2xl mb-12 opacity-90">Automated memory keeping with AI-powered insights</p>
+      <div class="flex flex-col md:flex-row gap-4 justify-center">
+        <button class="btn-primary pulse">Start Your Journey</button>
+        <button class="btn-secondary">Watch Demo →</button>
+      </div>
+    </div>
+  </section>
+  
+  <!-- Moved How It Works section before the Features section -->
+  <section id="how-it-works" class="py-20 px-6">
+    <div class="container mx-auto text-center">
+      <h2 class="text-4xl font-bold text-white text-center mb-16">How It Works</h2>
+      <div class="grid md:grid-cols-3 gap-12">
+        <div class="glass p-8 pulse">
+          <div class="text-4xl font-bold text-white mb-4">1</div>
+          <h3 class="text-2xl font-semibold text-white mb-4">Install</h3>
+          <p class="text-white opacity-80">Sign up to start collecting</p>
+        </div>
+        <div class="glass p-8 pulse">
+          <div class="text-4xl font-bold text-white mb-4">2</div>
+          <h3 class="text-2xl font-semibold text-white mb-4">Live</h3>
+          <p class="text-white opacity-80">Go on an adventure and take pictures</p>
+        </div>
+        <div class="glass p-8 pulse">
+          <div class="text-4xl font-bold text-white mb-4">3</div>
+          <h3 class="text-2xl font-semibold text-white mb-4">Enjoy and Share</h3>
+          <p class="text-white opacity-80">A beautifully crafted narrative everyday</p>
+        </div>
+      </div>
+    </div>
+  </section>
+  
+  <section id="features" class="py-20 px-6">
+    <div class="container mx-auto">
+      <h2 class="text-4xl font-bold text-white text-center mb-16">Why dytto?</h2>
+      <div class="grid md:grid-cols-3 gap-8">
+        <div class="glass p-8">
+          <div class="feature-image-container mb-6">
+            <img src="/1.webp" alt="Track" class="w-full h-[300px] object-cover rounded-lg floating" />
+          </div>
+          <h3 class="text-2xl font-semibold text-white mb-4">Effortless Tracking</h3>
+          <p class="text-white opacity-80 mb-6">Automatically record daily activities and milestones</p>
+          <button class="btn-secondary">Learn More →</button>
+        </div>
+        <div class="glass p-8">
+          <div class="feature-image-container mb-6">
+            <img src="/2.webp" alt="Style" class="w-full h-[300px] object-cover rounded-lg floating" />
+          </div>
+          <h3 class="text-2xl font-semibold text-white mb-4">Personalized Style</h3>
+          <p class="text-white opacity-80 mb-6">dytto adapts to your unique storytelling voice</p>
+          <button class="btn-secondary">Learn More →</button>
+        </div>
+        <div class="glass p-8">
+          <div class="feature-image-container mb-6">
+            <img src="/3.webp" alt="Security" class="w-full h-[300px] object-cover rounded-lg floating" />
+          </div>
+          <h3 class="text-2xl font-semibold text-white mb-4">Secure Storage</h3>
+          <p class="text-white opacity-80 mb-6">Bank-level encryption for your private memories</p>
+          <button class="btn-secondary">Learn More →</button>
+        </div>
+      </div>
+    </div>
+  </section>
+  
+  <footer class="py-12 px-6 text-white text-center">
+    <div class="container mx-auto">
+      <div class="mb-8">
+        <button class="btn-primary text-xl">Download Now</button>
+      </div>
+      <p class="mb-4">dytto</p>
+      <p class="mb-2">2311 N Campus Dr #2300 Evanston, IL 60208</p>
+      <p class="mb-4">+1 773-200-7411</p>
+      <p class="text-sm opacity-75">iOS version coming soon</p>
+    </div>
+  </footer>
+  
+  <script>
+    // Smooth scroll
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+      anchor.addEventListener('click', function (e) {
+        e.preventDefault();
+        document.querySelector(this.getAttribute('href')).scrollIntoView({
+          behavior: 'smooth'
+        });
+      });
+    });
+
+    // GSAP animations
+    gsap.from('.hero-section h1', {
+      duration: 1,
+      y: 50,
+      opacity: 0,
+      ease: 'power3.out'
+    });
+
+    gsap.from('.hero-section p', {
+      duration: 1,
+      y: 30,
+      opacity: 0,
+      delay: 0.3,
+      ease: 'power3.out'
+    });
+
+    gsap.from('.hero-section button', {
+      duration: 1,
+      y: 30,
+      opacity: 0,
+      delay: 0.6,
+      ease: 'power3.out',
+      stagger: 0.2
+    });
+
+    // Animate features on scroll
+    const animateOnScroll = (elements, animation) => {
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            gsap.from(entry.target, animation);
+            observer.unobserve(entry.target);
+          }
+        });
+      });
+
+      elements.forEach(element => observer.observe(element));
+    };
+
+    animateOnScroll(document.querySelectorAll('.glass'), {
+      duration: 0.8,
+      y: 30,
+      opacity: 0,
+      ease: 'power3.out',
+      stagger: 0.2
+    });
+  </script>
+</body>
+</html>
