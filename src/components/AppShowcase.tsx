@@ -95,7 +95,7 @@ const AppShowcase = () => {
                     style={{ backgroundColor: theme.colors.background }}
                   >
                     <img 
-                      src="https://images.pexels.com/photos/1181244/pexels-photo-1181244.jpeg?auto=compress&cs=tinysrgb&w=256&h=512" 
+                      src="/home.jpg"
                       alt="Dytto Home Screen"
                       className="w-full h-full object-cover"
                     />
@@ -131,7 +131,7 @@ const AppShowcase = () => {
                     style={{ backgroundColor: theme.colors.background }}
                   >
                     <img 
-                      src="https://images.pexels.com/photos/518543/pexels-photo-518543.jpeg?auto=compress&cs=tinysrgb&w=256&h=512" 
+                      src="/story.jpg"
                       alt="Dytto Story Screen"
                       className="w-full h-full object-cover"
                     />

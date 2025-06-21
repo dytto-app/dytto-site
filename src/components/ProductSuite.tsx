@@ -10,21 +10,21 @@ const features = [
     name: 'Memories',
     description: 'AI-powered story generation from your daily experiences',
     features: ['Automatic context collection', 'Smart narrative generation', 'Personal insights', 'Timeline view'],
-    image: 'https://images.pexels.com/photos/1181244/pexels-photo-1181244.jpeg?auto=compress&cs=tinysrgb&w=400'
+    image: '/home.jpg'
   },
   {
     icon: Newspaper,
     name: 'News Feed',
     description: 'Personalized news consumption tailored to your interests',
     features: ['Personalized feed', 'Smart briefs', 'Context-aware ranking', 'Interest tracking'],
-    image: 'https://images.pexels.com/photos/518543/pexels-photo-518543.jpeg?auto=compress&cs=tinysrgb&w=400'
+    image: '/story.jpg'
   },
   {
     icon: Brain,
     name: 'AI Insights',
     description: 'Intelligent analysis of your context and preferences',
     features: ['Behavioral patterns', 'Preference learning', 'Smart recommendations', 'Context understanding'],
-    image: 'https://images.pexels.com/photos/159711/books-bookstore-book-reading-159711.jpeg?auto=compress&cs=tinysrgb&w=400'
+    image: '/recs.jpg'
   }
 ];
 
