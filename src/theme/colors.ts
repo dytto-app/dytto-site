@@ -27,9 +27,9 @@ export const colors = {
     primary: '#FAFAFA',     // Soft white
     secondary: '#F1F5F9',   // Very light blue-gray
     tertiary: '#E2E8F0',    // Light blue-gray
-    dark: '#0F172A',        // Deep blue-black
-    darkSecondary: '#1E293B', // Warm dark slate
-    darkTertiary: '#334155',  // Medium dark slate
+    dark: '#0A0A0A',        // Very dark gray (almost black)
+    darkSecondary: '#171717', // Dark gray
+    darkTertiary: '#262626',  // Medium dark gray
   },
 
   // Text colors - optimized for readability without harsh contrast
@@ -37,8 +37,8 @@ export const colors = {
     primary: '#1E293B',     // Dark slate instead of black
     secondary: '#475569',   // Medium slate
     tertiary: '#64748B',    // Light slate
-    inverse: '#F8FAFC',     // Soft white for dark backgrounds
-    inverseSecondary: '#CBD5E1', // Light gray for dark backgrounds
+    inverse: '#F5F5F5',     // Soft white for dark backgrounds
+    inverseSecondary: '#D4D4D8', // Light gray for dark backgrounds
     accent: '#0EA5E9',      // Blue accent for links
   },
 

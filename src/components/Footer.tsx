@@ -46,11 +46,11 @@ const Footer = () => {
         borderTop: `1px solid ${theme.colors.border}`,
       }}
     >
-      <div className="max-w-7xl mx-auto px-6 py-16">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-6 gap-8 mb-12">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 py-12 sm:py-16">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-6 gap-8 mb-8 sm:mb-12">
           {/* Brand */}
-          <div className="lg:col-span-2">
-            <div className="flex items-center space-x-3 mb-6">
+          <div className="sm:col-span-2 lg:col-span-2">
+            <div className="flex items-center space-x-3 mb-4 sm:mb-6">
               <div 
                 style={{
                   width: '2.5rem',
@@ -86,7 +86,7 @@ const Footer = () => {
               that truly understand their users. From simulation agents to 
               personalized experiences.
             </p>
-            <div className="flex items-center space-x-4">
+            <div className="flex items-center space-x-3 sm:space-x-4">
               {[Twitter, Github, Linkedin, Mail].map((Icon, index) => (
                 <motion.a
                   key={index}
@@ -121,17 +121,18 @@ const Footer = () => {
 
           {/* Links */}
           {Object.entries(footerLinks).map(([category, links]) => (
-            <div key={category}>
+            <div key={category} className="sm:col-span-1">
               <h3 
                 style={{
                   color: theme.colors.text,
                   fontWeight: theme.typography.fontWeight.semibold,
                   marginBottom: theme.semanticSpacing.md,
+                  fontSize: theme.typography.fontSize.base,
                 }}
               >
                 {category}
               </h3>
-              <ul className="space-y-3">
+              <ul className="space-y-2 sm:space-y-3">
                 {links.map((link, index) => (
                   <li key={index}>
                     <a
@@ -141,6 +142,7 @@ const Footer = () => {
                         fontSize: theme.typography.fontSize.sm,
                         transition: theme.animations.transition.normal,
                         textDecoration: 'none',
+                        display: 'block',
                       }}
                       onMouseEnter={(e) => {
                         e.target.style.color = theme.colors.primary;
@@ -161,11 +163,11 @@ const Footer = () => {
         <div 
           style={{
             borderTop: `1px solid ${theme.colors.border}`,
-            paddingTop: theme.semanticSpacing.xl,
+            paddingTop: theme.semanticSpacing.lg,
           }}
         >
-          <div className="flex flex-col md:flex-row items-center justify-between">
-            <div className="flex items-center space-x-6 mb-4 md:mb-0">
+          <div className="flex flex-col sm:flex-row items-center justify-between space-y-4 sm:space-y-0">
+            <div className="flex items-center space-x-4 sm:space-x-6">
               <div 
                 style={{
                   color: theme.colors.textSecondary,
@@ -177,13 +179,13 @@ const Footer = () => {
             </div>
 
             <div 
-              className="flex items-center space-x-6"
+              className="flex flex-wrap items-center justify-center sm:justify-end space-x-4 sm:space-x-6"
               style={{
                 color: theme.colors.textSecondary,
                 fontSize: theme.typography.fontSize.sm,
               }}
             >
-              {['Privacy Policy', 'Terms of Service', 'Security', 'Cookies'].map((item) => (
+              {['Privacy Policy', 'Terms of Service', 'Security', 'Cookies'].map((item, index) => (
                 <a 
                   key={item}
                   href="#" 

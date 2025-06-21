@@ -27,20 +27,22 @@ const AppShowcase = () => {
   const styles = useThemeStyles();
 
   return (
-    <section style={styles.bg.secondary} className="py-32">
-      <div className="max-w-7xl mx-auto px-6">
+    <section style={styles.bg.secondary} className="py-16 sm:py-32">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6">
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8 }}
-          className="text-center mb-16"
+          className="text-center mb-12 sm:mb-16"
         >
           <h2 
             style={{
               ...styles.typography.h1,
               color: theme.colors.text,
               marginBottom: theme.semanticSpacing.lg,
-              fontSize: 'clamp(2.5rem, 6vw, 4rem)',
+              fontSize: 'clamp(2rem, 6vw, 4rem)',
+              paddingLeft: '1rem',
+              paddingRight: '1rem',
             }}
           >
             Experience{' '}
@@ -68,6 +70,8 @@ const AppShowcase = () => {
               color: theme.colors.textSecondary,
               maxWidth: '48rem',
               margin: '0 auto',
+              paddingLeft: '1rem',
+              paddingRight: '1rem',
             }}
           >
             Our flagship app demonstrates the power of context-aware AI. 
@@ -75,23 +79,23 @@ const AppShowcase = () => {
           </p>
         </motion.div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-16 items-center">
           {/* App Screenshots */}
           <motion.div
             initial={{ opacity: 0, x: -50 }}
             whileInView={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.8 }}
-            className="relative"
+            className="relative order-2 lg:order-1"
           >
-            <div className="flex justify-center space-x-4">
+            <div className="flex justify-center space-x-2 sm:space-x-4">
               {/* Phone mockups with screenshots */}
               <div className="relative">
                 <div 
-                  className="w-64 h-[520px] rounded-[3rem] p-2 shadow-2xl"
+                  className="w-48 sm:w-64 h-96 sm:h-[520px] rounded-[2rem] sm:rounded-[3rem] p-1.5 sm:p-2 shadow-2xl"
                   style={{ backgroundColor: theme.colors.text }}
                 >
                   <div 
-                    className="w-full h-full rounded-[2.5rem] overflow-hidden"
+                    className="w-full h-full rounded-[1.5rem] sm:rounded-[2.5rem] overflow-hidden"
                     style={{ backgroundColor: theme.colors.background }}
                   >
                     <img 
@@ -107,13 +111,13 @@ const AppShowcase = () => {
                   transition={{ duration: 3, repeat: Infinity }}
                   style={{
                     position: 'absolute',
-                    top: '-1rem',
-                    right: '-1rem',
+                    top: '-0.5rem',
+                    right: '-0.5rem',
                     backgroundColor: theme.colors.primary,
                     color: theme.colors.background,
                     padding: `${theme.semanticSpacing.xs} ${theme.semanticSpacing.sm}`,
                     borderRadius: '9999px',
-                    fontSize: theme.typography.fontSize.sm,
+                    fontSize: theme.typography.fontSize.xs,
                     fontWeight: theme.typography.fontWeight.semibold,
                   }}
                 >
@@ -121,13 +125,13 @@ const AppShowcase = () => {
                 </motion.div>
               </div>
               
-              <div className="relative mt-8">
+              <div className="relative mt-4 sm:mt-8">
                 <div 
-                  className="w-64 h-[520px] rounded-[3rem] p-2 shadow-2xl"
+                  className="w-48 sm:w-64 h-96 sm:h-[520px] rounded-[2rem] sm:rounded-[3rem] p-1.5 sm:p-2 shadow-2xl"
                   style={{ backgroundColor: theme.colors.text }}
                 >
                   <div 
-                    className="w-full h-full rounded-[2.5rem] overflow-hidden"
+                    className="w-full h-full rounded-[1.5rem] sm:rounded-[2.5rem] overflow-hidden"
                     style={{ backgroundColor: theme.colors.background }}
                   >
                     <img 
@@ -142,13 +146,13 @@ const AppShowcase = () => {
                   transition={{ duration: 3, repeat: Infinity, delay: 1 }}
                   style={{
                     position: 'absolute',
-                    top: '-1rem',
-                    left: '-1rem',
+                    top: '-0.5rem',
+                    left: '-0.5rem',
                     backgroundColor: theme.colors.surface,
                     color: theme.colors.primary,
                     padding: `${theme.semanticSpacing.xs} ${theme.semanticSpacing.sm}`,
                     borderRadius: '9999px',
-                    fontSize: theme.typography.fontSize.sm,
+                    fontSize: theme.typography.fontSize.xs,
                     fontWeight: theme.typography.fontWeight.semibold,
                     border: `1px solid ${theme.colors.primary}`,
                   }}
@@ -164,7 +168,7 @@ const AppShowcase = () => {
             initial={{ opacity: 0, x: 50 }}
             whileInView={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.8 }}
-            className="space-y-8"
+            className="space-y-6 sm:space-y-8 order-1 lg:order-2"
           >
             <div>
               <h3 
@@ -172,6 +176,7 @@ const AppShowcase = () => {
                   ...styles.typography.h3,
                   color: theme.colors.text,
                   marginBottom: theme.semanticSpacing.lg,
+                  fontSize: 'clamp(1.5rem, 5vw, 1.875rem)',
                 }}
               >
                 Your life, intelligently understood
@@ -190,19 +195,19 @@ const AppShowcase = () => {
               </p>
             </div>
 
-            <div className="space-y-6">
+            <div className="space-y-4 sm:space-y-6">
               {features.map((feature, index) => (
                 <motion.div
                   key={index}
                   initial={{ opacity: 0, y: 20 }}
                   whileInView={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.6, delay: index * 0.1 }}
-                  className="flex items-start space-x-4"
+                  className="flex items-start space-x-3 sm:space-x-4"
                 >
                   <div 
                     style={{
-                      width: '3rem',
-                      height: '3rem',
+                      width: '2.5rem',
+                      height: '2.5rem',
                       backgroundColor: theme.utils.alpha(theme.colors.primary, 0.1),
                       border: `1px solid ${theme.utils.alpha(theme.colors.primary, 0.3)}`,
                       borderRadius: '0.75rem',
@@ -212,7 +217,7 @@ const AppShowcase = () => {
                       flexShrink: 0,
                     }}
                   >
-                    <feature.icon style={{ color: theme.colors.primary }} size={24} />
+                    <feature.icon style={{ color: theme.colors.primary }} size={20} />
                   </div>
                   <div>
                     <h4 
@@ -233,7 +238,7 @@ const AppShowcase = () => {
             </div>
 
             <div style={{ paddingTop: theme.semanticSpacing.xl }}>
-              <div className="flex flex-col sm:flex-row gap-4">
+              <div className="flex flex-col sm:flex-row gap-3 sm:gap-4">
                 <motion.button
                   whileHover={{ scale: 1.02, y: -2 }}
                   whileTap={{ scale: 0.98 }}
@@ -249,6 +254,7 @@ const AppShowcase = () => {
                     alignItems: 'center',
                     justifyContent: 'center',
                     gap: theme.semanticSpacing.sm,
+                    flex: '1',
                   }}
                 >
                   <Apple size={20} />
@@ -273,6 +279,7 @@ const AppShowcase = () => {
                     alignItems: 'center',
                     justifyContent: 'center',
                     gap: theme.semanticSpacing.sm,
+                    flex: '1',
                   }}
                 >
                   <Play size={20} />
@@ -284,7 +291,7 @@ const AppShowcase = () => {
               </div>
               
               <div 
-                className="flex items-center space-x-2 mt-4"
+                className="flex items-center justify-center sm:justify-start space-x-2 mt-4"
                 style={{
                   color: theme.colors.textSecondary,
                   fontSize: theme.typography.fontSize.sm,

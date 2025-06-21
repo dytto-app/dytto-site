@@ -9,7 +9,7 @@ const Hero = () => {
   const styles = useThemeStyles();
 
   return (
-    <section className="relative min-h-screen flex items-center justify-center overflow-hidden pt-20">
+    <section className="relative min-h-screen flex items-center justify-center overflow-hidden pt-24 sm:pt-20 px-4 sm:px-6">
       {/* Subtle Background Gradient */}
       <div 
         className="absolute inset-0"
@@ -31,12 +31,12 @@ const Hero = () => {
         />
       </div>
 
-      {/* Floating Elements */}
+      {/* Floating Elements - Hidden on mobile for cleaner look */}
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 1 }}
-        className="absolute top-32 right-8 rounded-2xl p-4"
+        className="absolute top-32 right-4 sm:right-8 rounded-2xl p-3 sm:p-4 hidden sm:block"
         style={{
           ...styles.glass.light,
           border: `1px solid ${theme.colors.border}`,
@@ -68,7 +68,7 @@ const Hero = () => {
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 1.2 }}
-        className="absolute top-48 left-8 rounded-2xl p-4"
+        className="absolute top-48 left-4 sm:left-8 rounded-2xl p-3 sm:p-4 hidden sm:block"
         style={{
           ...styles.glass.light,
           border: `1px solid ${theme.colors.border}`,
@@ -97,15 +97,15 @@ const Hero = () => {
       </motion.div>
 
       {/* Main Content */}
-      <div className="relative z-10 text-center max-w-6xl mx-auto px-6">
+      <div className="relative z-10 text-center max-w-6xl mx-auto">
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8 }}
-          className="mb-8"
+          className="mb-6 sm:mb-8"
         >
           <div 
-            className="inline-flex items-center space-x-2 rounded-full px-4 py-2 mb-6"
+            className="inline-flex items-center space-x-2 rounded-full px-3 sm:px-4 py-2 mb-4 sm:mb-6"
             style={{
               backgroundColor: theme.utils.alpha(theme.colors.primary, 0.1),
               border: `1px solid ${theme.utils.alpha(theme.colors.primary, 0.2)}`,
@@ -132,13 +132,15 @@ const Hero = () => {
             ...styles.typography.h1,
             color: theme.colors.text,
             marginBottom: theme.semanticSpacing.lg,
-            fontSize: 'clamp(2.5rem, 8vw, 5rem)',
+            fontSize: 'clamp(2rem, 8vw, 5rem)',
             lineHeight: '1.1',
+            paddingLeft: '1rem',
+            paddingRight: '1rem',
           }}
         >
           Build AI that{' '}
           <motion.span 
-            key={`gradient-${theme.mode}`} // Force re-render on theme change
+            key={`gradient-${theme.mode}`}
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 0.3 }}
@@ -148,7 +150,7 @@ const Hero = () => {
               WebkitTextFillColor: 'transparent',
               backgroundClip: 'text',
               fontWeight: theme.typography.fontWeight.semibold,
-              display: 'inline-block', // Ensures proper rendering
+              display: 'inline-block',
             }}
           >
             understands
@@ -167,6 +169,9 @@ const Hero = () => {
             margin: '0 auto',
             marginBottom: theme.semanticSpacing['3xl'],
             lineHeight: '1.6',
+            paddingLeft: '1rem',
+            paddingRight: '1rem',
+            fontSize: 'clamp(1rem, 4vw, 1.125rem)',
           }}
         >
           Dytto provides the context infrastructure for intelligent applications. 
@@ -178,7 +183,7 @@ const Hero = () => {
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.4 }}
-          className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-16"
+          className="flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4 mb-12 sm:mb-16 px-4"
         >
           <motion.button
             whileHover={{ scale: 1.02, y: -2 }}
@@ -189,6 +194,10 @@ const Hero = () => {
               display: 'inline-flex',
               alignItems: 'center',
               gap: theme.semanticSpacing.sm,
+              width: '100%',
+              maxWidth: '200px',
+              justifyContent: 'center',
+              padding: `${theme.semanticSpacing.md} ${theme.semanticSpacing.lg}`,
             }}
           >
             <span>Start Building</span>
@@ -198,7 +207,13 @@ const Hero = () => {
           <motion.button
             whileHover={{ scale: 1.02, y: -2 }}
             whileTap={{ scale: 0.98 }}
-            style={styles.button.secondary}
+            style={{
+              ...styles.button.secondary,
+              width: '100%',
+              maxWidth: '200px',
+              justifyContent: 'center',
+              padding: `${theme.semanticSpacing.md} ${theme.semanticSpacing.lg}`,
+            }}
           >
             View Documentation
           </motion.button>
@@ -211,17 +226,19 @@ const Hero = () => {
           style={{
             color: theme.colors.textTertiary,
             fontSize: theme.typography.fontSize.sm,
+            paddingLeft: '1rem',
+            paddingRight: '1rem',
           }}
         >
           Trusted by AI researchers and developers worldwide
         </motion.div>
       </div>
 
-      {/* Scroll Indicator */}
+      {/* Scroll Indicator - Hidden on mobile */}
       <motion.div
         animate={{ y: [0, 10, 0] }}
         transition={{ duration: 2, repeat: Infinity }}
-        className="absolute bottom-8 left-1/2 transform -translate-x-1/2"
+        className="absolute bottom-8 left-1/2 transform -translate-x-1/2 hidden sm:block"
       >
         <div 
           className="w-6 h-10 rounded-full flex justify-center"

@@ -6,7 +6,11 @@ import PlatformOverview from './components/PlatformOverview';
 import AppShowcase from './components/AppShowcase';
 import APIShowcase from './components/APIShowcase';
 import ProductSuite from './components/ProductSuite';
+import UseCases from './components/UseCases';
+import TechStack from './components/TechStack';
 import DeveloperExperience from './components/DeveloperExperience';
+import Testimonials from './components/Testimonials';
+import Pricing from './components/Pricing';
 import SecuritySection from './components/SecuritySection';
 import CallToAction from './components/CallToAction';
 import Footer from './components/Footer';
@@ -23,7 +27,11 @@ function AppContent() {
       <AppShowcase />
       <APIShowcase />
       <ProductSuite />
+      <UseCases />
+      <TechStack />
       <DeveloperExperience />
+      <Testimonials />
+      <Pricing />
       <SecuritySection />
       <CallToAction />
       <Footer />
