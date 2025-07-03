@@ -23,11 +23,8 @@ const APILandingPage = () => {
       <PlatformOverview />
       <APIShowcase />
       <UseCases />
-      <TechStack />
-      <DeveloperExperience />
-      <APITestimonials />
+      
       <Pricing />
-      <SecuritySection />
       <CallToAction />
       <Footer />
     </div>
