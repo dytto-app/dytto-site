@@ -71,7 +71,7 @@ const AppHero = () => {
             marginBottom: theme.semanticSpacing.lg,
           }}
         >
-          Your life,{' '}
+          Your story,{' '}
           <motion.span 
             key={`gradient-${theme.mode}`}
             initial={{ opacity: 0 }}
