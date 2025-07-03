@@ -27,17 +27,22 @@ const AppShowcase = () => {
   const styles = useThemeStyles();
 
   return (
-    <section style={styles.bg.secondary} className="py-12 sm:py-16 lg:py-24">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <section style={styles.bg.secondary} className="py-16 sm:py-24">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6">
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8 }}
-          className="text-center mb-8 sm:mb-12 lg:mb-16"
+          className="text-center mb-12 sm:mb-16"
         >
           <h2 
-            className="text-3xl sm:text-4xl lg:text-5xl xl:text-6xl font-bold mb-4 sm:mb-6"
-            style={{ color: theme.colors.text }}
+            style={{
+              color: theme.colors.text,
+              fontSize: 'clamp(1.75rem, 6vw, 3.5rem)',
+              fontWeight: theme.typography.fontWeight.bold,
+              lineHeight: '1.2',
+              marginBottom: theme.semanticSpacing.md,
+            }}
           >
             Experience{' '}
             <motion.span 
@@ -59,190 +64,277 @@ const AppShowcase = () => {
             on mobile
           </h2>
           <p 
-            className="text-base sm:text-lg lg:text-xl max-w-3xl mx-auto leading-relaxed"
-            style={{ color: theme.colors.textSecondary }}
+            style={{
+              color: theme.colors.textSecondary,
+              fontSize: 'clamp(1rem, 3vw, 1.125rem)',
+              lineHeight: '1.6',
+              maxWidth: '42rem',
+              margin: '0 auto',
+            }}
           >
             Our flagship app demonstrates the power of context-aware AI. 
             Transform your daily experiences into meaningful stories and insights.
           </p>
         </motion.div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-16 items-center">
-          {/* App Screenshots - Mobile Optimized */}
+        {/* Mobile-First Content Layout */}
+        <div className="space-y-12 sm:space-y-16">
+          
+          {/* App Preview - Mobile Optimized */}
           <motion.div
-            initial={{ opacity: 0, x: -50 }}
-            whileInView={{ opacity: 1, x: 0 }}
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8 }}
-            className="relative order-2 lg:order-1 flex justify-center"
+            className="text-center"
           >
-            <div className="flex justify-center space-x-2 sm:space-x-4 scale-75 sm:scale-90 lg:scale-100">
-              {/* Phone mockups with screenshots */}
-              <div className="relative">
+            <div 
+              style={{
+                ...styles.glass.light,
+                border: `1px solid ${theme.colors.border}`,
+                borderRadius: '1.5rem',
+                padding: '2rem 1.5rem',
+                maxWidth: '28rem',
+                margin: '0 auto',
+              }}
+            >
+              {/* Single Phone Mockup - Properly Sized */}
+              <div className="relative mx-auto" style={{ width: '200px', height: '400px' }}>
                 <div 
-                  className="w-40 sm:w-48 md:w-56 lg:w-64 h-80 sm:h-96 md:h-[450px] lg:h-[520px] rounded-[2rem] lg:rounded-[3rem] p-1.5 lg:p-2 shadow-2xl"
-                  style={{ backgroundColor: theme.colors.text }}
+                  style={{
+                    width: '100%',
+                    height: '100%',
+                    backgroundColor: theme.colors.text,
+                    borderRadius: '2rem',
+                    padding: '0.5rem',
+                    boxShadow: theme.shadows.lg,
+                  }}
                 >
                   <div 
-                    className="w-full h-full rounded-[1.5rem] lg:rounded-[2.5rem] overflow-hidden"
-                    style={{ backgroundColor: theme.colors.background }}
+                    style={{
+                      width: '100%',
+                      height: '100%',
+                      backgroundColor: theme.colors.background,
+                      borderRadius: '1.5rem',
+                      overflow: 'hidden',
+                      position: 'relative',
+                    }}
                   >
                     <img 
                       src="/home.jpg"
-                      alt="Dytto Home Screen"
-                      className="w-full h-full object-cover"
+                      alt="Dytto App Interface"
+                      style={{
+                        width: '100%',
+                        height: '100%',
+                        objectFit: 'cover',
+                      }}
                     />
                   </div>
                 </div>
-                {/* Floating elements */}
+                
+                {/* Floating Badge */}
                 <motion.div
                   animate={{ y: [0, -10, 0] }}
                   transition={{ duration: 3, repeat: Infinity }}
-                  className="hidden sm:block absolute -top-2 -right-2 px-3 py-1 rounded-full text-xs font-semibold"
                   style={{
+                    position: 'absolute',
+                    top: '-0.5rem',
+                    right: '-0.5rem',
                     backgroundColor: theme.colors.primary,
                     color: theme.colors.background,
+                    padding: '0.5rem 0.75rem',
+                    borderRadius: '9999px',
+                    fontSize: '0.75rem',
+                    fontWeight: theme.typography.fontWeight.semibold,
+                    boxShadow: theme.shadows.md,
                   }}
                 >
-                  Today: 9 Photos
-                </motion.div>
-              </div>
-              
-              <div className="relative mt-4 sm:mt-8">
-                <div 
-                  className="w-40 sm:w-48 md:w-56 lg:w-64 h-80 sm:h-96 md:h-[450px] lg:h-[520px] rounded-[2rem] lg:rounded-[3rem] p-1.5 lg:p-2 shadow-2xl"
-                  style={{ backgroundColor: theme.colors.text }}
-                >
-                  <div 
-                    className="w-full h-full rounded-[1.5rem] lg:rounded-[2.5rem] overflow-hidden"
-                    style={{ backgroundColor: theme.colors.background }}
-                  >
-                    <img 
-                      src="/story.jpg"
-                      alt="Dytto Story Screen"
-                      className="w-full h-full object-cover"
-                    />
-                  </div>
-                </div>
-                <motion.div
-                  animate={{ y: [0, -10, 0] }}
-                  transition={{ duration: 3, repeat: Infinity, delay: 1 }}
-                  className="hidden sm:block absolute -top-2 -left-2 px-3 py-1 rounded-full text-xs font-semibold border"
-                  style={{
-                    backgroundColor: theme.colors.surface,
-                    color: theme.colors.primary,
-                    border: `1px solid ${theme.colors.primary}`,
-                  }}
-                >
-                  AI Generated
+                  Live Demo
                 </motion.div>
               </div>
             </div>
           </motion.div>
 
-          {/* Features and Download */}
+          {/* Features List - Mobile Optimized */}
           <motion.div
-            initial={{ opacity: 0, x: 50 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.8 }}
-            className="space-y-6 sm:space-y-8 order-1 lg:order-2"
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.2 }}
           >
-            <div>
-              <h3 
-                className="text-2xl sm:text-3xl lg:text-4xl font-bold mb-4 sm:mb-6"
-                style={{ color: theme.colors.text }}
-              >
-                Your life, intelligently understood
-              </h3>
-              <p 
-                className="text-base sm:text-lg lg:text-xl leading-relaxed mb-6 sm:mb-8"
-                style={{ color: theme.colors.textSecondary }}
-              >
-                Dytto automatically collects context from your daily life and uses advanced AI 
-                to generate meaningful stories, provide personalized recommendations, and help 
-                you reflect on your experiences.
-              </p>
-            </div>
-
-            <div className="space-y-4 sm:space-y-6">
+            <h3 
+              style={{
+                color: theme.colors.text,
+                fontSize: 'clamp(1.5rem, 5vw, 2rem)',
+                fontWeight: theme.typography.fontWeight.semibold,
+                textAlign: 'center',
+                marginBottom: '2rem',
+              }}
+            >
+              Your life, intelligently understood
+            </h3>
+            
+            <div className="space-y-6">
               {features.map((feature, index) => (
                 <motion.div
                   key={index}
-                  initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
+                  initial={{ opacity: 0, x: -30 }}
+                  whileInView={{ opacity: 1, x: 0 }}
                   transition={{ duration: 0.6, delay: index * 0.1 }}
-                  className="flex items-start space-x-4"
+                  style={{
+                    ...styles.glass.light,
+                    border: `1px solid ${theme.colors.border}`,
+                    borderRadius: '1rem',
+                    padding: '1.5rem',
+                  }}
                 >
-                  <div 
-                    className="flex-shrink-0 w-10 h-10 sm:w-12 sm:h-12 rounded-xl flex items-center justify-center"
-                    style={{
-                      backgroundColor: theme.utils.alpha(theme.colors.primary, 0.1),
-                      border: `1px solid ${theme.utils.alpha(theme.colors.primary, 0.3)}`,
-                    }}
-                  >
-                    <feature.icon style={{ color: theme.colors.primary }} size={20} />
-                  </div>
-                  <div className="flex-1 min-w-0">
-                    <h4 
-                      className="text-lg sm:text-xl font-semibold mb-1 sm:mb-2"
-                      style={{ color: theme.colors.text }}
+                  <div className="flex items-start gap-4">
+                    <div 
+                      style={{
+                        width: '3rem',
+                        height: '3rem',
+                        backgroundColor: theme.utils.alpha(theme.colors.primary, 0.1),
+                        border: `1px solid ${theme.utils.alpha(theme.colors.primary, 0.3)}`,
+                        borderRadius: '0.75rem',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        flexShrink: 0,
+                      }}
                     >
-                      {feature.title}
-                    </h4>
-                    <p 
-                      className="text-sm sm:text-base leading-relaxed"
-                      style={{ color: theme.colors.textSecondary }}
-                    >
-                      {feature.description}
-                    </p>
+                      <feature.icon style={{ color: theme.colors.primary }} size={20} />
+                    </div>
+                    
+                    <div className="flex-1 min-w-0">
+                      <h4 
+                        style={{
+                          color: theme.colors.text,
+                          fontSize: 'clamp(1.125rem, 4vw, 1.25rem)',
+                          fontWeight: theme.typography.fontWeight.semibold,
+                          marginBottom: '0.5rem',
+                          lineHeight: '1.3',
+                        }}
+                      >
+                        {feature.title}
+                      </h4>
+                      <p 
+                        style={{
+                          color: theme.colors.textSecondary,
+                          fontSize: 'clamp(0.875rem, 3vw, 1rem)',
+                          lineHeight: '1.5',
+                        }}
+                      >
+                        {feature.description}
+                      </p>
+                    </div>
                   </div>
                 </motion.div>
               ))}
             </div>
+          </motion.div>
 
-            <div className="pt-6 sm:pt-8">
-              <div className="flex flex-col sm:flex-row gap-4">
+          {/* Download Section - Mobile Optimized */}
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.4 }}
+            className="text-center"
+          >
+            <div 
+              style={{
+                ...styles.glass.light,
+                border: `1px solid ${theme.colors.border}`,
+                borderRadius: '1.5rem',
+                padding: '2rem 1.5rem',
+              }}
+            >
+              <h3 
+                style={{
+                  color: theme.colors.text,
+                  fontSize: 'clamp(1.25rem, 4vw, 1.5rem)',
+                  fontWeight: theme.typography.fontWeight.semibold,
+                  marginBottom: '1rem',
+                }}
+              >
+                Ready to get started?
+              </h3>
+              <p 
+                style={{
+                  color: theme.colors.textSecondary,
+                  fontSize: 'clamp(0.875rem, 3vw, 1rem)',
+                  marginBottom: '2rem',
+                  lineHeight: '1.5',
+                }}
+              >
+                Download Dytto and start discovering meaningful insights about your life
+              </p>
+              
+              <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
                 <motion.button
                   whileHover={{ scale: 1.02, y: -2 }}
                   whileTap={{ scale: 0.98 }}
-                  className="flex-1 flex items-center justify-center gap-3 px-6 py-4 rounded-xl font-medium transition-all duration-300"
                   style={{
                     backgroundColor: theme.colors.text,
                     border: `1px solid ${theme.colors.border}`,
                     color: theme.colors.background,
-                    minHeight: '56px',
+                    padding: '1rem 1.5rem',
+                    borderRadius: '0.75rem',
+                    fontWeight: theme.typography.fontWeight.medium,
+                    transition: 'all 0.3s ease',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    gap: '0.75rem',
+                    width: '100%',
+                    maxWidth: '200px',
+                    boxShadow: theme.shadows.md,
                   }}
                 >
                   <Apple size={20} />
-                  <div className="text-left">
-                    <div className="text-xs opacity-70">Download on the</div>
-                    <div className="text-sm font-semibold">App Store</div>
+                  <div style={{ textAlign: 'left' }}>
+                    <div style={{ fontSize: '0.75rem', opacity: 0.7 }}>Download on the</div>
+                    <div style={{ fontSize: '0.875rem', fontWeight: theme.typography.fontWeight.semibold }}>App Store</div>
                   </div>
                 </motion.button>
                 
                 <motion.button
                   whileHover={{ scale: 1.02, y: -2 }}
                   whileTap={{ scale: 0.98 }}
-                  className="flex-1 flex items-center justify-center gap-3 px-6 py-4 rounded-xl font-medium transition-all duration-300"
                   style={{
                     backgroundColor: theme.colors.text,
                     border: `1px solid ${theme.colors.border}`,
                     color: theme.colors.background,
-                    minHeight: '56px',
+                    padding: '1rem 1.5rem',
+                    borderRadius: '0.75rem',
+                    fontWeight: theme.typography.fontWeight.medium,
+                    transition: 'all 0.3s ease',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    gap: '0.75rem',
+                    width: '100%',
+                    maxWidth: '200px',
+                    boxShadow: theme.shadows.md,
                   }}
                 >
                   <Play size={20} />
-                  <div className="text-left">
-                    <div className="text-xs opacity-70">Get it on</div>
-                    <div className="text-sm font-semibold">Google Play</div>
+                  <div style={{ textAlign: 'left' }}>
+                    <div style={{ fontSize: '0.75rem', opacity: 0.7 }}>Get it on</div>
+                    <div style={{ fontSize: '0.875rem', fontWeight: theme.typography.fontWeight.semibold }}>Google Play</div>
                   </div>
                 </motion.button>
               </div>
               
               <div 
-                className="flex items-center justify-center sm:justify-start space-x-2 mt-4 text-sm"
-                style={{ color: theme.colors.textSecondary }}
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  gap: '0.5rem',
+                  marginTop: '1.5rem',
+                  color: theme.colors.textSecondary,
+                  fontSize: 'clamp(0.75rem, 2.5vw, 0.875rem)',
+                }}
               >
-                <div className="flex items-center space-x-1">
+                <div className="flex items-center gap-1">
                   {[...Array(5)].map((_, i) => (
                     <Star key={i} size={14} style={{ color: theme.colors.primary }} className="fill-current" />
                   ))}
