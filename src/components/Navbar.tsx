@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Menu, X, Brain, Sun, Moon } from 'lucide-react';
+import { Link, useLocation } from 'react-router-dom';
 import { useTheme } from './ThemeProvider';
 import { useThemeStyles } from '../hooks/useThemeStyles';
 
@@ -8,6 +9,12 @@ const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const { theme, mode, toggleMode } = useTheme();
   const styles = useThemeStyles();
+  const location = useLocation();
+  const isAPIPage = location.pathname === '/api';
+
+  const navItems = isAPIPage 
+    ? ['Platform', 'API', 'Use Cases', 'Developers', 'Pricing']
+    : ['Features', 'App', 'Products', 'Testimonials', 'Pricing'];
 
   return (
     <>
@@ -22,7 +29,7 @@ const Navbar = () => {
       >
         <div className="flex items-center justify-between">
           {/* Logo */}
-          <div className="flex items-center space-x-2 sm:space-x-3">
+          <Link to="/" className="flex items-center space-x-2 sm:space-x-3">
             <div 
               className="w-8 h-8 sm:w-10 sm:h-10 rounded-lg sm:rounded-xl flex items-center justify-center"
               style={{ backgroundColor: theme.colors.primary }}
@@ -39,11 +46,11 @@ const Navbar = () => {
             }}>
               Dytto
             </span>
-          </div>
+          </Link>
           
           {/* Desktop Navigation Menu */}
           <div className="hidden lg:flex items-center space-x-8">
-            {['Platform', 'App', 'API', 'Developers', 'Docs'].map((item) => (
+            {navItems.map((item) => (
               <a 
                 key={item}
                 href={`#${item.toLowerCase()}`} 
@@ -63,6 +70,18 @@ const Navbar = () => {
                 {item}
               </a>
             ))}
+            <Link
+              to={isAPIPage ? '/' : '/api'}
+              style={{ 
+                color: theme.colors.primary,
+                fontSize: theme.typography.fontSize.sm,
+                transition: theme.animations.transition.normal,
+                textDecoration: 'none',
+                fontWeight: theme.typography.fontWeight.medium,
+              }}
+            >
+              {isAPIPage ? 'App' : 'API'}
+            </Link>
           </div>
 
           {/* Desktop Auth buttons and theme toggle */}
@@ -128,7 +147,7 @@ const Navbar = () => {
                 transition: theme.animations.transition.normal,
               }}
             >
-              Get API Key
+              {isAPIPage ? 'Get API Key' : 'Download App'}
             </motion.button>
           </div>
 
@@ -189,7 +208,7 @@ const Navbar = () => {
               onClick={(e) => e.stopPropagation()}
             >
               <div className="space-y-4">
-                {['Platform', 'App', 'API', 'Developers', 'Docs'].map((item, index) => (
+                {navItems.map((item, index) => (
                   <motion.a
                     key={item}
                     href={`#${item.toLowerCase()}`}
@@ -217,6 +236,29 @@ const Navbar = () => {
                     {item}
                   </motion.a>
                 ))}
+                
+                <motion.div
+                  initial={{ opacity: 0, x: -20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: navItems.length * 0.1 }}
+                >
+                  <Link
+                    to={isAPIPage ? '/' : '/api'}
+                    onClick={() => setIsOpen(false)}
+                    style={{
+                      display: 'block',
+                      color: theme.colors.primary,
+                      fontSize: theme.typography.fontSize.lg,
+                      fontWeight: theme.typography.fontWeight.medium,
+                      padding: theme.semanticSpacing.md,
+                      borderRadius: '0.75rem',
+                      textDecoration: 'none',
+                      transition: theme.animations.transition.normal,
+                    }}
+                  >
+                    {isAPIPage ? 'App' : 'API'}
+                  </Link>
+                </motion.div>
                 
                 <div className="border-t pt-4" style={{ borderColor: theme.colors.border }}>
                   <motion.button
@@ -255,7 +297,7 @@ const Navbar = () => {
                       cursor: 'pointer',
                     }}
                   >
-                    Get API Key
+                    {isAPIPage ? 'Get API Key' : 'Download App'}
                   </motion.button>
                 </div>
               </div>
