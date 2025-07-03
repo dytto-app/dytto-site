@@ -105,9 +105,8 @@ const AppHero = () => {
           }}
         >
           Dytto captures your daily moments and transforms them into 
-          beautiful stories. 
-          
-          Discover patterns, get personalized insights, 
+          beautiful stories.     
+        Discover patterns, get personalized insights, 
           and relive your memories like never before.
         </motion.p>
 
