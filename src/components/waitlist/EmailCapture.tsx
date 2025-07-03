@@ -282,9 +282,9 @@ const EmailCapture: React.FC<EmailCaptureProps> = ({
           className="mt-8 space-y-3"
         >
           {[
-            "Beta access to Dytto",
-            "MCP server/API access to make AI applications like Claude desktop context aware",
-            "Free",
+            "Full access to Dytto’s context API",
+            "Claude desktop agent integration",
+            "Get premium access for free while we’re in beta.",
             "Direct line to our team for feedback",
           ].map((benefit, index) => (
             <motion.div
