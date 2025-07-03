@@ -20,6 +20,7 @@ import {
 import { Link } from 'react-router-dom';
 import { useTheme } from '../components/ThemeProvider';
 import { useThemeStyles } from '../hooks/useThemeStyles';
+import EmailCapture from '../components/waitlist/EmailCapture';
 
 const WaitlistLandingPage = () => {
   const { theme, mode, toggleMode } = useTheme();
@@ -52,13 +53,16 @@ const WaitlistLandingPage = () => {
     return () => clearInterval(interval);
   }, []);
 
-  const handleEmailSubmit = (e) => {
-    e.preventDefault();
-    if (email) {
-      setQueuePosition(Math.floor(Math.random() * 2000) + 1000);
-      setIsSubmitted(true);
-      setShowExitIntent(false);
-    }
+  const handleEmailSuccess = (email: string, position: number) => {
+    setEmail(email);
+    setQueuePosition(position);
+    setIsSubmitted(true);
+    setShowExitIntent(false);
+  };
+
+  const handleEmailError = (error: string) => {
+    console.error('Email submission error:', error);
+    // You could show a toast notification here
   };
 
   const shareOnTwitter = () => {
@@ -871,65 +875,12 @@ const WaitlistLandingPage = () => {
 
       {/* Email Capture Section */}
       <section id="email-capture" className="py-32 px-6" style={styles.bg.primary}>
-        <div className="max-w-2xl mx-auto text-center">
+        <div className="max-w-2xl mx-auto">
           {!isSubmitted ? (
-            <motion.div
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8 }}
-            >
-              <h2 
-                style={{
-                  ...styles.typography.h1,
-                  color: theme.colors.text,
-                  marginBottom: theme.semanticSpacing.lg,
-                  fontSize: 'clamp(2.5rem, 6vw, 4rem)',
-                }}
-              >
-                Be first to get your life,{' '}
-                <span 
-                  style={{
-                    background: `linear-gradient(135deg, ${theme.colors.primary}, ${theme.colors.accent})`,
-                    WebkitBackgroundClip: 'text',
-                    WebkitTextFillColor: 'transparent',
-                    backgroundClip: 'text',
-                  }}
-                >
-                  authored.
-                </span>
-              </h2>
-              
-              <form onSubmit={handleEmailSubmit} className="flex flex-col sm:flex-row gap-4 max-w-md mx-auto">
-                <input
-                  type="email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  placeholder="Enter your email"
-                  required
-                  style={{
-                    flex: 1,
-                    padding: theme.semanticSpacing.md,
-                    borderRadius: '0.75rem',
-                    border: `1px solid ${theme.colors.border}`,
-                    backgroundColor: theme.colors.surface,
-                    color: theme.colors.text,
-                    fontSize: theme.typography.fontSize.base,
-                  }}
-                />
-                <motion.button
-                  type="submit"
-                  whileHover={{ scale: 1.02 }}
-                  whileTap={{ scale: 0.98 }}
-                  style={{
-                    ...styles.button.primary,
-                    whiteSpace: 'nowrap',
-                    padding: `${theme.semanticSpacing.md} ${theme.semanticSpacing.xl}`,
-                  }}
-                >
-                  Join
-                </motion.button>
-              </form>
-            </motion.div>
+            <EmailCapture 
+              onSuccess={handleEmailSuccess}
+              onError={handleEmailError}
+            />
           ) : (
             <motion.div
               initial={{ opacity: 0, scale: 0.8 }}
@@ -940,6 +891,7 @@ const WaitlistLandingPage = () => {
                 border: `1px solid ${theme.colors.border}`,
                 borderRadius: '1.5rem',
                 padding: theme.semanticSpacing.xl,
+                textAlign: 'center',
               }}
             >
               <CheckCircle style={{ color: theme.colors.success, margin: '0 auto', marginBottom: theme.semanticSpacing.lg }} size={48} />
@@ -1219,35 +1171,13 @@ const WaitlistLandingPage = () => {
                 Let Dytto write you a free sample story tomorrow.
               </p>
               
-              <form onSubmit={handleEmailSubmit} className="space-y-4">
-                <input
-                  type="email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  placeholder="Enter your email"
-                  required
-                  style={{
-                    width: '100%',
-                    padding: theme.semanticSpacing.md,
-                    borderRadius: '0.75rem',
-                    border: `1px solid ${theme.colors.border}`,
-                    backgroundColor: theme.colors.surface,
-                    color: theme.colors.text,
-                    fontSize: theme.typography.fontSize.base,
-                  }}
-                />
-                <motion.button
-                  type="submit"
-                  whileHover={{ scale: 1.02 }}
-                  whileTap={{ scale: 0.98 }}
-                  style={{
-                    ...styles.button.primary,
-                    width: '100%',
-                  }}
-                >
-                  Get My Free Story
-                </motion.button>
-              </form>
+              <EmailCapture 
+                onSuccess={(email, position) => {
+                  handleEmailSuccess(email, position);
+                  setShowExitIntent(false);
+                }}
+                onError={handleEmailError}
+              />
             </motion.div>
           </motion.div>
         )}
