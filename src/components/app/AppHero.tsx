@@ -9,7 +9,7 @@ const AppHero = () => {
   const styles = useThemeStyles();
 
   return (
-    <section className="relative min-h-screen flex items-center justify-center overflow-hidden pt-24 sm:pt-20 px-4 sm:px-6">
+    <section className="relative min-h-screen flex items-center justify-center overflow-hidden pt-24 sm:pt-20 px-4 sm:px-6 mobile-safe">
       {/* Subtle Background Gradient */}
       <div 
         className="absolute inset-0"
@@ -132,11 +132,9 @@ const AppHero = () => {
             ...styles.typography.h1,
             color: theme.colors.text,
             marginBottom: theme.semanticSpacing.lg,
-            fontSize: 'clamp(2rem, 8vw, 5rem)',
             lineHeight: '1.1',
-            paddingLeft: '1rem',
-            paddingRight: '1rem',
           }}
+          className="responsive-heading mobile-text hero-text"
         >
           Your life,{' '}
           <motion.span 
@@ -169,10 +167,8 @@ const AppHero = () => {
             margin: '0 auto',
             marginBottom: theme.semanticSpacing['3xl'],
             lineHeight: '1.6',
-            paddingLeft: '1rem',
-            paddingRight: '1rem',
-            fontSize: 'clamp(1rem, 4vw, 1.125rem)',
           }}
+          className="responsive-body mobile-text hero-text force-break-text"
         >
           Dytto transforms your daily experiences into meaningful stories and insights. 
           Automatically capture context, generate AI-powered narratives, and discover 
@@ -183,7 +179,7 @@ const AppHero = () => {
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.4 }}
-          className="flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4 mb-12 sm:mb-16 px-4"
+          className="flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4 mb-12 sm:mb-16 mobile-buttons"
         >
           <motion.button
             whileHover={{ scale: 1.02, y: -2 }}
@@ -242,12 +238,10 @@ const AppHero = () => {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.8 }}
-          className="flex items-center justify-center space-x-2"
+          className="flex items-center justify-center space-x-2 mobile-text hero-text"
           style={{
             color: theme.colors.textTertiary,
             fontSize: theme.typography.fontSize.sm,
-            paddingLeft: '1rem',
-            paddingRight: '1rem',
           }}
         >
           <div className="flex items-center space-x-1">

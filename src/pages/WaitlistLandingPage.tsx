@@ -512,7 +512,7 @@ const WaitlistLandingPage = () => {
               },
               {
                 image: "/IMG_4025.PNG",
-                title: "Personalized Recommendations", 
+                title: "Personalized", 
                 description: "Get intelligent suggestions for places to visit, activities to try, and experiences to explore based on your patterns and preferences."
               },
               {

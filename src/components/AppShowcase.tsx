@@ -79,23 +79,23 @@ const AppShowcase = () => {
           </p>
         </motion.div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-16 items-center">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-16 items-center mobile-safe">
           {/* App Screenshots */}
           <motion.div
             initial={{ opacity: 0, x: -50 }}
             whileInView={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.8 }}
-            className="relative order-2 lg:order-1"
+            className="relative order-2 lg:order-1 phone-showcase-wrapper motion-safe"
           >
-            <div className="flex justify-center space-x-2 sm:space-x-4">
+            <div className="flex justify-center space-x-1 sm:space-x-4 phone-showcase">
               {/* Phone mockups with screenshots */}
               <div className="relative">
                 <div 
-                  className="w-48 sm:w-64 h-96 sm:h-[520px] rounded-[2rem] sm:rounded-[3rem] p-1.5 sm:p-2 shadow-2xl"
+                  className="w-32 sm:w-48 md:w-64 h-64 sm:h-96 md:h-[520px] rounded-[1.5rem] sm:rounded-[2rem] md:rounded-[3rem] p-1 sm:p-1.5 md:p-2 shadow-2xl"
                   style={{ backgroundColor: theme.colors.text }}
                 >
                   <div 
-                    className="w-full h-full rounded-[1.5rem] sm:rounded-[2.5rem] overflow-hidden"
+                    className="w-full h-full rounded-[1rem] sm:rounded-[1.5rem] md:rounded-[2.5rem] overflow-hidden"
                     style={{ backgroundColor: theme.colors.background }}
                   >
                     <img 
@@ -109,6 +109,7 @@ const AppShowcase = () => {
                 <motion.div
                   animate={{ y: [0, -10, 0] }}
                   transition={{ duration: 3, repeat: Infinity }}
+                  className="hidden sm:block"
                   style={{
                     position: 'absolute',
                     top: '-0.5rem',
@@ -125,13 +126,13 @@ const AppShowcase = () => {
                 </motion.div>
               </div>
               
-              <div className="relative mt-4 sm:mt-8">
+              <div className="relative mt-2 sm:mt-4 md:mt-8">
                 <div 
-                  className="w-48 sm:w-64 h-96 sm:h-[520px] rounded-[2rem] sm:rounded-[3rem] p-1.5 sm:p-2 shadow-2xl"
+                  className="w-32 sm:w-48 md:w-64 h-64 sm:h-96 md:h-[520px] rounded-[1.5rem] sm:rounded-[2rem] md:rounded-[3rem] p-1 sm:p-1.5 md:p-2 shadow-2xl"
                   style={{ backgroundColor: theme.colors.text }}
                 >
                   <div 
-                    className="w-full h-full rounded-[1.5rem] sm:rounded-[2.5rem] overflow-hidden"
+                    className="w-full h-full rounded-[1rem] sm:rounded-[1.5rem] md:rounded-[2.5rem] overflow-hidden"
                     style={{ backgroundColor: theme.colors.background }}
                   >
                     <img 
@@ -144,6 +145,7 @@ const AppShowcase = () => {
                 <motion.div
                   animate={{ y: [0, -10, 0] }}
                   transition={{ duration: 3, repeat: Infinity, delay: 1 }}
+                  className="hidden sm:block"
                   style={{
                     position: 'absolute',
                     top: '-0.5rem',
@@ -170,14 +172,14 @@ const AppShowcase = () => {
             transition={{ duration: 0.8 }}
             className="space-y-6 sm:space-y-8 order-1 lg:order-2"
           >
-            <div>
+            <div className="px-4 sm:px-0">
               <h3 
                 style={{
                   ...styles.typography.h3,
                   color: theme.colors.text,
                   marginBottom: theme.semanticSpacing.lg,
-                  fontSize: 'clamp(1.5rem, 5vw, 1.875rem)',
                 }}
+                className="responsive-subheading mobile-text"
               >
                 Your life, intelligently understood
               </h3>
@@ -188,6 +190,7 @@ const AppShowcase = () => {
                   lineHeight: '1.6',
                   marginBottom: theme.semanticSpacing.xl,
                 }}
+                className="responsive-body mobile-text force-break-text"
               >
                 Dytto automatically collects context from your daily life and uses advanced AI 
                 to generate meaningful stories, provide personalized recommendations, and help 
@@ -237,7 +240,7 @@ const AppShowcase = () => {
               ))}
             </div>
 
-            <div style={{ paddingTop: theme.semanticSpacing.xl }}>
+            <div style={{ paddingTop: theme.semanticSpacing.xl }} className="mobile-buttons">
               <div className="flex flex-col sm:flex-row gap-3 sm:gap-4">
                 <motion.button
                   whileHover={{ scale: 1.02, y: -2 }}

@@ -14,7 +14,7 @@ const AppLandingPage = () => {
   const styles = useThemeStyles();
   
   return (
-    <div style={styles.bg.primary} className="min-h-screen">
+    <div style={styles.bg.primary} className="min-h-screen mobile-safe">
       <Navbar />
       <AppHero />
       <AppFeatures />

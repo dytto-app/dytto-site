@@ -48,7 +48,7 @@ const AppFeatures = () => {
   const styles = useThemeStyles();
 
   return (
-    <section id="features" style={styles.bg.secondary} className="py-16 sm:py-32">
+    <section id="features" style={styles.bg.secondary} className="py-16 sm:py-32 mobile-safe">
       <div className="max-w-7xl mx-auto px-4 sm:px-6">
         <motion.div
           initial={{ opacity: 0, y: 30 }}
@@ -115,7 +115,7 @@ const AppFeatures = () => {
                 padding: theme.semanticSpacing.lg,
                 transition: theme.animations.transition.normal,
               }}
-              className="hover:shadow-lg"
+              className="hover:shadow-lg mobile-grid-item feature-card motion-safe"
             >
               <motion.div
                 whileHover={{ scale: 1.1, rotate: 5 }}
@@ -139,6 +139,7 @@ const AppFeatures = () => {
                   color: theme.colors.text,
                   marginBottom: theme.semanticSpacing.md,
                 }}
+                className="mobile-text"
               >
                 {feature.title}
               </h3>
@@ -148,6 +149,7 @@ const AppFeatures = () => {
                   color: theme.colors.textSecondary,
                   lineHeight: '1.6',
                 }}
+                className="responsive-body mobile-text"
               >
                 {feature.description}
               </p>
