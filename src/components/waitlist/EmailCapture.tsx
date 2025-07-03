@@ -315,7 +315,7 @@ const EmailCapture: React.FC<EmailCaptureProps> = ({
             color: theme.colors.textTertiary,
           }}
         >
-          🔒 No spam, unsubscribe anytime. We respect your privacy.
+          No spam, unsubscribe anytime. We respect your privacy.
         </p>
         {/* <p 
           style={{
