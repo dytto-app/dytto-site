@@ -46,10 +46,10 @@ const WaitlistLandingPage = () => {
   ];
 
   return (
-    <div style={styles.bg.primary} className="min-h-screen">
+    <div style={styles.bg.primary} className="min-h-screen mobile-safe">
       <Navbar />
       
-      {/* Hero Section */}
+      {/* Hero Section - Mobile Optimized */}
       <section className="relative min-h-screen flex items-center justify-center overflow-hidden pt-20 sm:pt-24 px-4 sm:px-6">
         {/* Background Effects */}
         <div 
@@ -77,7 +77,7 @@ const WaitlistLandingPage = () => {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 1 }}
-          className="absolute top-32 right-8 rounded-2xl p-4 hidden lg:block"
+          className="absolute top-32 right-4 sm:right-8 rounded-2xl p-3 sm:p-4 hidden lg:block"
           style={{
             ...styles.glass.light,
             border: `1px solid ${theme.colors.border}`,
@@ -109,7 +109,7 @@ const WaitlistLandingPage = () => {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 1.2 }}
-          className="absolute top-48 left-8 rounded-2xl p-4 hidden lg:block"
+          className="absolute top-48 left-4 sm:left-8 rounded-2xl p-3 sm:p-4 hidden lg:block"
           style={{
             ...styles.glass.light,
             border: `1px solid ${theme.colors.border}`,
@@ -137,8 +137,8 @@ const WaitlistLandingPage = () => {
           </div>
         </motion.div>
 
-        {/* Main Content */}
-        <div className="relative z-10 w-full max-w-4xl mx-auto">
+        {/* Main Content - Mobile Safe */}
+        <div className="relative z-10 w-full max-w-4xl mx-auto mobile-safe">
           <EmailCapture 
             source="waitlist-landing"
             onSuccess={(email, position) => {
@@ -151,8 +151,8 @@ const WaitlistLandingPage = () => {
         </div>
       </section>
 
-      {/* Benefits Section */}
-      <section style={styles.bg.secondary} className="py-12 sm:py-16 lg:py-24">
+      {/* Benefits Section - Mobile Optimized */}
+      <section style={styles.bg.secondary} className="py-12 sm:py-16 lg:py-24 mobile-safe">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
@@ -161,7 +161,7 @@ const WaitlistLandingPage = () => {
             className="text-center mb-8 sm:mb-12 lg:mb-16"
           >
             <h2 
-              className="text-3xl sm:text-4xl lg:text-5xl font-bold mb-4 sm:mb-6"
+              className="text-2xl sm:text-3xl lg:text-4xl xl:text-5xl font-bold mb-4 sm:mb-6 mobile-text hero-text"
               style={{ color: theme.colors.text }}
             >
               Why join the{' '}
@@ -183,7 +183,7 @@ const WaitlistLandingPage = () => {
               </motion.span>
             </h2>
             <p 
-              className="text-base sm:text-lg lg:text-xl max-w-3xl mx-auto leading-relaxed"
+              className="text-sm sm:text-base lg:text-lg xl:text-xl max-w-3xl mx-auto leading-relaxed mobile-text responsive-body"
               style={{ color: theme.colors.textSecondary }}
             >
               Get exclusive early access to the future of context-aware AI and help shape 
@@ -191,8 +191,8 @@ const WaitlistLandingPage = () => {
             </p>
           </motion.div>
 
-          {/* Benefits Grid */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 lg:gap-8 mb-12 sm:mb-16">
+          {/* Benefits Grid - Mobile First */}
+          <div className="space-y-4 sm:space-y-6 lg:grid lg:grid-cols-2 lg:gap-6 lg:space-y-0 xl:gap-8 mb-8 sm:mb-12 lg:mb-16">
             {benefits.map((benefit, index) => (
               <motion.div
                 key={index}
@@ -200,7 +200,7 @@ const WaitlistLandingPage = () => {
                 whileInView={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6, delay: index * 0.1 }}
                 whileHover={{ y: -2 }}
-                className="group"
+                className="group mobile-grid-item feature-card"
                 style={{
                   ...styles.glass.light,
                   border: `1px solid ${theme.colors.border}`,
@@ -209,13 +209,13 @@ const WaitlistLandingPage = () => {
                   transition: 'all 0.3s ease',
                 }}
               >
-                <div className="flex items-start space-x-4">
+                <div className="flex items-start space-x-3 sm:space-x-4">
                   <motion.div
                     whileHover={{ scale: 1.05, rotate: 5 }}
                     className="flex-shrink-0"
                     style={{
-                      width: '3rem',
-                      height: '3rem',
+                      width: '2.5rem',
+                      height: '2.5rem',
                       backgroundColor: theme.utils.alpha(benefit.color, 0.1),
                       borderRadius: '0.75rem',
                       display: 'flex',
@@ -223,18 +223,18 @@ const WaitlistLandingPage = () => {
                       justifyContent: 'center',
                     }}
                   >
-                    <benefit.icon style={{ color: benefit.color }} size={24} />
+                    <benefit.icon style={{ color: benefit.color }} size={20} />
                   </motion.div>
                   
                   <div className="flex-1 min-w-0">
                     <h3 
-                      className="text-lg sm:text-xl font-semibold mb-2 leading-tight"
+                      className="text-base sm:text-lg lg:text-xl font-semibold mb-2 leading-tight mobile-text"
                       style={{ color: theme.colors.text }}
                     >
                       {benefit.title}
                     </h3>
                     <p 
-                      className="text-sm sm:text-base leading-relaxed"
+                      className="text-sm sm:text-base leading-relaxed mobile-text responsive-body"
                       style={{ color: theme.colors.textSecondary }}
                     >
                       {benefit.description}
@@ -245,42 +245,43 @@ const WaitlistLandingPage = () => {
             ))}
           </div>
 
-          {/* Stats Section */}
+          {/* Stats Section - Mobile Optimized */}
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.4 }}
+            className="mobile-grid-item"
             style={{
               ...styles.glass.light,
               border: `1px solid ${theme.colors.border}`,
               borderRadius: '1.5rem',
-              padding: '2rem',
+              padding: '1.5rem sm:2rem',
             }}
           >
             <h3 
-              className="text-xl sm:text-2xl font-bold text-center mb-8"
+              className="text-lg sm:text-xl lg:text-2xl font-bold text-center mb-6 sm:mb-8 mobile-text"
               style={{ color: theme.colors.text }}
             >
               Join the Community
             </h3>
             
-            <div className="grid grid-cols-2 lg:grid-cols-4 gap-6">
+            <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
               {stats.map((stat, index) => (
                 <motion.div
                   key={index}
                   initial={{ opacity: 0, scale: 0.8 }}
                   whileInView={{ opacity: 1, scale: 1 }}
                   transition={{ duration: 0.6, delay: index * 0.1 }}
-                  className="text-center"
+                  className="text-center mobile-grid-item"
                 >
                   <div 
-                    className="text-2xl sm:text-3xl lg:text-4xl font-bold mb-2"
+                    className="text-xl sm:text-2xl lg:text-3xl xl:text-4xl font-bold mb-1 sm:mb-2 mobile-text"
                     style={{ color: theme.colors.primary }}
                   >
                     {stat.number}
                   </div>
                   <div 
-                    className="text-sm sm:text-base"
+                    className="text-xs sm:text-sm lg:text-base mobile-text"
                     style={{ color: theme.colors.textSecondary }}
                   >
                     {stat.label}
@@ -292,8 +293,8 @@ const WaitlistLandingPage = () => {
         </div>
       </section>
 
-      {/* Social Proof Section */}
-      <section style={styles.bg.primary} className="py-12 sm:py-16 lg:py-24">
+      {/* Social Proof Section - Mobile Optimized */}
+      <section style={styles.bg.primary} className="py-12 sm:py-16 lg:py-24 mobile-safe">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
@@ -302,13 +303,13 @@ const WaitlistLandingPage = () => {
             className="text-center"
           >
             <h2 
-              className="text-2xl sm:text-3xl lg:text-4xl font-bold mb-8"
+              className="text-xl sm:text-2xl lg:text-3xl xl:text-4xl font-bold mb-6 sm:mb-8 mobile-text hero-text"
               style={{ color: theme.colors.text }}
             >
               Trusted by AI Researchers Worldwide
             </h2>
             
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8">
+            <div className="space-y-4 sm:space-y-6 lg:grid lg:grid-cols-2 lg:gap-6 lg:space-y-0 xl:grid-cols-3 xl:gap-8">
               {[
                 { name: 'Stanford AI Lab', type: 'University', users: '150+ researchers' },
                 { name: 'MIT CSAIL', type: 'Research Lab', users: '200+ students' },
@@ -322,6 +323,7 @@ const WaitlistLandingPage = () => {
                   initial={{ opacity: 0, y: 20 }}
                   whileInView={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.6, delay: index * 0.1 }}
+                  className="mobile-grid-item feature-card"
                   style={{
                     ...styles.glass.light,
                     border: `1px solid ${theme.colors.border}`,
@@ -331,19 +333,19 @@ const WaitlistLandingPage = () => {
                   }}
                 >
                   <h3 
-                    className="text-lg font-semibold mb-2"
+                    className="text-base sm:text-lg font-semibold mb-2 mobile-text"
                     style={{ color: theme.colors.text }}
                   >
                     {org.name}
                   </h3>
                   <p 
-                    className="text-sm mb-1"
+                    className="text-sm mb-1 mobile-text"
                     style={{ color: theme.colors.primary }}
                   >
                     {org.type}
                   </p>
                   <p 
-                    className="text-xs"
+                    className="text-xs mobile-text"
                     style={{ color: theme.colors.textSecondary }}
                   >
                     {org.users}
@@ -356,12 +358,12 @@ const WaitlistLandingPage = () => {
               initial={{ opacity: 0 }}
               whileInView={{ opacity: 1 }}
               transition={{ duration: 0.8, delay: 0.6 }}
-              className="mt-8 sm:mt-12 flex items-center justify-center space-x-2"
+              className="mt-6 sm:mt-8 lg:mt-12 flex items-center justify-center space-x-2 mobile-text"
               style={{ color: theme.colors.textTertiary }}
             >
               <div className="flex items-center space-x-1">
                 {[...Array(5)].map((_, i) => (
-                  <Star key={i} size={16} style={{ color: theme.colors.primary }} className="fill-current" />
+                  <Star key={i} size={14} style={{ color: theme.colors.primary }} className="fill-current" />
                 ))}
               </div>
               <span className="text-sm">Rated 4.9/5 by early users</span>
@@ -370,47 +372,48 @@ const WaitlistLandingPage = () => {
         </div>
       </section>
 
-      {/* Final CTA Section */}
-      <section style={styles.bg.secondary} className="py-12 sm:py-16 lg:py-24">
+      {/* Final CTA Section - Mobile Optimized */}
+      <section style={styles.bg.secondary} className="py-12 sm:py-16 lg:py-24 mobile-safe">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8 }}
+            className="mobile-grid-item"
             style={{
               ...styles.glass.medium,
               border: `1px solid ${theme.colors.border}`,
               borderRadius: '1.5rem',
-              padding: '2rem',
+              padding: '1.5rem sm:2rem',
               background: `linear-gradient(135deg, ${theme.utils.alpha(theme.colors.primary, 0.02)}, ${theme.utils.alpha(theme.colors.accent, 0.02)})`,
             }}
           >
             <h2 
-              className="text-2xl sm:text-3xl lg:text-4xl font-bold mb-4"
+              className="text-xl sm:text-2xl lg:text-3xl xl:text-4xl font-bold mb-4 mobile-text hero-text"
               style={{ color: theme.colors.text }}
             >
               Ready to shape the future of AI?
             </h2>
             <p 
-              className="text-base sm:text-lg mb-8 leading-relaxed"
+              className="text-sm sm:text-base lg:text-lg mb-6 sm:mb-8 leading-relaxed mobile-text responsive-body"
               style={{ color: theme.colors.textSecondary }}
             >
               Join thousands of researchers, developers, and AI enthusiasts who are 
               building the next generation of context-aware applications.
             </p>
             
-            <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-6">
+            <div className="flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4 mb-4 sm:mb-6">
               <div className="flex items-center space-x-2">
-                <CheckCircle style={{ color: theme.colors.success }} size={20} />
-                <span style={{ color: theme.colors.textSecondary }}>No spam, ever</span>
+                <CheckCircle style={{ color: theme.colors.success }} size={18} />
+                <span className="text-sm mobile-text" style={{ color: theme.colors.textSecondary }}>No spam, ever</span>
               </div>
               <div className="flex items-center space-x-2">
-                <CheckCircle style={{ color: theme.colors.success }} size={20} />
-                <span style={{ color: theme.colors.textSecondary }}>Unsubscribe anytime</span>
+                <CheckCircle style={{ color: theme.colors.success }} size={18} />
+                <span className="text-sm mobile-text" style={{ color: theme.colors.textSecondary }}>Unsubscribe anytime</span>
               </div>
               <div className="flex items-center space-x-2">
-                <CheckCircle style={{ color: theme.colors.success }} size={20} />
-                <span style={{ color: theme.colors.textSecondary }}>Privacy first</span>
+                <CheckCircle style={{ color: theme.colors.success }} size={18} />
+                <span className="text-sm mobile-text" style={{ color: theme.colors.textSecondary }}>Privacy first</span>
               </div>
             </div>
 
@@ -418,12 +421,13 @@ const WaitlistLandingPage = () => {
               href="#top"
               whileHover={{ scale: 1.02, y: -2 }}
               whileTap={{ scale: 0.98 }}
-              className="inline-block w-full sm:w-auto px-8 py-4 rounded-xl text-lg font-semibold transition-all duration-300"
+              className="inline-block w-full sm:w-auto px-6 sm:px-8 py-3 sm:py-4 rounded-xl text-base sm:text-lg font-semibold transition-all duration-300 mobile-buttons"
               style={{
                 backgroundColor: theme.colors.primary,
                 color: theme.colors.background,
                 boxShadow: theme.shadows.brand,
                 textDecoration: 'none',
+                minHeight: '48px',
               }}
               onClick={(e) => {
                 e.preventDefault();
