@@ -54,18 +54,23 @@ const AppFeatures = () => {
   const styles = useThemeStyles();
 
   return (
-    <section id="features" style={styles.bg.secondary} className="py-12 sm:py-16 lg:py-24 mobile-safe">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Header - Mobile Optimized */}
+    <section id="features" style={styles.bg.secondary} className="py-16 sm:py-24">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6">
+        {/* Header - Simplified for Mobile */}
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8 }}
-          className="text-center mb-8 sm:mb-12 lg:mb-16"
+          className="text-center mb-12 sm:mb-16"
         >
           <h2 
-            className="responsive-heading font-bold mb-4 sm:mb-6 mobile-text"
-            style={{ color: theme.colors.text }}
+            style={{
+              color: theme.colors.text,
+              fontSize: 'clamp(1.75rem, 6vw, 3.5rem)',
+              fontWeight: theme.typography.fontWeight.bold,
+              lineHeight: '1.2',
+              marginBottom: theme.semanticSpacing.md,
+            }}
           >
             Intelligent{' '}
             <motion.span 
@@ -87,16 +92,21 @@ const AppFeatures = () => {
             that understand you
           </h2>
           <p 
-            className="responsive-body max-w-3xl mx-auto leading-relaxed mobile-text"
-            style={{ color: theme.colors.textSecondary }}
+            style={{
+              color: theme.colors.textSecondary,
+              fontSize: 'clamp(1rem, 3vw, 1.125rem)',
+              lineHeight: '1.6',
+              maxWidth: '42rem',
+              margin: '0 auto',
+            }}
           >
             Experience the power of context-aware AI through features designed 
             to enhance your daily life and help you discover meaningful insights.
           </p>
         </motion.div>
 
-        {/* Features Grid - Mobile First Design */}
-        <div className="space-y-4 sm:space-y-6 lg:grid lg:grid-cols-2 lg:gap-6 lg:space-y-0 xl:grid-cols-3 xl:gap-8">
+        {/* Features - Mobile-First Single Column */}
+        <div className="space-y-6 sm:space-y-8">
           {features.map((feature, index) => (
             <motion.div
               key={index}
@@ -104,67 +114,57 @@ const AppFeatures = () => {
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: index * 0.1 }}
               whileHover={{ y: -2 }}
-              className="group mobile-grid-item feature-card"
               style={{
                 ...styles.glass.light,
                 border: `1px solid ${theme.colors.border}`,
-                borderRadius: '1rem',
+                borderRadius: '1.25rem',
                 padding: '1.5rem',
                 transition: 'all 0.3s ease',
                 backgroundColor: theme.colors.surface,
               }}
             >
-              {/* Mobile-First Layout: Icon and Title in Row */}
-              <div className="flex items-start space-x-4 mb-3">
+              <div className="flex items-start gap-4">
+                {/* Icon */}
                 <motion.div
                   whileHover={{ scale: 1.05, rotate: 5 }}
-                  className="flex-shrink-0"
                   style={{
-                    width: '3rem',
-                    height: '3rem',
+                    width: '3.5rem',
+                    height: '3.5rem',
                     backgroundColor: feature.bgColor,
-                    borderRadius: '0.75rem',
+                    borderRadius: '1rem',
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',
+                    flexShrink: 0,
                   }}
                 >
                   <feature.icon style={{ color: feature.color }} size={24} />
                 </motion.div>
                 
+                {/* Content */}
                 <div className="flex-1 min-w-0">
                   <h3 
-                    className="text-lg sm:text-xl font-semibold mb-2 leading-tight mobile-text"
-                    style={{ color: theme.colors.text }}
+                    style={{
+                      color: theme.colors.text,
+                      fontSize: 'clamp(1.125rem, 4vw, 1.25rem)',
+                      fontWeight: theme.typography.fontWeight.semibold,
+                      lineHeight: '1.3',
+                      marginBottom: '0.5rem',
+                    }}
                   >
                     {feature.title}
                   </h3>
+                  <p 
+                    style={{ 
+                      color: theme.colors.textSecondary,
+                      fontSize: 'clamp(0.875rem, 3vw, 1rem)',
+                      lineHeight: '1.5',
+                    }}
+                  >
+                    {feature.description}
+                  </p>
                 </div>
               </div>
-
-              {/* Description - Full Width on Mobile */}
-              <p 
-                className="text-sm sm:text-base leading-relaxed mobile-text force-break-text"
-                style={{ 
-                  color: theme.colors.textSecondary,
-                  lineHeight: '1.6'
-                }}
-              >
-                {feature.description}
-              </p>
-
-              {/* Hover Effect Indicator */}
-              <motion.div
-                initial={{ width: 0 }}
-                whileHover={{ width: '2rem' }}
-                transition={{ duration: 0.3 }}
-                style={{
-                  height: '2px',
-                  backgroundColor: feature.color,
-                  borderRadius: '1px',
-                  marginTop: '1rem',
-                }}
-              />
             </motion.div>
           ))}
         </div>
@@ -174,28 +174,36 @@ const AppFeatures = () => {
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.5 }}
-          className="text-center mt-8 sm:mt-12 lg:mt-16"
+          className="text-center mt-12 sm:mt-16"
         >
           <motion.button 
             whileHover={{ scale: 1.02, y: -2 }}
             whileTap={{ scale: 0.98 }}
-            className="w-full sm:w-auto px-6 sm:px-8 py-4 rounded-xl text-base sm:text-lg font-semibold transition-all duration-300 mobile-buttons"
             style={{
               backgroundColor: theme.colors.primary,
               color: theme.colors.background,
-              boxShadow: theme.shadows.brand,
+              padding: '1rem 2rem',
+              borderRadius: '0.75rem',
+              fontSize: 'clamp(1rem, 3vw, 1.125rem)',
+              fontWeight: theme.typography.fontWeight.semibold,
               border: 'none',
               cursor: 'pointer',
+              boxShadow: theme.shadows.brand,
+              transition: 'all 0.3s ease',
+              width: '100%',
               maxWidth: '280px',
             }}
           >
             Download Dytto App
           </motion.button>
           
-          {/* Trust Indicator - Mobile Friendly */}
+          {/* Trust Indicator */}
           <p 
-            className="mt-4 text-sm mobile-text"
-            style={{ color: theme.colors.textTertiary }}
+            style={{ 
+              color: theme.colors.textTertiary,
+              fontSize: 'clamp(0.75rem, 2.5vw, 0.875rem)',
+              marginTop: '1rem',
+            }}
           >
             Free to download • Available on iOS & Android
           </p>
