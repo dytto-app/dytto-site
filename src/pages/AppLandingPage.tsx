@@ -17,7 +17,7 @@ const AppLandingPage = () => {
       <AppHero />
       <AppShowcase />
       <AppFeatures />
-      <AppTestimonials />
+     
       <AppCTA />
       <Footer />
     </div>
