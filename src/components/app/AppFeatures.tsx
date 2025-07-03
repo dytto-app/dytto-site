@@ -54,9 +54,9 @@ const AppFeatures = () => {
   const styles = useThemeStyles();
 
   return (
-    <section id="features" style={styles.bg.secondary} className="py-12 sm:py-16 lg:py-24">
+    <section id="features" style={styles.bg.secondary} className="py-12 sm:py-16 lg:py-24 mobile-safe">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Header */}
+        {/* Header - Mobile Optimized */}
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -64,7 +64,7 @@ const AppFeatures = () => {
           className="text-center mb-8 sm:mb-12 lg:mb-16"
         >
           <h2 
-            className="text-3xl sm:text-4xl lg:text-5xl xl:text-6xl font-bold mb-4 sm:mb-6"
+            className="responsive-heading font-bold mb-4 sm:mb-6 mobile-text"
             style={{ color: theme.colors.text }}
           >
             Intelligent{' '}
@@ -87,7 +87,7 @@ const AppFeatures = () => {
             that understand you
           </h2>
           <p 
-            className="text-base sm:text-lg lg:text-xl max-w-3xl mx-auto leading-relaxed"
+            className="responsive-body max-w-3xl mx-auto leading-relaxed mobile-text"
             style={{ color: theme.colors.textSecondary }}
           >
             Experience the power of context-aware AI through features designed 
@@ -104,7 +104,7 @@ const AppFeatures = () => {
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: index * 0.1 }}
               whileHover={{ y: -2 }}
-              className="group"
+              className="group mobile-grid-item feature-card"
               style={{
                 ...styles.glass.light,
                 border: `1px solid ${theme.colors.border}`,
@@ -114,7 +114,7 @@ const AppFeatures = () => {
                 backgroundColor: theme.colors.surface,
               }}
             >
-              {/* Icon and Title Row */}
+              {/* Mobile-First Layout: Icon and Title in Row */}
               <div className="flex items-start space-x-4 mb-3">
                 <motion.div
                   whileHover={{ scale: 1.05, rotate: 5 }}
@@ -134,7 +134,7 @@ const AppFeatures = () => {
                 
                 <div className="flex-1 min-w-0">
                   <h3 
-                    className="text-lg sm:text-xl font-semibold mb-2 leading-tight"
+                    className="text-lg sm:text-xl font-semibold mb-2 leading-tight mobile-text"
                     style={{ color: theme.colors.text }}
                   >
                     {feature.title}
@@ -142,9 +142,9 @@ const AppFeatures = () => {
                 </div>
               </div>
 
-              {/* Description */}
+              {/* Description - Full Width on Mobile */}
               <p 
-                className="text-sm sm:text-base leading-relaxed"
+                className="text-sm sm:text-base leading-relaxed mobile-text force-break-text"
                 style={{ 
                   color: theme.colors.textSecondary,
                   lineHeight: '1.6'
@@ -169,7 +169,7 @@ const AppFeatures = () => {
           ))}
         </div>
 
-        {/* Call to Action */}
+        {/* Call to Action - Mobile Optimized */}
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -179,21 +179,22 @@ const AppFeatures = () => {
           <motion.button 
             whileHover={{ scale: 1.02, y: -2 }}
             whileTap={{ scale: 0.98 }}
-            className="w-full sm:w-auto px-8 py-4 rounded-xl text-base sm:text-lg font-semibold transition-all duration-300"
+            className="w-full sm:w-auto px-6 sm:px-8 py-4 rounded-xl text-base sm:text-lg font-semibold transition-all duration-300 mobile-buttons"
             style={{
               backgroundColor: theme.colors.primary,
               color: theme.colors.background,
               boxShadow: theme.shadows.brand,
               border: 'none',
               cursor: 'pointer',
+              maxWidth: '280px',
             }}
           >
             Download Dytto App
           </motion.button>
           
-          {/* Trust Indicator */}
+          {/* Trust Indicator - Mobile Friendly */}
           <p 
-            className="mt-4 text-sm"
+            className="mt-4 text-sm mobile-text"
             style={{ color: theme.colors.textTertiary }}
           >
             Free to download • Available on iOS & Android
