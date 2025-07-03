@@ -9,8 +9,8 @@ const AppHero = () => {
   const styles = useThemeStyles();
 
   return (
-    <section className="relative min-h-screen flex items-center justify-center overflow-hidden pt-20 sm:pt-24 px-4 sm:px-6">
-      {/* Subtle Background Gradient */}
+    <section className="relative min-h-screen flex items-center justify-center overflow-hidden pt-20 px-4 sm:px-6">
+      {/* Background */}
       <div 
         className="absolute inset-0"
         style={{
@@ -31,78 +31,13 @@ const AppHero = () => {
         />
       </div>
 
-      {/* Floating Elements - Only show on larger screens */}
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 1 }}
-        className="absolute top-32 right-8 rounded-2xl p-4 hidden lg:block"
-        style={{
-          ...styles.glass.light,
-          border: `1px solid ${theme.colors.border}`,
-        }}
-      >
-        <div className="flex items-center space-x-2 mb-2">
-          <Star style={{ color: theme.colors.primary }} size={16} />
-          <span 
-            style={{ 
-              color: theme.colors.text, 
-              fontSize: theme.typography.fontSize.sm, 
-              fontWeight: theme.typography.fontWeight.semibold 
-            }}
-          >
-            4.8 Rating
-          </span>
-        </div>
-        <div 
-          style={{ 
-            color: theme.colors.textSecondary, 
-            fontSize: theme.typography.fontSize.xs 
-          }}
-        >
-          10K+ Downloads
-        </div>
-      </motion.div>
-
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 1.2 }}
-        className="absolute top-48 left-8 rounded-2xl p-4 hidden lg:block"
-        style={{
-          ...styles.glass.light,
-          border: `1px solid ${theme.colors.border}`,
-        }}
-      >
-        <div className="flex items-center space-x-2 mb-2">
-          <Smartphone style={{ color: theme.colors.primary }} size={16} />
-          <span 
-            style={{ 
-              color: theme.colors.text, 
-              fontSize: theme.typography.fontSize.sm, 
-              fontWeight: theme.typography.fontWeight.semibold 
-            }}
-          >
-            iOS & Android
-          </span>
-        </div>
-        <div 
-          style={{ 
-            color: theme.colors.textSecondary, 
-            fontSize: theme.typography.fontSize.xs 
-          }}
-        >
-          Available Now
-        </div>
-      </motion.div>
-
       {/* Main Content */}
       <div className="relative z-10 text-center max-w-4xl mx-auto w-full">
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8 }}
-          className="mb-6 sm:mb-8"
+          className="mb-6"
         >
           <div 
             className="inline-flex items-center space-x-2 rounded-full px-4 py-2 mb-6"
@@ -119,7 +54,7 @@ const AppHero = () => {
                 fontWeight: theme.typography.fontWeight.medium 
               }}
             >
-              Mobile App Experience
+              AI-Powered Life Stories
             </span>
           </div>
         </motion.div>
@@ -128,8 +63,13 @@ const AppHero = () => {
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.1 }}
-          className="text-4xl sm:text-5xl lg:text-6xl xl:text-7xl font-bold mb-6 leading-tight"
-          style={{ color: theme.colors.text }}
+          style={{
+            color: theme.colors.text,
+            fontSize: 'clamp(2rem, 8vw, 4.5rem)',
+            fontWeight: theme.typography.fontWeight.bold,
+            lineHeight: '1.1',
+            marginBottom: theme.semanticSpacing.lg,
+          }}
         >
           Your life,{' '}
           <motion.span 
@@ -146,62 +86,86 @@ const AppHero = () => {
               display: 'inline-block',
             }}
           >
-            intelligently
+            beautifully
           </motion.span>{' '}
-          understood
+          told
         </motion.h1>
 
         <motion.p
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.2 }}
-          className="text-lg sm:text-xl lg:text-2xl mb-8 sm:mb-12 leading-relaxed max-w-3xl mx-auto"
-          style={{ color: theme.colors.textSecondary }}
+          style={{
+            color: theme.colors.textSecondary,
+            fontSize: 'clamp(1rem, 4vw, 1.25rem)',
+            lineHeight: '1.6',
+            maxWidth: '48rem',
+            margin: '0 auto',
+            marginBottom: theme.semanticSpacing.xl,
+          }}
         >
-          Dytto transforms your daily experiences into meaningful stories and insights. 
-          Automatically capture context, generate AI-powered narratives, and discover 
-          personalized recommendations that truly understand you.
+          Dytto automatically captures your daily moments and transforms them into 
+          beautiful, AI-written stories. Discover patterns, get personalized insights, 
+          and relive your memories like never before.
         </motion.p>
 
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.4 }}
-          className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-8 sm:mb-12"
+          className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-8"
         >
           <motion.button
             whileHover={{ scale: 1.02, y: -2 }}
             whileTap={{ scale: 0.98 }}
-            className="w-full sm:w-auto flex items-center justify-center gap-3 px-6 py-4 rounded-xl font-medium transition-all duration-300"
             style={{
               backgroundColor: theme.colors.text,
               border: `1px solid ${theme.colors.border}`,
               color: theme.colors.background,
-              minHeight: '56px',
+              padding: '1rem 1.5rem',
+              borderRadius: '0.75rem',
+              fontWeight: theme.typography.fontWeight.medium,
+              transition: 'all 0.3s ease',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              gap: '0.75rem',
+              width: '100%',
+              maxWidth: '200px',
+              boxShadow: theme.shadows.md,
             }}
           >
-            <Apple size={24} />
-            <div className="text-left">
-              <div className="text-xs opacity-70">Download on the</div>
-              <div className="text-sm font-semibold">App Store</div>
+            <Apple size={20} />
+            <div style={{ textAlign: 'left' }}>
+              <div style={{ fontSize: '0.75rem', opacity: 0.7 }}>Download on the</div>
+              <div style={{ fontSize: '0.875rem', fontWeight: theme.typography.fontWeight.semibold }}>App Store</div>
             </div>
           </motion.button>
           
           <motion.button
             whileHover={{ scale: 1.02, y: -2 }}
             whileTap={{ scale: 0.98 }}
-            className="w-full sm:w-auto flex items-center justify-center gap-3 px-6 py-4 rounded-xl font-medium transition-all duration-300"
             style={{
               backgroundColor: theme.colors.text,
               border: `1px solid ${theme.colors.border}`,
               color: theme.colors.background,
-              minHeight: '56px',
+              padding: '1rem 1.5rem',
+              borderRadius: '0.75rem',
+              fontWeight: theme.typography.fontWeight.medium,
+              transition: 'all 0.3s ease',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              gap: '0.75rem',
+              width: '100%',
+              maxWidth: '200px',
+              boxShadow: theme.shadows.md,
             }}
           >
-            <Play size={24} />
-            <div className="text-left">
-              <div className="text-xs opacity-70">Get it on</div>
-              <div className="text-sm font-semibold">Google Play</div>
+            <Play size={20} />
+            <div style={{ textAlign: 'left' }}>
+              <div style={{ fontSize: '0.75rem', opacity: 0.7 }}>Get it on</div>
+              <div style={{ fontSize: '0.875rem', fontWeight: theme.typography.fontWeight.semibold }}>Google Play</div>
             </div>
           </motion.button>
         </motion.div>
@@ -210,8 +174,11 @@ const AppHero = () => {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.8 }}
-          className="flex items-center justify-center space-x-2 text-sm"
-          style={{ color: theme.colors.textTertiary }}
+          className="flex items-center justify-center space-x-2"
+          style={{
+            color: theme.colors.textTertiary,
+            fontSize: 'clamp(0.75rem, 2.5vw, 0.875rem)',
+          }}
         >
           <div className="flex items-center space-x-1">
             {[...Array(5)].map((_, i) => (
@@ -221,25 +188,6 @@ const AppHero = () => {
           <span>4.8 • 10K+ downloads • Free to use</span>
         </motion.div>
       </div>
-
-      {/* Scroll Indicator - Only show on desktop */}
-      <motion.div
-        animate={{ y: [0, 10, 0] }}
-        transition={{ duration: 2, repeat: Infinity }}
-        className="absolute bottom-8 left-1/2 transform -translate-x-1/2 hidden lg:block"
-      >
-        <div 
-          className="w-6 h-10 rounded-full flex justify-center"
-          style={{
-            border: `2px solid ${theme.colors.border}`,
-          }}
-        >
-          <div 
-            className="w-1 h-3 rounded-full mt-2"
-            style={{ backgroundColor: theme.colors.primary }}
-          />
-        </div>
-      </motion.div>
     </section>
   );
 };
