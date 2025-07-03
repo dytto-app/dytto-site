@@ -1,6 +1,6 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { Twitter, Github, Linkedin, Mail, Brain } from 'lucide-react';
+import { Twitter, Github, Linkedin, Mail, Brain, MessageCircle, Instagram } from 'lucide-react';
 import { useTheme } from './ThemeProvider';
 import { useThemeStyles } from '../hooks/useThemeStyles';
 
@@ -38,6 +38,33 @@ const Footer = () => {
       'Terms of Service'
     ]
   };
+
+  const socialLinks = [
+    {
+      icon: MessageCircle,
+      label: 'Discord',
+      url: 'https://discord.gg/kpJUrjuysa',
+      color: '#5865F2'
+    },
+    {
+      icon: Instagram,
+      label: 'Instagram',
+      url: 'https://www.instagram.com/dytto.app/',
+      color: '#E4405F'
+    },
+    {
+      icon: Twitter,
+      label: 'Twitter',
+      url: 'https://x.com/dytto_app',
+      color: '#1DA1F2'
+    },
+    {
+      icon: Mail,
+      label: 'Email',
+      url: 'mailto:hello@dytto.app',
+      color: theme.colors.primary
+    }
+  ];
 
   return (
     <footer 
@@ -86,11 +113,15 @@ const Footer = () => {
               that truly understand their users. From simulation agents to 
               personalized experiences.
             </p>
+            
+            {/* Social Links */}
             <div className="flex items-center space-x-3 sm:space-x-4">
-              {[Twitter, Github, Linkedin, Mail].map((Icon, index) => (
+              {socialLinks.map((social, index) => (
                 <motion.a
                   key={index}
-                  href="#"
+                  href={social.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
                   whileHover={{ scale: 1.1, y: -2 }}
                   style={{
                     width: '2.5rem',
@@ -105,15 +136,16 @@ const Footer = () => {
                     textDecoration: 'none',
                   }}
                   onMouseEnter={(e) => {
-                    e.target.style.color = theme.colors.primary;
-                    e.target.style.backgroundColor = theme.colors.surfaceSecondary;
+                    e.currentTarget.style.color = social.color;
+                    e.currentTarget.style.backgroundColor = theme.utils.alpha(social.color, 0.1);
                   }}
                   onMouseLeave={(e) => {
-                    e.target.style.color = theme.colors.textSecondary;
-                    e.target.style.backgroundColor = theme.colors.surface;
+                    e.currentTarget.style.color = theme.colors.textSecondary;
+                    e.currentTarget.style.backgroundColor = theme.colors.surface;
                   }}
+                  aria-label={social.label}
                 >
-                  <Icon size={18} />
+                  <social.icon size={18} />
                 </motion.a>
               ))}
             </div>
