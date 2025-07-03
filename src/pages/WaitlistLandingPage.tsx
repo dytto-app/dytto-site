@@ -48,17 +48,17 @@ const WaitlistLandingPage = () => {
     loadStats();
   }, []);
 
-  // Exit intent detection
-  useEffect(() => {
-    const handleMouseLeave = (e: MouseEvent) => {
-      if (e.clientY <= 0 && !isSubmitted && !showExitIntent) {
-        setShowExitIntent(true);
-      }
-    };
+  // Exit intent detection - DISABLED to remove annoying popup
+  // useEffect(() => {
+  //   const handleMouseLeave = (e: MouseEvent) => {
+  //     if (e.clientY <= 0 && !isSubmitted && !showExitIntent) {
+  //       setShowExitIntent(true);
+  //     }
+  //   };
 
-    document.addEventListener('mouseleave', handleMouseLeave);
-    return () => document.removeEventListener('mouseleave', handleMouseLeave);
-  }, [isSubmitted, showExitIntent]);
+  //   document.addEventListener('mouseleave', handleMouseLeave);
+  //   return () => document.removeEventListener('mouseleave', handleMouseLeave);
+  // }, [isSubmitted, showExitIntent]);
 
   // Animate stories counter
   useEffect(() => {
@@ -256,44 +256,37 @@ const WaitlistLandingPage = () => {
                   className="w-full h-full rounded-[2.5rem] overflow-hidden relative"
                   style={{ backgroundColor: theme.colors.background }}
                 >
-                  {/* Animated Timeline → Story Transition */}
-                  <motion.div
-                    animate={{ 
-                      opacity: [1, 0, 1],
-                      scale: [1, 0.95, 1]
-                    }}
-                    transition={{ 
-                      duration: 4, 
-                      repeat: Infinity,
-                      ease: "easeInOut"
-                    }}
-                    className="absolute inset-0"
-                  >
-                    <img 
-                      src="/home.jpg"
-                      alt="Timeline View"
-                      className="w-full h-full object-cover"
-                    />
-                  </motion.div>
-                  <motion.div
-                    animate={{ 
-                      opacity: [0, 1, 0],
-                      scale: [0.95, 1, 0.95]
-                    }}
-                    transition={{ 
-                      duration: 4, 
-                      repeat: Infinity,
-                      ease: "easeInOut",
-                      delay: 2
-                    }}
-                    className="absolute inset-0"
-                  >
-                    <img 
-                      src="/story.jpg"
-                      alt="Generated Story"
-                      className="w-full h-full object-cover"
-                    />
-                  </motion.div>
+                  {/* Animated Image Carousel */}
+                  {[
+                    { src: "/IMG_4026.PNG", alt: "Home Screen", delay: 0 },
+                    { src: "/IMG_4024.PNG", alt: "Add Context Comments", delay: 4 },
+                    { src: "/IMG_4021.PNG", alt: "Story Screen", delay: 8 },
+                    { src: "/IMG_4025.PNG", alt: "Recommendations", delay: 12 },
+                    { src: "/IMG_3843.PNG", alt: "Context-Aware AI Chat", delay: 16 }
+                  ].map((image, index) => (
+                    <motion.div
+                      key={index}
+                      animate={{ 
+                        opacity: [0, 1, 1, 0],
+                        scale: [0.98, 1, 1, 0.98]
+                      }}
+                      transition={{ 
+                        duration: 4,
+                        times: [0, 0.25, 0.75, 1],
+                        repeat: Infinity,
+                        ease: "easeInOut",
+                        delay: image.delay,
+                        repeatDelay: 16
+                      }}
+                      className="absolute inset-0"
+                    >
+                      <img 
+                        src={image.src}
+                        alt={image.alt}
+                        className="w-full h-full object-cover"
+                      />
+                    </motion.div>
+                  ))}
                 </div>
               </div>
             </div>
@@ -343,9 +336,47 @@ const WaitlistLandingPage = () => {
         </div>
       </section>
 
-      {/* 3 Quick Benefits */}
+      {/* Context Engine Feature Section */}
       <section className="py-24 px-6" style={styles.bg.secondary}>
         <div className="max-w-6xl mx-auto">
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8 }}
+            className="text-center mb-16"
+          >
+            <h2 
+              style={{
+                ...styles.typography.h1,
+                color: theme.colors.text,
+                marginBottom: theme.semanticSpacing.lg,
+                fontSize: 'clamp(2.5rem, 6vw, 4rem)',
+              }}
+            >
+              Powered by our{' '}
+              <span 
+                style={{
+                  background: `linear-gradient(135deg, ${theme.colors.primary}, ${theme.colors.accent})`,
+                  WebkitBackgroundClip: 'text',
+                  WebkitTextFillColor: 'transparent',
+                  backgroundClip: 'text',
+                }}
+              >
+                Context Engine
+              </span>
+            </h2>
+            <p 
+              style={{
+                ...styles.typography.bodyLarge,
+                color: theme.colors.textSecondary,
+                maxWidth: '48rem',
+                margin: '0 auto',
+              }}
+            >
+              The first AI system that truly understands your personal context, patterns, and preferences to create meaningful narratives from your daily life.
+            </p>
+          </motion.div>
+
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {[
               {
@@ -355,13 +386,13 @@ const WaitlistLandingPage = () => {
               },
               {
                 icon: Star,
-                title: "Story worth rereading",
-                description: "2-minute narrative, every night. Beautifully crafted by AI that understands you."
+                title: "Context-aware stories",
+                description: "Our Context Engine understands your patterns, relationships, and preferences to craft personalized narratives."
               },
               {
                 icon: Shield,
                 title: "Your data, your device",
-                description: "Encrypted, revocable. Complete control over your personal information."
+                description: "Encrypted, revocable. Complete control over your personal information with local processing."
               }
             ].map((benefit, index) => (
               <motion.div
@@ -431,8 +462,150 @@ const WaitlistLandingPage = () => {
         </div>
       </section>
 
+      {/* Features Section */}
+      <section className="py-24 px-6" style={styles.bg.primary}>
+        <div className="max-w-6xl mx-auto">
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8 }}
+            className="text-center mb-16"
+          >
+            <h2 
+              style={{
+                ...styles.typography.h1,
+                color: theme.colors.text,
+                marginBottom: theme.semanticSpacing.lg,
+                fontSize: 'clamp(2.5rem, 6vw, 4rem)',
+              }}
+            >
+              Powerful Features
+            </h2>
+            <p 
+              style={{
+                ...styles.typography.bodyLarge,
+                color: theme.colors.textSecondary,
+                maxWidth: '48rem',
+                margin: '0 auto',
+              }}
+            >
+              Everything you need to capture, understand, and relive your life's moments
+            </p>
+          </motion.div>
+
+          <div className="space-y-16 mb-16">
+            {[
+              {
+                image: "/IMG_4026.PNG",
+                title: "Beautiful Home Dashboard",
+                description: "Your personal timeline at a glance. See your recent stories, upcoming events, and daily insights all in one elegant interface."
+              },
+              {
+                image: "/IMG_4024.PNG", 
+                title: "Add Context with Simple Comments",
+                description: "Enhance your stories by adding simple comments and context to your daily entries. Help Dytto understand what matters most to you."
+              },
+              {
+                image: "/IMG_4021.PNG",
+                title: "Beautifully Crafted Stories",
+                description: "Every evening, discover a thoughtfully written story about your day. Each narrative captures the essence of your experiences with literary quality."
+              },
+              {
+                image: "/IMG_4025.PNG",
+                title: "Personalized Recommendations", 
+                description: "Get intelligent suggestions for places to visit, activities to try, and experiences to explore based on your patterns and preferences."
+              },
+              {
+                image: "/IMG_3843.PNG",
+                title: "Context-Aware AI Chat",
+                description: "Chat with an AI that truly knows you. Ask questions about your past, get insights about your patterns, and receive personalized advice."
+              }
+            ].map((feature, index) => (
+              <motion.div
+                key={index}
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6, delay: index * 0.1 }}
+                className="flex flex-col lg:flex-row items-center gap-8 lg:gap-12"
+                style={{
+                  flexDirection: window.innerWidth >= 1024 && index % 2 === 1 ? 'row-reverse' : 'row',
+                }}
+              >
+                <div className="flex-shrink-0">
+                  <motion.div
+                    whileHover={{ scale: 1.05 }}
+                    className="relative mx-auto w-56 h-[448px] sm:w-64 sm:h-[512px]"
+                  >
+                    <div 
+                      className="w-full h-full rounded-[2rem] p-1 shadow-xl"
+                      style={{ backgroundColor: theme.colors.text }}
+                    >
+                      <div 
+                        className="w-full h-full rounded-[1.5rem] overflow-hidden"
+                        style={{ backgroundColor: theme.colors.background }}
+                      >
+                        <img 
+                          src={feature.image}
+                          alt={feature.title}
+                          className="w-full h-full object-cover"
+                        />
+                      </div>
+                    </div>
+                  </motion.div>
+                </div>
+                
+                <div className="flex-1 text-center lg:text-left max-w-lg lg:max-w-none">
+                  <h3 
+                    style={{
+                      ...styles.typography.h3,
+                      color: theme.colors.text,
+                      marginBottom: theme.semanticSpacing.md,
+                      fontSize: 'clamp(1.5rem, 4vw, 2rem)',
+                    }}
+                  >
+                    {feature.title}
+                  </h3>
+                  <p 
+                    style={{
+                      ...styles.typography.bodyLarge,
+                      color: theme.colors.textSecondary,
+                      lineHeight: '1.6',
+                      fontSize: 'clamp(1rem, 3vw, 1.125rem)',
+                    }}
+                  >
+                    {feature.description}
+                  </p>
+                </div>
+              </motion.div>
+            ))}
+          </div>
+
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.6 }}
+            className="text-center"
+          >
+            <button 
+              onClick={() => document.getElementById('email-capture')?.scrollIntoView({ behavior: 'smooth' })}
+              style={{
+                ...styles.button.primary,
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: theme.semanticSpacing.sm,
+                fontSize: theme.typography.fontSize.lg,
+                padding: `${theme.semanticSpacing.md} ${theme.semanticSpacing.xl}`,
+              }}
+            >
+              <span>Experience These Features</span>
+              <ArrowRight size={20} />
+            </button>
+          </motion.div>
+        </div>
+      </section>
+
       {/* How It Works */}
-      <section id="how-it-works" className="py-24 px-6" style={styles.bg.primary}>
+      <section id="how-it-works" className="py-24 px-6" style={styles.bg.secondary}>
         <div className="max-w-6xl mx-auto">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
@@ -648,7 +821,7 @@ const WaitlistLandingPage = () => {
       </section>
 
       {/* Social Proof / FOMO */}
-      <section className="py-24 px-6" style={styles.bg.primary}>
+      {/* <section className="py-24 px-6" style={styles.bg.primary}>
         <div className="max-w-6xl mx-auto">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
@@ -775,10 +948,10 @@ const WaitlistLandingPage = () => {
             </button>
           </motion.div>
         </div>
-      </section>
+      </section> */}
 
       {/* FAQ Section */}
-      <section className="py-24 px-6" style={styles.bg.secondary}>
+      {/* <section className="py-24 px-6" style={styles.bg.secondary}>
         <div className="max-w-4xl mx-auto">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
@@ -888,7 +1061,7 @@ const WaitlistLandingPage = () => {
             </button>
           </motion.div>
         </div>
-      </section>
+      </section> */}
 
       {/* Email Capture Section */}
       <section id="email-capture" className="py-32 px-6" style={styles.bg.primary}>
@@ -923,17 +1096,17 @@ const WaitlistLandingPage = () => {
               >
                 You're in!
               </h3>
-              <p 
+              {/* <p 
                 style={{
                   ...styles.typography.bodyLarge,
                   color: theme.colors.textSecondary,
                   marginBottom: theme.semanticSpacing.lg,
                 }}
               >
-                You're #{queuePosition.toLocaleString()} in line — move up by sharing
-              </p>
+                You're #{queuePosition.toLocaleString()} in line 
+              </p> */}
               
-              <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              {/* <div className="flex flex-col sm:flex-row gap-4 justify-center">
                 <motion.button
                   whileHover={{ scale: 1.02 }}
                   whileTap={{ scale: 0.98 }}
@@ -963,7 +1136,7 @@ const WaitlistLandingPage = () => {
                   <Mail size={18} />
                   <span>Share via Email</span>
                 </motion.button>
-              </div>
+              </div> */}
             </motion.div>
           )}
         </div>

@@ -53,8 +53,8 @@ const EmailCapture: React.FC<EmailCaptureProps> = ({
         onSuccess?.(email, result.position || 0);
         
         // Track analytics (optional)
-        if (typeof gtag !== 'undefined') {
-          gtag('event', 'waitlist_signup', {
+        if (typeof window !== 'undefined' && 'gtag' in window) {
+          (window as any).gtag('event', 'waitlist_signup', {
             event_category: 'engagement',
             event_label: source,
             value: result.position
@@ -126,104 +126,207 @@ const EmailCapture: React.FC<EmailCaptureProps> = ({
       initial={{ opacity: 0, y: 30 }}
       whileInView={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.8 }}
+      className="max-w-2xl mx-auto"
     >
-      <h2 
-        style={{
-          ...styles.typography.h1,
-          color: theme.colors.text,
-          marginBottom: theme.semanticSpacing.lg,
-          fontSize: 'clamp(2.5rem, 6vw, 4rem)',
-          textAlign: 'center',
-        }}
+      {/* Header */}
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.6, delay: 0.1 }}
+        className="text-center mb-8"
       >
-        Be first to get your life,{' '}
-        <span 
+        <h2 
           style={{
-            background: `linear-gradient(135deg, ${theme.colors.primary}, ${theme.colors.accent})`,
-            WebkitBackgroundClip: 'text',
-            WebkitTextFillColor: 'transparent',
-            backgroundClip: 'text',
-          }}
-        >
-          authored.
-        </span>
-      </h2>
-      
-      <form onSubmit={handleSubmit} className="flex flex-col sm:flex-row gap-4 max-w-md mx-auto">
-        <input
-          type="email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          placeholder="Enter your email"
-          required
-          disabled={isSubmitting}
-          style={{
-            flex: 1,
-            padding: theme.semanticSpacing.md,
-            borderRadius: '0.75rem',
-            border: `1px solid ${error ? theme.colors.error : theme.colors.border}`,
-            backgroundColor: theme.colors.surface,
+            ...styles.typography.h1,
             color: theme.colors.text,
-            fontSize: theme.typography.fontSize.base,
-            opacity: isSubmitting ? 0.7 : 1,
-          }}
-        />
-        <motion.button
-          type="submit"
-          disabled={isSubmitting || !email}
-          whileHover={{ scale: isSubmitting ? 1 : 1.02 }}
-          whileTap={{ scale: isSubmitting ? 1 : 0.98 }}
-          style={{
-            ...styles.button.primary,
-            whiteSpace: 'nowrap',
-            padding: `${theme.semanticSpacing.md} ${theme.semanticSpacing.xl}`,
-            opacity: isSubmitting || !email ? 0.7 : 1,
-            cursor: isSubmitting || !email ? 'not-allowed' : 'pointer',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            gap: theme.semanticSpacing.sm,
+            marginBottom: theme.semanticSpacing.md,
+            fontSize: 'clamp(2.5rem, 6vw, 4rem)',
+            lineHeight: '1.1',
           }}
         >
-          {isSubmitting ? (
-            <>
-              <Loader size={18} className="animate-spin" />
-              <span>Joining...</span>
-            </>
-          ) : (
-            <>
-              <span>Join</span>
-              <ArrowRight size={18} />
-            </>
-          )}
-        </motion.button>
-      </form>
-      
-      {error && (
-        <motion.div
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="flex items-center justify-center gap-2 mt-4"
+          Be first to get your life,{' '}
+          <span 
+            style={{
+              background: `linear-gradient(135deg, ${theme.colors.primary}, ${theme.colors.accent})`,
+              WebkitBackgroundClip: 'text',
+              WebkitTextFillColor: 'transparent',
+              backgroundClip: 'text',
+            }}
+          >
+            authored.
+          </span>
+        </h2>
+        <p 
           style={{
-            color: theme.colors.error,
-            fontSize: theme.typography.fontSize.sm,
+            ...styles.typography.bodyLarge,
+            color: theme.colors.textSecondary,
+            marginBottom: theme.semanticSpacing.lg,
           }}
         >
-          <AlertCircle size={16} />
-          <span>{error}</span>
-        </motion.div>
-      )}
-      
-      <p 
+          Join thousands of early users getting exclusive access to Dytto
+        </p>
+      </motion.div>
+
+      {/* Main Form Card */}
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.6, delay: 0.2 }}
         style={{
-          ...styles.typography.caption,
-          color: theme.colors.textTertiary,
-          textAlign: 'center',
-          marginTop: theme.semanticSpacing.md,
+          ...styles.glass.medium,
+          border: `1px solid ${theme.colors.border}`,
+          borderRadius: '1.5rem',
+          padding: theme.semanticSpacing.xl,
+          background: `linear-gradient(135deg, ${theme.utils.alpha(theme.colors.primary, 0.02)}, ${theme.utils.alpha(theme.colors.accent, 0.02)})`,
         }}
       >
-        No spam, unsubscribe anytime. We respect your privacy.
-      </p>
+        <form onSubmit={handleSubmit} className="space-y-6">
+          {/* Email Input with Enhanced Design */}
+          <div className="relative">
+            <motion.input
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              placeholder="Enter your email address"
+              required
+              disabled={isSubmitting}
+              whileFocus={{ scale: 1.02 }}
+              style={{
+                width: '100%',
+                padding: `${theme.semanticSpacing.lg} ${theme.semanticSpacing.md}`,
+                borderRadius: '1rem',
+                border: `2px solid ${error ? theme.colors.error : email ? theme.colors.primary : theme.colors.border}`,
+                backgroundColor: theme.colors.surface,
+                color: theme.colors.text,
+                fontSize: theme.typography.fontSize.lg,
+                fontWeight: theme.typography.fontWeight.medium,
+                opacity: isSubmitting ? 0.7 : 1,
+                transition: 'all 0.3s ease',
+                outline: 'none',
+                boxShadow: email ? `0 0 0 4px ${theme.utils.alpha(theme.colors.primary, 0.1)}` : 'none',
+              }}
+            />
+            {email && (
+              <motion.div
+                initial={{ opacity: 0, scale: 0.8 }}
+                animate={{ opacity: 1, scale: 1 }}
+                className="absolute right-4 top-1/2 transform -translate-y-1/2"
+              >
+                <CheckCircle style={{ color: theme.colors.success }} size={20} />
+              </motion.div>
+            )}
+          </div>
+
+          {/* Submit Button */}
+          <motion.button
+            type="submit"
+            disabled={isSubmitting || !email}
+            whileHover={{ scale: isSubmitting || !email ? 1 : 1.02, y: isSubmitting || !email ? 0 : -2 }}
+            whileTap={{ scale: isSubmitting || !email ? 1 : 0.98 }}
+            style={{
+              width: '100%',
+              padding: `${theme.semanticSpacing.lg} ${theme.semanticSpacing.xl}`,
+              borderRadius: '1rem',
+              border: 'none',
+              background: isSubmitting || !email 
+                ? theme.colors.border 
+                : `linear-gradient(135deg, ${theme.colors.primary}, ${theme.colors.accent})`,
+              color: theme.colors.background,
+              fontSize: theme.typography.fontSize.lg,
+              fontWeight: theme.typography.fontWeight.semibold,
+              cursor: isSubmitting || !email ? 'not-allowed' : 'pointer',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              gap: theme.semanticSpacing.sm,
+              boxShadow: isSubmitting || !email ? 'none' : theme.shadows.brand,
+              transition: 'all 0.3s ease',
+            }}
+          >
+            {isSubmitting ? (
+              <>
+                <Loader size={20} className="animate-spin" />
+                <span>Joining waitlist...</span>
+              </>
+            ) : (
+              <>
+                <span>Join the Waitlist</span>
+                <ArrowRight size={20} />
+              </>
+            )}
+          </motion.button>
+        </form>
+
+        {/* Error Message */}
+        {error && (
+          <motion.div
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="flex items-center justify-center gap-2 mt-4 p-3 rounded-lg"
+            style={{
+              backgroundColor: theme.utils.alpha(theme.colors.error, 0.1),
+              border: `1px solid ${theme.utils.alpha(theme.colors.error, 0.3)}`,
+              color: theme.colors.error,
+            }}
+          >
+            <AlertCircle size={16} />
+            <span style={{ fontSize: theme.typography.fontSize.sm }}>{error}</span>
+          </motion.div>
+        )}
+
+        {/* Benefits List */}
+        <motion.div
+          initial={{ opacity: 0 }}
+          whileInView={{ opacity: 1 }}
+          transition={{ duration: 0.6, delay: 0.4 }}
+          className="mt-8 space-y-3"
+        >
+          {[
+            "Beta access to Dytto",
+            "MCP server/API access to make AI applications like Claude desktop context aware",
+            "Free",
+            "Direct line to our team for feedback",
+          ].map((benefit, index) => (
+            <motion.div
+              key={index}
+              initial={{ opacity: 0, x: -20 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.4, delay: 0.5 + index * 0.1 }}
+              className="flex items-center gap-3"
+            >
+              <span style={{ fontSize: theme.typography.fontSize.base, color: theme.colors.textSecondary }}>
+                {benefit}
+              </span>
+            </motion.div>
+          ))}
+        </motion.div>
+      </motion.div>
+
+      {/* Trust Indicators */}
+      <motion.div
+        initial={{ opacity: 0 }}
+        whileInView={{ opacity: 1 }}
+        transition={{ duration: 0.6, delay: 0.6 }}
+        className="text-center mt-6 space-y-2"
+      >
+        <p 
+          style={{
+            ...styles.typography.caption,
+            color: theme.colors.textTertiary,
+          }}
+        >
+          🔒 No spam, unsubscribe anytime. We respect your privacy.
+        </p>
+        {/* <p 
+          style={{
+            ...styles.typography.caption,
+            color: theme.colors.textSecondary,
+            fontWeight: theme.typography.fontWeight.medium,
+          }}
+        >
+          Join 12,000+ people already on the waitlist
+        </p> */}
+      </motion.div>
     </motion.div>
   );
 };
