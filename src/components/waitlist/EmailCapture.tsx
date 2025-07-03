@@ -3,14 +3,21 @@ import { motion } from 'framer-motion';
 import { ArrowRight, CheckCircle, AlertCircle, Loader } from 'lucide-react';
 import { useTheme } from '../ThemeProvider';
 import { useThemeStyles } from '../../hooks/useThemeStyles';
-import { submitToConvertKit } from '../../utils/emailService'; // Choose your service
+import { joinWaitlist, type WaitlistSignupData } from '../../utils/supabaseWaitlist';
 
 interface EmailCaptureProps {
   onSuccess?: (email: string, queuePosition: number) => void;
   onError?: (error: string) => void;
+  source?: string;
+  referralCode?: string;
 }
 
-const EmailCapture: React.FC<EmailCaptureProps> = ({ onSuccess, onError }) => {
+const EmailCapture: React.FC<EmailCaptureProps> = ({ 
+  onSuccess, 
+  onError, 
+  source = 'website',
+  referralCode 
+}) => {
   const { theme } = useTheme();
   const styles = useThemeStyles();
   const [email, setEmail] = useState('');
@@ -27,23 +34,36 @@ const EmailCapture: React.FC<EmailCaptureProps> = ({ onSuccess, onError }) => {
     setError('');
 
     try {
-      // Submit to your chosen email service
-      await submitToConvertKit(email);
+      const signupData: WaitlistSignupData = {
+        email,
+        source,
+        referral_code: referralCode,
+        metadata: {
+          user_agent: navigator.userAgent,
+          timestamp: new Date().toISOString(),
+          url: window.location.href,
+        }
+      };
+
+      const result = await joinWaitlist(signupData);
       
-      // Generate queue position (you might get this from your service)
-      const position = Math.floor(Math.random() * 2000) + 1000;
-      setQueuePosition(position);
-      setIsSubmitted(true);
-      
-      // Call success callback
-      onSuccess?.(email, position);
-      
-      // Track analytics (optional)
-      if (typeof gtag !== 'undefined') {
-        gtag('event', 'waitlist_signup', {
-          event_category: 'engagement',
-          event_label: 'email_capture'
-        });
+      if (result.success && result.data) {
+        setQueuePosition(result.position || 0);
+        setIsSubmitted(true);
+        onSuccess?.(email, result.position || 0);
+        
+        // Track analytics (optional)
+        if (typeof gtag !== 'undefined') {
+          gtag('event', 'waitlist_signup', {
+            event_category: 'engagement',
+            event_label: source,
+            value: result.position
+          });
+        }
+      } else {
+        const errorMessage = result.error || 'Something went wrong. Please try again.';
+        setError(errorMessage);
+        onError?.(errorMessage);
       }
       
     } catch (err) {

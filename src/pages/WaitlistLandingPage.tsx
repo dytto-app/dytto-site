@@ -21,6 +21,7 @@ import { Link } from 'react-router-dom';
 import { useTheme } from '../components/ThemeProvider';
 import { useThemeStyles } from '../hooks/useThemeStyles';
 import EmailCapture from '../components/waitlist/EmailCapture';
+import { getWaitlistStats } from '../utils/supabaseWaitlist';
 
 const WaitlistLandingPage = () => {
   const { theme, mode, toggleMode } = useTheme();
@@ -31,11 +32,25 @@ const WaitlistLandingPage = () => {
   const [queuePosition, setQueuePosition] = useState(0);
   const [showDemo, setShowDemo] = useState(false);
   const [storiesCount, setStoriesCount] = useState(12742);
-  const [openFAQ, setOpenFAQ] = useState(null);
+  const [openFAQ, setOpenFAQ] = useState<number | null>(null);
+  const [waitlistTotal, setWaitlistTotal] = useState(0);
+
+  // Get URL parameters for referral tracking
+  const urlParams = new URLSearchParams(window.location.search);
+  const referralCode = urlParams.get('ref');
+
+  // Load waitlist stats
+  useEffect(() => {
+    const loadStats = async () => {
+      const stats = await getWaitlistStats();
+      setWaitlistTotal(stats.total);
+    };
+    loadStats();
+  }, []);
 
   // Exit intent detection
   useEffect(() => {
-    const handleMouseLeave = (e) => {
+    const handleMouseLeave = (e: MouseEvent) => {
       if (e.clientY <= 0 && !isSubmitted && !showExitIntent) {
         setShowExitIntent(true);
       }
@@ -58,6 +73,8 @@ const WaitlistLandingPage = () => {
     setQueuePosition(position);
     setIsSubmitted(true);
     setShowExitIntent(false);
+    // Refresh waitlist stats
+    getWaitlistStats().then(stats => setWaitlistTotal(stats.total));
   };
 
   const handleEmailError = (error: string) => {
@@ -67,13 +84,13 @@ const WaitlistLandingPage = () => {
 
   const shareOnTwitter = () => {
     const text = "Just joined the Dytto waitlist! AI that writes your life story automatically. 🤖📖";
-    const url = "https://dytto.ai";
+    const url = `https://dytto.ai${referralCode ? `?ref=${referralCode}` : ''}`;
     window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}&url=${encodeURIComponent(url)}`, '_blank');
   };
 
   const shareViaEmail = () => {
     const subject = "Check out Dytto - AI that writes your life story";
-    const body = "I just joined the Dytto waitlist! It's an AI that automatically writes your life story from your daily experiences. Thought you might be interested: https://dytto.ai";
+    const body = `I just joined the Dytto waitlist! It's an AI that automatically writes your life story from your daily experiences. Thought you might be interested: https://dytto.ai${referralCode ? `?ref=${referralCode}` : ''}`;
     window.open(`mailto:?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`);
   };
 
@@ -162,7 +179,7 @@ const WaitlistLandingPage = () => {
           <motion.button
             whileHover={{ scale: 1.02 }}
             whileTap={{ scale: 0.98 }}
-            onClick={() => document.getElementById('email-capture').scrollIntoView({ behavior: 'smooth' })}
+            onClick={() => document.getElementById('email-capture')?.scrollIntoView({ behavior: 'smooth' })}
             style={{
               backgroundColor: theme.colors.primary,
               color: theme.colors.background,
@@ -291,7 +308,7 @@ const WaitlistLandingPage = () => {
             <motion.button
               whileHover={{ scale: 1.02, y: -2 }}
               whileTap={{ scale: 0.98 }}
-              onClick={() => document.getElementById('email-capture').scrollIntoView({ behavior: 'smooth' })}
+              onClick={() => document.getElementById('email-capture')?.scrollIntoView({ behavior: 'smooth' })}
               style={{
                 ...styles.button.primary,
                 boxShadow: theme.shadows.brand,
@@ -399,7 +416,7 @@ const WaitlistLandingPage = () => {
             className="text-center mt-16"
           >
             <button 
-              onClick={() => document.getElementById('email-capture').scrollIntoView({ behavior: 'smooth' })}
+              onClick={() => document.getElementById('email-capture')?.scrollIntoView({ behavior: 'smooth' })}
               style={{
                 ...styles.button.primary,
                 display: 'inline-flex',
@@ -499,7 +516,7 @@ const WaitlistLandingPage = () => {
             className="text-center mt-16"
           >
             <button 
-              onClick={() => document.getElementById('email-capture').scrollIntoView({ behavior: 'smooth' })}
+              onClick={() => document.getElementById('email-capture')?.scrollIntoView({ behavior: 'smooth' })}
               style={{
                 ...styles.button.primary,
                 display: 'inline-flex',
@@ -613,7 +630,7 @@ const WaitlistLandingPage = () => {
             className="mt-12"
           >
             <button 
-              onClick={() => document.getElementById('email-capture').scrollIntoView({ behavior: 'smooth' })}
+              onClick={() => document.getElementById('email-capture')?.scrollIntoView({ behavior: 'smooth' })}
               style={{
                 ...styles.button.primary,
                 display: 'inline-flex',
@@ -649,7 +666,7 @@ const WaitlistLandingPage = () => {
                 fontSize: 'clamp(2rem, 5vw, 3rem)',
               }}
             >
-              {storiesCount.toLocaleString()}
+              {(storiesCount + waitlistTotal).toLocaleString()}
             </motion.div>
             <p 
               style={{
@@ -657,7 +674,7 @@ const WaitlistLandingPage = () => {
                 color: theme.colors.textSecondary,
               }}
             >
-              stories written so far
+              people already on the waitlist
             </p>
           </motion.div>
 
@@ -743,7 +760,7 @@ const WaitlistLandingPage = () => {
             className="text-center"
           >
             <button 
-              onClick={() => document.getElementById('email-capture').scrollIntoView({ behavior: 'smooth' })}
+              onClick={() => document.getElementById('email-capture')?.scrollIntoView({ behavior: 'smooth' })}
               style={{
                 ...styles.button.primary,
                 display: 'inline-flex',
@@ -858,7 +875,7 @@ const WaitlistLandingPage = () => {
             className="text-center mt-16"
           >
             <button 
-              onClick={() => document.getElementById('email-capture').scrollIntoView({ behavior: 'smooth' })}
+              onClick={() => document.getElementById('email-capture')?.scrollIntoView({ behavior: 'smooth' })}
               style={{
                 ...styles.button.primary,
                 display: 'inline-flex',
@@ -880,6 +897,8 @@ const WaitlistLandingPage = () => {
             <EmailCapture 
               onSuccess={handleEmailSuccess}
               onError={handleEmailError}
+              source="waitlist-landing"
+              referralCode={referralCode || undefined}
             />
           ) : (
             <motion.div
@@ -1090,7 +1109,7 @@ const WaitlistLandingPage = () => {
               <button 
                 onClick={() => {
                   setShowDemo(false);
-                  document.getElementById('email-capture').scrollIntoView({ behavior: 'smooth' });
+                  document.getElementById('email-capture')?.scrollIntoView({ behavior: 'smooth' });
                 }}
                 style={{
                   ...styles.button.primary,
@@ -1177,6 +1196,8 @@ const WaitlistLandingPage = () => {
                   setShowExitIntent(false);
                 }}
                 onError={handleEmailError}
+                source="exit-intent"
+                referralCode={referralCode || undefined}
               />
             </motion.div>
           </motion.div>
