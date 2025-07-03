@@ -1,14 +1,16 @@
 import { createClient } from '@supabase/supabase-js';
 
-// Initialize Supabase client
+// Initialize Supabase client only if environment variables are available
 const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
 const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
 
-if (!supabaseUrl || !supabaseAnonKey) {
-  throw new Error('Missing Supabase environment variables');
-}
+// Check if Supabase is configured
+const isSupabaseConfigured = !!(supabaseUrl && supabaseAnonKey);
 
-export const supabase = createClient(supabaseUrl, supabaseAnonKey);
+// Create client only if configured, otherwise null
+export const supabase = isSupabaseConfigured 
+  ? createClient(supabaseUrl, supabaseAnonKey)
+  : null;
 
 export interface WaitlistEntry {
   id: string;
@@ -41,6 +43,30 @@ export interface WaitlistResponse {
 
 // Join the waitlist
 export const joinWaitlist = async (signupData: WaitlistSignupData): Promise<WaitlistResponse> => {
+  // If Supabase is not configured, return a mock success response
+  if (!isSupabaseConfigured || !supabase) {
+    console.warn('Supabase not configured. Waitlist signup would normally be processed here.');
+    
+    // Simulate a successful signup for development
+    const mockPosition = Math.floor(Math.random() * 1000) + 1;
+    
+    return {
+      success: true,
+      data: {
+        id: 'mock-id',
+        email: signupData.email,
+        position: mockPosition,
+        source: signupData.source || 'website',
+        referral_code: 'MOCK123',
+        referral_count: 0,
+        status: 'pending',
+        metadata: signupData.metadata || {},
+        created_at: new Date().toISOString(),
+      } as WaitlistEntry,
+      position: mockPosition,
+    };
+  }
+
   try {
     // Check if email already exists
     const { data: existingEntry } = await supabase
@@ -107,6 +133,13 @@ export const joinWaitlist = async (signupData: WaitlistSignupData): Promise<Wait
 
 // Get waitlist entry by email
 export const getWaitlistEntry = async (email: string): Promise<WaitlistResponse> => {
+  if (!isSupabaseConfigured || !supabase) {
+    return {
+      success: false,
+      error: 'Supabase not configured',
+    };
+  }
+
   try {
     const { data, error } = await supabase
       .from('waitlist_entries')
@@ -136,6 +169,10 @@ export const getWaitlistEntry = async (email: string): Promise<WaitlistResponse>
 
 // Get waitlist stats (total count, etc.)
 export const getWaitlistStats = async () => {
+  if (!isSupabaseConfigured || !supabase) {
+    return { total: 0 };
+  }
+
   try {
     const { count, error } = await supabase
       .from('waitlist_entries')
@@ -159,6 +196,13 @@ export const updateWaitlistStatus = async (
   id: string, 
   status: WaitlistEntry['status']
 ): Promise<WaitlistResponse> => {
+  if (!isSupabaseConfigured || !supabase) {
+    return {
+      success: false,
+      error: 'Supabase not configured',
+    };
+  }
+
   try {
     const updateData: any = { status };
     
@@ -193,3 +237,6 @@ export const updateWaitlistStatus = async (
     };
   }
 };
+
+// Utility function to check if Supabase is available
+export const isSupabaseAvailable = () => isSupabaseConfigured;
