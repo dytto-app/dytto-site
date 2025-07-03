@@ -10,12 +10,48 @@ const Navbar = () => {
   const { theme, mode, toggleMode } = useTheme();
   const styles = useThemeStyles();
   const location = useLocation();
-  const isAPIPage = location.pathname === '/api';
-  const isWaitlistPage = location.pathname === '/waitlist';
 
-  const navItems = isAPIPage 
-    ? ['Platform', 'API', 'Use Cases', 'Developers', 'Pricing']
-    : ['Features', 'App', 'Products', 'Testimonials', 'Pricing'];
+  // Define consistent navigation items for all pages
+  const navItems = [
+    { label: 'Features', href: '#features' },
+    { label: 'App', href: '#app' },
+    { label: 'Testimonials', href: '#testimonials' },
+    { label: 'Pricing', href: '#pricing' }
+  ];
+
+  // Define page-specific links
+  const getPageLinks = () => {
+    const currentPath = location.pathname;
+    const links = [];
+
+    // Always show other main pages
+    if (currentPath !== '/') {
+      links.push({ label: 'App', path: '/' });
+    }
+    if (currentPath !== '/api') {
+      links.push({ label: 'API', path: '/api' });
+    }
+    if (currentPath !== '/waitlist') {
+      links.push({ label: 'Waitlist', path: '/waitlist' });
+    }
+
+    return links;
+  };
+
+  // Get the primary CTA button text and action
+  const getPrimaryCTA = () => {
+    switch (location.pathname) {
+      case '/api':
+        return { text: 'Get API Key', action: () => console.log('Get API Key') };
+      case '/waitlist':
+        return { text: 'Join Waitlist', action: () => window.scrollTo({ top: 0, behavior: 'smooth' }) };
+      default:
+        return { text: 'Download App', action: () => console.log('Download App') };
+    }
+  };
+
+  const pageLinks = getPageLinks();
+  const primaryCTA = getPrimaryCTA();
 
   return (
     <>
@@ -29,7 +65,7 @@ const Navbar = () => {
         }}
       >
         <div className="flex items-center justify-between">
-          {/* Logo */}
+          {/* Logo - Always consistent */}
           <Link to="/" className="flex items-center space-x-2 sm:space-x-3">
             <div 
               className="w-8 h-8 sm:w-10 sm:h-10 rounded-lg sm:rounded-xl flex items-center justify-center"
@@ -41,20 +77,18 @@ const Navbar = () => {
               color: theme.colors.text, 
               fontWeight: theme.typography.fontWeight.semibold,
               fontSize: theme.typography.fontSize.lg,
-              '@media (min-width: 640px)': {
-                fontSize: theme.typography.fontSize.xl
-              }
             }}>
               Dytto
             </span>
           </Link>
           
           {/* Desktop Navigation Menu */}
-          <div className="hidden lg:flex items-center space-x-8">
-            {navItems.map((item) => (
+          <div className="hidden lg:flex items-center space-x-6">
+            {/* Page-specific navigation items (only show on main app page) */}
+            {location.pathname === '/' && navItems.map((item) => (
               <a 
-                key={item}
-                href={`#${item.toLowerCase()}`} 
+                key={item.label}
+                href={item.href} 
                 style={{ 
                   color: theme.colors.textSecondary,
                   fontSize: theme.typography.fontSize.sm,
@@ -68,44 +102,35 @@ const Navbar = () => {
                   e.target.style.color = theme.colors.textSecondary;
                 }}
               >
-                {item}
+                {item.label}
               </a>
             ))}
-            <Link
-              to={isAPIPage ? '/' : '/api'}
-              style={{ 
-                color: theme.colors.primary,
-                fontSize: theme.typography.fontSize.sm,
-                transition: theme.animations.transition.normal,
-                textDecoration: 'none',
-                fontWeight: theme.typography.fontWeight.medium,
-              }}
-            >
-              {isAPIPage ? 'App' : 'API'}
-            </Link>
-            {!isWaitlistPage && (
+
+            {/* Page links - consistent order */}
+            {pageLinks.map((link) => (
               <Link
-                to="/waitlist"
+                key={link.label}
+                to={link.path}
                 style={{ 
-                  color: theme.colors.textSecondary,
+                  color: theme.colors.primary,
                   fontSize: theme.typography.fontSize.sm,
                   transition: theme.animations.transition.normal,
                   textDecoration: 'none',
                   fontWeight: theme.typography.fontWeight.medium,
                 }}
                 onMouseEnter={(e) => {
-                  e.target.style.color = theme.colors.primary;
+                  e.target.style.opacity = '0.8';
                 }}
                 onMouseLeave={(e) => {
-                  e.target.style.color = theme.colors.textSecondary;
+                  e.target.style.opacity = '1';
                 }}
               >
-                Waitlist
+                {link.label}
               </Link>
-            )}
+            ))}
           </div>
 
-          {/* Desktop Auth buttons and theme toggle */}
+          {/* Desktop Controls - consistent layout */}
           <div className="hidden lg:flex items-center space-x-4">
             <button
               onClick={toggleMode}
@@ -156,6 +181,7 @@ const Navbar = () => {
             <motion.button
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
+              onClick={primaryCTA.action}
               style={{
                 backgroundColor: theme.colors.primary,
                 color: theme.colors.background,
@@ -166,9 +192,10 @@ const Navbar = () => {
                 border: 'none',
                 cursor: 'pointer',
                 transition: theme.animations.transition.normal,
+                whiteSpace: 'nowrap',
               }}
             >
-              {isAPIPage ? 'Get API Key' : isWaitlistPage ? 'Join Waitlist' : 'Download App'}
+              {primaryCTA.text}
             </motion.button>
           </div>
 
@@ -229,10 +256,11 @@ const Navbar = () => {
               onClick={(e) => e.stopPropagation()}
             >
               <div className="space-y-4">
-                {navItems.map((item, index) => (
+                {/* Page-specific navigation (only on main app page) */}
+                {location.pathname === '/' && navItems.map((item, index) => (
                   <motion.a
-                    key={item}
-                    href={`#${item.toLowerCase()}`}
+                    key={item.label}
+                    href={item.href}
                     initial={{ opacity: 0, x: -20 }}
                     animate={{ opacity: 1, x: 0 }}
                     transition={{ delay: index * 0.1 }}
@@ -254,45 +282,24 @@ const Navbar = () => {
                       e.target.style.backgroundColor = 'transparent';
                     }}
                   >
-                    {item}
+                    {item.label}
                   </motion.a>
                 ))}
                 
-                <motion.div
-                  initial={{ opacity: 0, x: -20 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ delay: navItems.length * 0.1 }}
-                >
-                  <Link
-                    to={isAPIPage ? '/' : '/api'}
-                    onClick={() => setIsOpen(false)}
-                    style={{
-                      display: 'block',
-                      color: theme.colors.primary,
-                      fontSize: theme.typography.fontSize.lg,
-                      fontWeight: theme.typography.fontWeight.medium,
-                      padding: theme.semanticSpacing.md,
-                      borderRadius: '0.75rem',
-                      textDecoration: 'none',
-                      transition: theme.animations.transition.normal,
-                    }}
-                  >
-                    {isAPIPage ? 'App' : 'API'}
-                  </Link>
-                </motion.div>
-
-                {!isWaitlistPage && (
+                {/* Page links */}
+                {pageLinks.map((link, index) => (
                   <motion.div
+                    key={link.label}
                     initial={{ opacity: 0, x: -20 }}
                     animate={{ opacity: 1, x: 0 }}
-                    transition={{ delay: (navItems.length + 1) * 0.1 }}
+                    transition={{ delay: (navItems.length + index) * 0.1 }}
                   >
                     <Link
-                      to="/waitlist"
+                      to={link.path}
                       onClick={() => setIsOpen(false)}
                       style={{
                         display: 'block',
-                        color: theme.colors.textSecondary,
+                        color: theme.colors.primary,
                         fontSize: theme.typography.fontSize.lg,
                         fontWeight: theme.typography.fontWeight.medium,
                         padding: theme.semanticSpacing.md,
@@ -300,11 +307,17 @@ const Navbar = () => {
                         textDecoration: 'none',
                         transition: theme.animations.transition.normal,
                       }}
+                      onMouseEnter={(e) => {
+                        e.target.style.backgroundColor = theme.colors.surface;
+                      }}
+                      onMouseLeave={(e) => {
+                        e.target.style.backgroundColor = 'transparent';
+                      }}
                     >
-                      Waitlist
+                      {link.label}
                     </Link>
                   </motion.div>
-                )}
+                ))}
                 
                 <div className="border-t pt-4" style={{ borderColor: theme.colors.border }}>
                   <motion.button
@@ -331,6 +344,10 @@ const Navbar = () => {
                     initial={{ opacity: 0, x: -20 }}
                     animate={{ opacity: 1, x: 0 }}
                     transition={{ delay: 0.6 }}
+                    onClick={() => {
+                      setIsOpen(false);
+                      primaryCTA.action();
+                    }}
                     style={{
                       width: '100%',
                       backgroundColor: theme.colors.primary,
@@ -343,7 +360,7 @@ const Navbar = () => {
                       cursor: 'pointer',
                     }}
                   >
-                    {isAPIPage ? 'Get API Key' : isWaitlistPage ? 'Join Waitlist' : 'Download App'}
+                    {primaryCTA.text}
                   </motion.button>
                 </div>
               </div>
