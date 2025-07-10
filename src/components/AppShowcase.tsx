@@ -7,7 +7,7 @@ import { useThemeStyles } from '../hooks/useThemeStyles';
 const features = [
   {
     icon: Camera,
-    title: "Beautiful Home Dashboard",
+    title: "Home Dashboard",
     description: "Your personal timeline at a glance with recent stories and daily insights.",
     image: "/IMG_4026.PNG"
   },
@@ -19,7 +19,7 @@ const features = [
   },
   {
     icon: BookOpen,
-    title: "Beautifully Crafted Stories",
+    title: "Crafted Stories",
     description: "Discover thoughtfully written stories about your day with literary quality.",
     image: "/IMG_4021.PNG"
   },
