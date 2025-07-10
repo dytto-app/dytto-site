@@ -21,6 +21,7 @@ import { useTheme } from '../components/ThemeProvider';
 import { useThemeStyles } from '../hooks/useThemeStyles';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
+import { mockFeedbackService } from '../utils/mockFeedbackService';
 
 interface FeedbackItem {
   id: string;
@@ -260,7 +261,7 @@ const FeedbackPage: React.FC = () => {
                 Feedback
               </motion.span>
             </h1>
-            <p 
+            {/* <p 
               style={{
                 ...styles.typography.bodyLarge,
                 color: theme.colors.textSecondary,
@@ -270,7 +271,7 @@ const FeedbackPage: React.FC = () => {
             >
               Help us improve Dytto by sharing your ideas, reporting bugs, and providing feedback. 
               Your voice shapes the future of our platform.
-            </p>
+            </p> */}
           </motion.div>
 
           {/* Stats */}
@@ -281,7 +282,7 @@ const FeedbackPage: React.FC = () => {
             className="grid grid-cols-1 sm:grid-cols-3 gap-6 mb-12"
           >
             {[
-              { icon: MessageSquare, label: 'Total Feedback', value: feedback.length },
+              { icon: MessageSquare, label: 'Comments', value: feedback.length },
               { icon: TrendingUp, label: 'Total Votes', value: feedback.reduce((sum, item) => sum + item.upvotes, 0) },
               { icon: CheckCircle, label: 'Completed', value: feedback.filter(item => item.status === 'completed').length }
             ].map((stat, index) => (
