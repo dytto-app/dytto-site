@@ -76,7 +76,7 @@ const statusConfig = {
 const FeedbackPage: React.FC = () => {
   const { theme } = useTheme();
   const styles = useThemeStyles();
-  const [showForm, setShowForm] = useState(false);
+  const [showForm, setShowForm] = useState(true); // Form shown by default
   const [feedback, setFeedback] = useState<FeedbackItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [submitting, setSubmitting] = useState(false);
@@ -217,22 +217,22 @@ const FeedbackPage: React.FC = () => {
     <div style={styles.bg.primary} className="min-h-screen">
       <Navbar />
       
-      {/* Hero Section */}
+      {/* Main Content */}
       <section className="pt-32 pb-16 px-4 sm:px-6">
         <div className="max-w-6xl mx-auto">
+          
+          {/* Header */}
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8 }}
-            className="text-center mb-12"
+            className="text-center mb-8"
           >
-            
-            
             <h1 
               style={{
                 ...styles.typography.h1,
                 color: theme.colors.text,
-                marginBottom: theme.semanticSpacing.lg,
+                marginBottom: theme.semanticSpacing.md,
                 fontSize: 'clamp(2.5rem, 6vw, 4rem)',
               }}
             >
@@ -254,7 +254,7 @@ const FeedbackPage: React.FC = () => {
                 Feedback
               </motion.span>
             </h1>
-            {/* <p 
+            <p 
               style={{
                 ...styles.typography.bodyLarge,
                 color: theme.colors.textSecondary,
@@ -264,8 +264,285 @@ const FeedbackPage: React.FC = () => {
             >
               Help us improve Dytto by sharing your ideas, reporting bugs, and providing feedback. 
               Your voice shapes the future of our platform.
-            </p> */}
+            </p>
           </motion.div>
+
+          {/* Feedback Form - Now prominently displayed */}
+          <AnimatePresence>
+            {showForm && (
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -20 }}
+                style={{
+                  ...styles.glass.medium,
+                  border: `2px solid ${theme.colors.primary}`,
+                  borderRadius: '1.5rem',
+                  marginBottom: theme.semanticSpacing.xl,
+                  overflow: 'hidden',
+                }}
+              >
+                {/* Form Header */}
+                <div 
+                  style={{
+                    background: `linear-gradient(135deg, ${theme.utils.alpha(theme.colors.primary, 0.1)}, ${theme.utils.alpha(theme.colors.accent, 0.05)})`,
+                    padding: theme.semanticSpacing.lg,
+                    borderBottom: `1px solid ${theme.colors.border}`,
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'space-between',
+                  }}
+                >
+                  <div>
+                    <h2 
+                      style={{
+                        ...styles.typography.h3,
+                        color: theme.colors.text,
+                        marginBottom: theme.semanticSpacing.xs,
+                      }}
+                    >
+                      Share Your Feedback
+                    </h2>
+                    <p 
+                      style={{
+                        ...styles.typography.body,
+                        color: theme.colors.textSecondary,
+                        fontSize: theme.typography.fontSize.sm,
+                      }}
+                    >
+                      Tell us what you think - every suggestion helps us improve
+                    </p>
+                  </div>
+                  <button
+                    onClick={() => setShowForm(false)}
+                    style={{
+                      backgroundColor: 'transparent',
+                      border: 'none',
+                      color: theme.colors.textSecondary,
+                      cursor: 'pointer',
+                      padding: theme.semanticSpacing.sm,
+                      borderRadius: '0.5rem',
+                      transition: theme.animations.transition.normal,
+                    }}
+                    onMouseEnter={(e) => {
+                      e.currentTarget.style.backgroundColor = theme.colors.surface;
+                    }}
+                    onMouseLeave={(e) => {
+                      e.currentTarget.style.backgroundColor = 'transparent';
+                    }}
+                  >
+                    <X size={20} />
+                  </button>
+                </div>
+
+                {/* Form Content */}
+                <form onSubmit={submitFeedback} style={{ padding: theme.semanticSpacing.lg }}>
+                  {/* Category Selection */}
+                  <div style={{ marginBottom: theme.semanticSpacing.lg }}>
+                    <label 
+                      style={{
+                        ...styles.typography.body,
+                        color: theme.colors.text,
+                        fontWeight: theme.typography.fontWeight.medium,
+                        marginBottom: theme.semanticSpacing.sm,
+                        display: 'block',
+                      }}
+                    >
+                      What type of feedback is this?
+                    </label>
+                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: theme.semanticSpacing.sm }}>
+                      {Object.entries(categoryConfig).map(([key, config]) => (
+                        <motion.button
+                          key={key}
+                          type="button"
+                          whileHover={{ scale: 1.02 }}
+                          whileTap={{ scale: 0.98 }}
+                          onClick={() => setFormData(prev => ({ ...prev, category: key as any }))}
+                          style={{
+                            display: 'flex',
+                            alignItems: 'flex-start',
+                            gap: theme.semanticSpacing.md,
+                            padding: theme.semanticSpacing.md,
+                            borderRadius: '0.75rem',
+                            border: `2px solid ${formData.category === key ? config.color : theme.colors.border}`,
+                            backgroundColor: formData.category === key ? config.bgColor : theme.colors.surface,
+                            color: theme.colors.text,
+                            cursor: 'pointer',
+                            textAlign: 'left',
+                            transition: theme.animations.transition.normal,
+                          }}
+                        >
+                          <config.icon 
+                            style={{ color: formData.category === key ? config.color : theme.colors.textSecondary, flexShrink: 0 }} 
+                            size={20} 
+                          />
+                          <div>
+                            <div style={{ fontWeight: theme.typography.fontWeight.medium, marginBottom: theme.semanticSpacing.xs }}>
+                              {config.label}
+                            </div>
+                            <div style={{ fontSize: theme.typography.fontSize.sm, color: theme.colors.textSecondary }}>
+                              {config.description}
+                            </div>
+                          </div>
+                        </motion.button>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Title Input */}
+                  <div style={{ marginBottom: theme.semanticSpacing.lg }}>
+                    <label 
+                      style={{
+                        ...styles.typography.body,
+                        color: theme.colors.text,
+                        fontWeight: theme.typography.fontWeight.medium,
+                        marginBottom: theme.semanticSpacing.sm,
+                        display: 'block',
+                      }}
+                    >
+                      Title *
+                    </label>
+                    <input
+                      type="text"
+                      value={formData.title}
+                      onChange={(e) => setFormData(prev => ({ ...prev, title: e.target.value }))}
+                      placeholder="Brief description of your feedback"
+                      required
+                      maxLength={200}
+                      style={{
+                        width: '100%',
+                        padding: theme.semanticSpacing.md,
+                        borderRadius: '0.75rem',
+                        border: `2px solid ${formData.title ? theme.colors.primary : theme.colors.border}`,
+                        backgroundColor: theme.colors.surface,
+                        color: theme.colors.text,
+                        fontSize: theme.typography.fontSize.base,
+                        outline: 'none',
+                        transition: theme.animations.transition.normal,
+                      }}
+                    />
+                  </div>
+
+                  {/* Details Textarea */}
+                  <div style={{ marginBottom: theme.semanticSpacing.lg }}>
+                    <label 
+                      style={{
+                        ...styles.typography.body,
+                        color: theme.colors.text,
+                        fontWeight: theme.typography.fontWeight.medium,
+                        marginBottom: theme.semanticSpacing.sm,
+                        display: 'block',
+                      }}
+                    >
+                      Details (optional)
+                    </label>
+                    <textarea
+                      value={formData.body}
+                      onChange={(e) => setFormData(prev => ({ ...prev, body: e.target.value }))}
+                      placeholder="Additional details about your feedback"
+                      maxLength={1000}
+                      rows={4}
+                      style={{
+                        width: '100%',
+                        padding: theme.semanticSpacing.md,
+                        borderRadius: '0.75rem',
+                        border: `2px solid ${formData.body ? theme.colors.primary : theme.colors.border}`,
+                        backgroundColor: theme.colors.surface,
+                        color: theme.colors.text,
+                        fontSize: theme.typography.fontSize.base,
+                        outline: 'none',
+                        resize: 'vertical',
+                        fontFamily: 'inherit',
+                        transition: theme.animations.transition.normal,
+                      }}
+                    />
+                  </div>
+
+                  {/* Submit Button */}
+                  <div style={{ display: 'flex', gap: theme.semanticSpacing.md, justifyContent: 'flex-end' }}>
+                    <motion.button
+                      type="submit"
+                      disabled={submitting || !formData.title.trim()}
+                      whileHover={{ scale: submitting || !formData.title.trim() ? 1 : 1.02 }}
+                      whileTap={{ scale: submitting || !formData.title.trim() ? 1 : 0.98 }}
+                      style={{
+                        ...styles.button.primary,
+                        padding: `${theme.semanticSpacing.md} ${theme.semanticSpacing.xl}`,
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: theme.semanticSpacing.sm,
+                        opacity: submitting || !formData.title.trim() ? 0.6 : 1,
+                        cursor: submitting || !formData.title.trim() ? 'not-allowed' : 'pointer',
+                        boxShadow: theme.shadows.brand,
+                        fontSize: theme.typography.fontSize.lg,
+                        fontWeight: theme.typography.fontWeight.semibold,
+                      }}
+                    >
+                      {submitting ? <Loader size={20} className="animate-spin" /> : <Send size={20} />}
+                      {submitting ? 'Submitting...' : 'Submit Feedback'}
+                    </motion.button>
+                  </div>
+                </form>
+              </motion.div>
+            )}
+          </AnimatePresence>
+
+          {/* Show Form Button (when form is hidden) */}
+          {!showForm && (
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="text-center mb-8"
+            >
+              <motion.button
+                whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 0.98 }}
+                onClick={() => setShowForm(true)}
+                style={{
+                  ...styles.button.primary,
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: theme.semanticSpacing.sm,
+                  boxShadow: theme.shadows.brand,
+                  margin: '0 auto',
+                  fontSize: theme.typography.fontSize.lg,
+                  padding: `${theme.semanticSpacing.md} ${theme.semanticSpacing.xl}`,
+                }}
+              >
+                <Plus size={20} />
+                Share Your Feedback
+              </motion.button>
+            </motion.div>
+          )}
+
+          {/* Success/Error Messages */}
+          <AnimatePresence>
+            {(success || error) && (
+              <motion.div
+                initial={{ opacity: 0, y: -10 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -10 }}
+                style={{
+                  padding: theme.semanticSpacing.md,
+                  marginBottom: theme.semanticSpacing.lg,
+                  borderRadius: '0.75rem',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: theme.semanticSpacing.sm,
+                  backgroundColor: success 
+                    ? theme.utils.alpha(theme.colors.success, 0.1)
+                    : theme.utils.alpha(theme.colors.error, 0.1),
+                  border: `1px solid ${success ? theme.colors.success : theme.colors.error}`,
+                  color: success ? theme.colors.success : theme.colors.error,
+                }}
+              >
+                {success ? <CheckCircle size={16} /> : <AlertCircle size={16} />}
+                <span style={{ fontSize: theme.typography.fontSize.sm }}>
+                  {success || error}
+                </span>
+              </motion.div>
+            )}
+          </AnimatePresence>
 
           {/* Stats */}
           <motion.div
@@ -301,19 +578,49 @@ const FeedbackPage: React.FC = () => {
             ))}
           </motion.div>
 
-          {/* Actions Bar */}
+          {/* Filter Bar */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.3 }}
-            className="flex flex-col sm:flex-row items-center justify-between gap-4 mb-8"
+            className="flex items-center gap-2 flex-wrap mb-8"
           >
-            {/* Category Filter */}
-            <div className="flex items-center gap-2 flex-wrap">
-              <Filter style={{ color: theme.colors.textSecondary }} size={20} />
+            <Filter style={{ color: theme.colors.textSecondary }} size={20} />
+            <span style={{ ...styles.typography.body, color: theme.colors.textSecondary, marginRight: theme.semanticSpacing.sm }}>
+              Filter:
+            </span>
+            <button
+              onClick={() => setSelectedCategory('all')}
+              style={{
+                padding: `${theme.semanticSpacing.sm} ${theme.semanticSpacing.md}`,
+                borderRadius: '0.75rem',
+                fontSize: theme.typography.fontSize.sm,
+                fontWeight: theme.typography.fontWeight.medium,
+                transition: theme.animations.transition.normal,
+                border: 'none',
+                cursor: 'pointer',
+                ...(selectedCategory === 'all'
+                  ? {
+                      backgroundColor: theme.colors.primary,
+                      color: theme.colors.background,
+                    }
+                  : {
+                      backgroundColor: theme.colors.surface,
+                      color: theme.colors.textSecondary,
+                    }
+                ),
+              }}
+            >
+              All
+            </button>
+            {Object.entries(categoryConfig).map(([key, config]) => (
               <button
-                onClick={() => setSelectedCategory('all')}
+                key={key}
+                onClick={() => setSelectedCategory(key)}
                 style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: theme.semanticSpacing.sm,
                   padding: `${theme.semanticSpacing.sm} ${theme.semanticSpacing.md}`,
                   borderRadius: '0.75rem',
                   fontSize: theme.typography.fontSize.sm,
@@ -321,10 +628,11 @@ const FeedbackPage: React.FC = () => {
                   transition: theme.animations.transition.normal,
                   border: 'none',
                   cursor: 'pointer',
-                  ...(selectedCategory === 'all'
+                  ...(selectedCategory === key
                     ? {
-                        backgroundColor: theme.colors.primary,
-                        color: theme.colors.background,
+                        backgroundColor: config.bgColor,
+                        color: config.color,
+                        border: `1px solid ${config.color}`,
                       }
                     : {
                         backgroundColor: theme.colors.surface,
@@ -333,88 +641,11 @@ const FeedbackPage: React.FC = () => {
                   ),
                 }}
               >
-                All
+                <config.icon size={16} />
+                {config.label}
               </button>
-              {Object.entries(categoryConfig).map(([key, config]) => (
-                <button
-                  key={key}
-                  onClick={() => setSelectedCategory(key)}
-                  style={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: theme.semanticSpacing.sm,
-                    padding: `${theme.semanticSpacing.sm} ${theme.semanticSpacing.md}`,
-                    borderRadius: '0.75rem',
-                    fontSize: theme.typography.fontSize.sm,
-                    fontWeight: theme.typography.fontWeight.medium,
-                    transition: theme.animations.transition.normal,
-                    border: 'none',
-                    cursor: 'pointer',
-                    ...(selectedCategory === key
-                      ? {
-                          backgroundColor: config.bgColor,
-                          color: config.color,
-                          border: `1px solid ${config.color}`,
-                        }
-                      : {
-                          backgroundColor: theme.colors.surface,
-                          color: theme.colors.textSecondary,
-                        }
-                    ),
-                  }}
-                >
-                  <config.icon size={16} />
-                  {config.label}
-                </button>
-              ))}
-            </div>
-
-            {/* Add Feedback Button */}
-            <motion.button
-              whileHover={{ scale: 1.02 }}
-              whileTap={{ scale: 0.98 }}
-              onClick={() => setShowForm(true)}
-              style={{
-                ...styles.button.primary,
-                display: 'flex',
-                alignItems: 'center',
-                gap: theme.semanticSpacing.sm,
-                boxShadow: theme.shadows.brand,
-              }}
-            >
-              <Plus size={20} />
-              Add Feedback
-            </motion.button>
+            ))}
           </motion.div>
-
-          {/* Success/Error Messages */}
-          <AnimatePresence>
-            {(success || error) && (
-              <motion.div
-                initial={{ opacity: 0, y: -10 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -10 }}
-                style={{
-                  padding: theme.semanticSpacing.md,
-                  marginBottom: theme.semanticSpacing.lg,
-                  borderRadius: '0.75rem',
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: theme.semanticSpacing.sm,
-                  backgroundColor: success 
-                    ? theme.utils.alpha(theme.colors.success, 0.1)
-                    : theme.utils.alpha(theme.colors.error, 0.1),
-                  border: `1px solid ${success ? theme.colors.success : theme.colors.error}`,
-                  color: success ? theme.colors.success : theme.colors.error,
-                }}
-              >
-                {success ? <CheckCircle size={16} /> : <AlertCircle size={16} />}
-                <span style={{ fontSize: theme.typography.fontSize.sm }}>
-                  {success || error}
-                </span>
-              </motion.div>
-            )}
-          </AnimatePresence>
 
           {/* Feedback List */}
           {loading ? (
@@ -576,226 +807,6 @@ const FeedbackPage: React.FC = () => {
           )}
         </div>
       </section>
-
-      {/* Feedback Form Modal */}
-      <AnimatePresence>
-        {showForm && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            style={{
-              position: 'fixed',
-              inset: 0,
-              backgroundColor: theme.utils.alpha(theme.colors.background, 0.8),
-              backdropFilter: 'blur(8px)',
-              zIndex: 1000,
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              padding: '1rem',
-            }}
-            onClick={() => setShowForm(false)}
-          >
-            <motion.div
-              initial={{ scale: 0.9, opacity: 0 }}
-              animate={{ scale: 1, opacity: 1 }}
-              exit={{ scale: 0.9, opacity: 0 }}
-              onClick={(e) => e.stopPropagation()}
-              style={{
-                ...styles.glass.medium,
-                border: `1px solid ${theme.colors.border}`,
-                borderRadius: '1.5rem',
-                width: '100%',
-                maxWidth: '32rem',
-                maxHeight: '90vh',
-                overflow: 'auto',
-              }}
-            >
-              {/* Header */}
-              <div 
-                style={{
-                  padding: theme.semanticSpacing.lg,
-                  borderBottom: `1px solid ${theme.colors.border}`,
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'space-between',
-                }}
-              >
-                <h2 
-                  style={{
-                    ...styles.typography.h3,
-                    color: theme.colors.text,
-                  }}
-                >
-                  Share Your Feedback
-                </h2>
-                <button
-                  onClick={() => setShowForm(false)}
-                  style={{
-                    backgroundColor: 'transparent',
-                    border: 'none',
-                    color: theme.colors.textSecondary,
-                    cursor: 'pointer',
-                    padding: theme.semanticSpacing.sm,
-                    borderRadius: '0.5rem',
-                  }}
-                >
-                  <X size={20} />
-                </button>
-              </div>
-
-              {/* Form */}
-              <form onSubmit={submitFeedback} style={{ padding: theme.semanticSpacing.lg }}>
-                <div style={{ marginBottom: theme.semanticSpacing.lg }}>
-                  <label 
-                    style={{
-                      ...styles.typography.body,
-                      color: theme.colors.text,
-                      fontWeight: theme.typography.fontWeight.medium,
-                      marginBottom: theme.semanticSpacing.sm,
-                      display: 'block',
-                    }}
-                  >
-                    Category
-                  </label>
-                  <div style={{ display: 'grid', gridTemplateColumns: '1fr', gap: theme.semanticSpacing.sm }}>
-                    {Object.entries(categoryConfig).map(([key, config]) => (
-                      <button
-                        key={key}
-                        type="button"
-                        onClick={() => setFormData(prev => ({ ...prev, category: key as any }))}
-                        style={{
-                          display: 'flex',
-                          alignItems: 'flex-start',
-                          gap: theme.semanticSpacing.md,
-                          padding: theme.semanticSpacing.md,
-                          borderRadius: '0.75rem',
-                          border: `1px solid ${formData.category === key ? config.color : theme.colors.border}`,
-                          backgroundColor: formData.category === key ? config.bgColor : theme.colors.surface,
-                          color: theme.colors.text,
-                          cursor: 'pointer',
-                          textAlign: 'left',
-                          transition: theme.animations.transition.normal,
-                        }}
-                      >
-                        <config.icon 
-                          style={{ color: formData.category === key ? config.color : theme.colors.textSecondary, flexShrink: 0 }} 
-                          size={20} 
-                        />
-                        <div>
-                          <div style={{ fontWeight: theme.typography.fontWeight.medium, marginBottom: theme.semanticSpacing.xs }}>
-                            {config.label}
-                          </div>
-                          <div style={{ fontSize: theme.typography.fontSize.sm, color: theme.colors.textSecondary }}>
-                            {config.description}
-                          </div>
-                        </div>
-                      </button>
-                    ))}
-                  </div>
-                </div>
-
-                <div style={{ marginBottom: theme.semanticSpacing.lg }}>
-                  <label 
-                    style={{
-                      ...styles.typography.body,
-                      color: theme.colors.text,
-                      fontWeight: theme.typography.fontWeight.medium,
-                      marginBottom: theme.semanticSpacing.sm,
-                      display: 'block',
-                    }}
-                  >
-                    Title *
-                  </label>
-                  <input
-                    type="text"
-                    value={formData.title}
-                    onChange={(e) => setFormData(prev => ({ ...prev, title: e.target.value }))}
-                    placeholder="Brief description of your feedback"
-                    required
-                    maxLength={200}
-                    style={{
-                      width: '100%',
-                      padding: theme.semanticSpacing.md,
-                      borderRadius: '0.75rem',
-                      border: `1px solid ${theme.colors.border}`,
-                      backgroundColor: theme.colors.surface,
-                      color: theme.colors.text,
-                      fontSize: theme.typography.fontSize.base,
-                      outline: 'none',
-                      transition: theme.animations.transition.normal,
-                    }}
-                  />
-                </div>
-
-                <div style={{ marginBottom: theme.semanticSpacing.lg }}>
-                  <label 
-                    style={{
-                      ...styles.typography.body,
-                      color: theme.colors.text,
-                      fontWeight: theme.typography.fontWeight.medium,
-                      marginBottom: theme.semanticSpacing.sm,
-                      display: 'block',
-                    }}
-                  >
-                    Details (optional)
-                  </label>
-                  <textarea
-                    value={formData.body}
-                    onChange={(e) => setFormData(prev => ({ ...prev, body: e.target.value }))}
-                    placeholder="Additional details about your feedback"
-                    maxLength={1000}
-                    rows={4}
-                    style={{
-                      width: '100%',
-                      padding: theme.semanticSpacing.md,
-                      borderRadius: '0.75rem',
-                      border: `1px solid ${theme.colors.border}`,
-                      backgroundColor: theme.colors.surface,
-                      color: theme.colors.text,
-                      fontSize: theme.typography.fontSize.base,
-                      outline: 'none',
-                      resize: 'vertical',
-                      fontFamily: 'inherit',
-                      transition: theme.animations.transition.normal,
-                    }}
-                  />
-                </div>
-
-                <div style={{ display: 'flex', gap: theme.semanticSpacing.md, justifyContent: 'flex-end' }}>
-                  <button
-                    type="button"
-                    onClick={() => setShowForm(false)}
-                    style={{
-                      ...styles.button.secondary,
-                      padding: `${theme.semanticSpacing.sm} ${theme.semanticSpacing.lg}`,
-                    }}
-                  >
-                    Cancel
-                  </button>
-                  <button
-                    type="submit"
-                    disabled={submitting || !formData.title.trim()}
-                    style={{
-                      ...styles.button.primary,
-                      padding: `${theme.semanticSpacing.sm} ${theme.semanticSpacing.lg}`,
-                      display: 'flex',
-                      alignItems: 'center',
-                      gap: theme.semanticSpacing.sm,
-                      opacity: submitting || !formData.title.trim() ? 0.6 : 1,
-                      cursor: submitting || !formData.title.trim() ? 'not-allowed' : 'pointer',
-                    }}
-                  >
-                    {submitting ? <Loader size={16} className="animate-spin" /> : <Send size={16} />}
-                    {submitting ? 'Submitting...' : 'Submit Feedback'}
-                  </button>
-                </div>
-              </form>
-            </motion.div>
-          </motion.div>
-        )}
-      </AnimatePresence>
 
       <Footer />
     </div>
