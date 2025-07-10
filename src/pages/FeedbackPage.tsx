@@ -226,14 +226,7 @@ const FeedbackPage: React.FC = () => {
             transition={{ duration: 0.8 }}
             className="text-center mb-12"
           >
-            <Link 
-              to="/"
-              className="inline-flex items-center gap-2 mb-6 text-sm"
-              style={{ color: theme.colors.textSecondary }}
-            >
-              <ArrowLeft size={16} />
-              Back to Home
-            </Link>
+            
             
             <h1 
               style={{
