@@ -7,4 +7,16 @@ export default defineConfig({
   optimizeDeps: {
     exclude: ['lucide-react'],
   },
+  // Add fallback for client-side routing
+  server: {
+    historyApiFallback: true,
+  },
+  // Ensure proper routing for production builds
+  build: {
+    rollupOptions: {
+      output: {
+        manualChunks: undefined,
+      },
+    },
+  },
 });
