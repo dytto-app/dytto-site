@@ -25,7 +25,7 @@ const APILandingPage = () => {
       <APIShowcase />
       <UseCases />
       
-      <Pricing />
+{/*       <Pricing /> */}
       <CallToAction />
       <Footer />
       <FeedbackWidget />
