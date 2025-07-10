@@ -19,7 +19,7 @@ const AppLandingPage = () => {
       <AppShowcase />
       <AppFeatures />
      
-      <AppCTA />
+{/*       <AppCTA /> */}
       <Footer />
       <FeedbackWidget />
     </div>
