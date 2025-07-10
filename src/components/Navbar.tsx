@@ -103,141 +103,92 @@ const Navbar = () => {
               </button>
             ))}
             
-            {/* Page Navigation */}
-            {navItems.length > 0 && (
-              <div className="flex items-center space-x-4 border-l border-gray-300 pl-4">
-                {!isHomePage && (
-                  <Link
-                    to="/"
-                    style={{ 
-                      color: theme.colors.textSecondary,
-                      fontSize: theme.typography.fontSize.sm,
-                      transition: theme.animations.transition.normal,
-                      textDecoration: 'none',
-                      fontWeight: theme.typography.fontWeight.medium,
-                    }}
-                    onMouseEnter={(e) => {
-                      e.target.style.color = theme.colors.primary;
-                    }}
-                    onMouseLeave={(e) => {
-                      e.target.style.color = theme.colors.textSecondary;
-                    }}
-                  >
-                    App
-                  </Link>
-                )}
-                
-                {!isAPIPage && (
-                  <Link
-                    to="/api"
-                    style={{ 
-                      color: theme.colors.textSecondary,
-                      fontSize: theme.typography.fontSize.sm,
-                      transition: theme.animations.transition.normal,
-                      textDecoration: 'none',
-                      fontWeight: theme.typography.fontWeight.medium,
-                    }}
-                    onMouseEnter={(e) => {
-                      e.target.style.color = theme.colors.primary;
-                    }}
-                    onMouseLeave={(e) => {
-                      e.target.style.color = theme.colors.textSecondary;
-                    }}
-                  >
-                    API
-                  </Link>
-                )}
-              </div>
-            )}
-
-            {/* Direct page links when no section nav */}
-            {navItems.length === 0 && (
-              <div className="flex items-center space-x-4">
-                {!isHomePage && (
-                  <Link
-                    to="/"
-                    style={{ 
-                      color: theme.colors.textSecondary,
-                      fontSize: theme.typography.fontSize.sm,
-                      transition: theme.animations.transition.normal,
-                      textDecoration: 'none',
-                      fontWeight: theme.typography.fontWeight.medium,
-                    }}
-                    onMouseEnter={(e) => {
-                      e.target.style.color = theme.colors.primary;
-                    }}
-                    onMouseLeave={(e) => {
-                      e.target.style.color = theme.colors.textSecondary;
-                    }}
-                  >
-                    App
-                  </Link>
-                )}
-                
-                {!isAPIPage && (
-                  <Link
-                    to="/api"
-                    style={{ 
-                      color: theme.colors.textSecondary,
-                      fontSize: theme.typography.fontSize.sm,
-                      transition: theme.animations.transition.normal,
-                      textDecoration: 'none',
-                      fontWeight: theme.typography.fontWeight.medium,
-                    }}
-                    onMouseEnter={(e) => {
-                      e.target.style.color = theme.colors.primary;
-                    }}
-                    onMouseLeave={(e) => {
-                      e.target.style.color = theme.colors.textSecondary;
-                    }}
-                  >
-                    API
-                  </Link>
-                )}
-                
-                {!isFeedbackPage && (
-                  <Link
-                    to="/feedback"
-                    style={{ 
-                      color: theme.colors.textSecondary,
-                      fontSize: theme.typography.fontSize.sm,
-                      transition: theme.animations.transition.normal,
-                      textDecoration: 'none',
-                      fontWeight: theme.typography.fontWeight.medium,
-                    }}
-                    onMouseEnter={(e) => {
-                      e.target.style.color = theme.colors.primary;
-                    }}
-                    onMouseLeave={(e) => {
-                      e.target.style.color = theme.colors.textSecondary;
-                    }}
-                  >
-                    Feedback
-                  </Link>
-                )}
-                
-                {!isWaitlistPage && (
-                  <Link
-                    to="/waitlist"
-                    style={{ 
-                      color: theme.colors.textSecondary,
-                      fontSize: theme.typography.fontSize.sm,
-                      transition: theme.animations.transition.normal,
-                      textDecoration: 'none',
-                      fontWeight: theme.typography.fontWeight.medium,
-                    }}
-                    onMouseEnter={(e) => {
-                      e.target.style.color = theme.colors.primary;
-                    }}
-                    onMouseLeave={(e) => {
-                      e.target.style.color = theme.colors.textSecondary;
-                    }}
-                  >
-                    Waitlist
-                  </Link>
-                )}
-              </div>
-            )}
+            {/* Page Navigation - Always show main pages */}
+            <div className="flex items-center space-x-4 border-l border-gray-300 pl-4">
+              {!isHomePage && (
+                <Link
+                  to="/"
+                  style={{ 
+                    color: theme.colors.textSecondary,
+                    fontSize: theme.typography.fontSize.sm,
+                    transition: theme.animations.transition.normal,
+                    textDecoration: 'none',
+                    fontWeight: theme.typography.fontWeight.medium,
+                  }}
+                  onMouseEnter={(e) => {
+                    e.target.style.color = theme.colors.primary;
+                  }}
+                  onMouseLeave={(e) => {
+                    e.target.style.color = theme.colors.textSecondary;
+                  }}
+                >
+                  App
+                </Link>
+              )}
+              
+              {!isAPIPage && (
+                <Link
+                  to="/api"
+                  style={{ 
+                    color: theme.colors.textSecondary,
+                    fontSize: theme.typography.fontSize.sm,
+                    transition: theme.animations.transition.normal,
+                    textDecoration: 'none',
+                    fontWeight: theme.typography.fontWeight.medium,
+                  }}
+                  onMouseEnter={(e) => {
+                    e.target.style.color = theme.colors.primary;
+                  }}
+                  onMouseLeave={(e) => {
+                    e.target.style.color = theme.colors.textSecondary;
+                  }}
+                >
+                  API
+                </Link>
+              )}
+              
+              {!isFeedbackPage && (
+                <Link
+                  to="/feedback"
+                  style={{ 
+                    color: theme.colors.textSecondary,
+                    fontSize: theme.typography.fontSize.sm,
+                    transition: theme.animations.transition.normal,
+                    textDecoration: 'none',
+                    fontWeight: theme.typography.fontWeight.medium,
+                  }}
+                  onMouseEnter={(e) => {
+                    e.target.style.color = theme.colors.primary;
+                  }}
+                  onMouseLeave={(e) => {
+                    e.target.style.color = theme.colors.textSecondary;
+                  }}
+                >
+                  Feedback
+                </Link>
+              )}
+              
+              {!isWaitlistPage && (
+                <Link
+                  to="/waitlist"
+                  style={{ 
+                    color: theme.colors.textSecondary,
+                    fontSize: theme.typography.fontSize.sm,
+                    transition: theme.animations.transition.normal,
+                    textDecoration: 'none',
+                    fontWeight: theme.typography.fontWeight.medium,
+                  }}
+                  onMouseEnter={(e) => {
+                    e.target.style.color = theme.colors.primary;
+                  }}
+                  onMouseLeave={(e) => {
+                    e.target.style.color = theme.colors.textSecondary;
+                  }}
+                >
+                  Waitlist
+                </Link>
+              )}
+            </div>
           </div>
 
           {/* Desktop Auth buttons and theme toggle */}
@@ -374,7 +325,7 @@ const Navbar = () => {
                   </motion.button>
                 ))}
                 
-                {/* Page Navigation */}
+                {/* Page Navigation - Always show */}
                 {navItems.length > 0 && (
                   <div style={{ 
                     height: '1px', 
