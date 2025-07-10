@@ -87,7 +87,7 @@ const AppShowcase = () => {
               margin: '0 auto',
             }}
           >
-            Experience how Dytto transforms your daily life into beautiful stories and meaningful insights
+            Experience how Dytto transforms your daily life into stories and meaningful insights
           </p>
         </motion.div>
 
