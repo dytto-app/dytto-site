@@ -10,12 +10,46 @@ const Navbar = () => {
   const { theme, mode, toggleMode } = useTheme();
   const styles = useThemeStyles();
   const location = useLocation();
+  
   const isAPIPage = location.pathname === '/api';
   const isWaitlistPage = location.pathname === '/waitlist';
+  const isFeedbackPage = location.pathname === '/feedback';
+  const isHomePage = location.pathname === '/';
 
-  const navItems = isAPIPage 
-    ? ['Platform', 'API', 'Use Cases', 'Developers', 'Pricing']
-    : ['Features', 'App', 'Products', 'Testimonials', 'Pricing'];
+  // Dynamic navigation items based on current page
+  const getNavItems = () => {
+    if (isAPIPage) {
+      return [
+        { label: 'Platform', href: '#platform' },
+        { label: 'API', href: '#api' },
+        { label: 'Use Cases', href: '#usecases' },
+        { label: 'Developers', href: '#developers' },
+        { label: 'Pricing', href: '#pricing' }
+      ];
+    } else if (isHomePage) {
+      return [
+        { label: 'Features', href: '#features' },
+        { label: 'App', href: '#app' },
+        { label: 'Products', href: '#products' },
+        { label: 'Testimonials', href: '#testimonials' },
+        { label: 'Pricing', href: '#pricing' }
+      ];
+    } else {
+      return []; // No section navigation for other pages
+    }
+  };
+
+  const navItems = getNavItems();
+
+  const handleNavClick = (href: string) => {
+    setIsOpen(false);
+    if (href.startsWith('#')) {
+      const element = document.querySelector(href);
+      if (element) {
+        element.scrollIntoView({ behavior: 'smooth' });
+      }
+    }
+  };
 
   return (
     <>
@@ -40,26 +74,27 @@ const Navbar = () => {
             <span style={{ 
               color: theme.colors.text, 
               fontWeight: theme.typography.fontWeight.semibold,
-              fontSize: theme.typography.fontSize.lg,
-              '@media (min-width: 640px)': {
-                fontSize: theme.typography.fontSize.xl
-              }
+              fontSize: 'clamp(1rem, 4vw, 1.25rem)',
             }}>
               Dytto
             </span>
           </Link>
           
           {/* Desktop Navigation Menu */}
-          <div className="hidden lg:flex items-center space-x-8">
+          <div className="hidden lg:flex items-center space-x-6">
+            {/* Section Navigation (only on home/api pages) */}
             {navItems.map((item) => (
-              <a 
-                key={item}
-                href={`#${item.toLowerCase()}`} 
+              <button
+                key={item.label}
+                onClick={() => handleNavClick(item.href)}
                 style={{ 
                   color: theme.colors.textSecondary,
                   fontSize: theme.typography.fontSize.sm,
                   transition: theme.animations.transition.normal,
-                  textDecoration: 'none',
+                  background: 'none',
+                  border: 'none',
+                  cursor: 'pointer',
+                  padding: `${theme.semanticSpacing.sm} 0`,
                 }}
                 onMouseEnter={(e) => {
                   e.target.style.color = theme.colors.primary;
@@ -68,59 +103,96 @@ const Navbar = () => {
                   e.target.style.color = theme.colors.textSecondary;
                 }}
               >
-                {item}
-              </a>
+                {item.label}
+              </button>
             ))}
-            <Link
-              to={isAPIPage ? '/' : '/api'}
-              style={{ 
-                color: theme.colors.primary,
-                fontSize: theme.typography.fontSize.sm,
-                transition: theme.animations.transition.normal,
-                textDecoration: 'none',
-                fontWeight: theme.typography.fontWeight.medium,
-              }}
-            >
-              {isAPIPage ? 'App' : 'API'}
-            </Link>
-            <Link
-              to="/feedback"
-              style={{ 
-                color: theme.colors.textSecondary,
-                fontSize: theme.typography.fontSize.sm,
-                transition: theme.animations.transition.normal,
-                textDecoration: 'none',
-                fontWeight: theme.typography.fontWeight.medium,
-              }}
-              onMouseEnter={(e) => {
-                e.target.style.color = theme.colors.primary;
-              }}
-              onMouseLeave={(e) => {
-                e.target.style.color = theme.colors.textSecondary;
-              }}
-            >
-              Feedback
-            </Link>
-            {!isWaitlistPage && (
-              <Link
-                to="/waitlist"
-                style={{ 
-                  color: theme.colors.textSecondary,
-                  fontSize: theme.typography.fontSize.sm,
-                  transition: theme.animations.transition.normal,
-                  textDecoration: 'none',
-                  fontWeight: theme.typography.fontWeight.medium,
-                }}
-                onMouseEnter={(e) => {
-                  e.target.style.color = theme.colors.primary;
-                }}
-                onMouseLeave={(e) => {
-                  e.target.style.color = theme.colors.textSecondary;
-                }}
-              >
-                Waitlist
-              </Link>
-            )}
+            
+            {/* Page Navigation */}
+            <div className="flex items-center space-x-4 border-l border-gray-300 pl-4">
+              {!isHomePage && (
+                <Link
+                  to="/"
+                  style={{ 
+                    color: theme.colors.textSecondary,
+                    fontSize: theme.typography.fontSize.sm,
+                    transition: theme.animations.transition.normal,
+                    textDecoration: 'none',
+                    fontWeight: theme.typography.fontWeight.medium,
+                  }}
+                  onMouseEnter={(e) => {
+                    e.target.style.color = theme.colors.primary;
+                  }}
+                  onMouseLeave={(e) => {
+                    e.target.style.color = theme.colors.textSecondary;
+                  }}
+                >
+                  App
+                </Link>
+              )}
+              
+              {!isAPIPage && (
+                <Link
+                  to="/api"
+                  style={{ 
+                    color: theme.colors.textSecondary,
+                    fontSize: theme.typography.fontSize.sm,
+                    transition: theme.animations.transition.normal,
+                    textDecoration: 'none',
+                    fontWeight: theme.typography.fontWeight.medium,
+                  }}
+                  onMouseEnter={(e) => {
+                    e.target.style.color = theme.colors.primary;
+                  }}
+                  onMouseLeave={(e) => {
+                    e.target.style.color = theme.colors.textSecondary;
+                  }}
+                >
+                  API
+                </Link>
+              )}
+              
+              {!isFeedbackPage && (
+                <Link
+                  to="/feedback"
+                  style={{ 
+                    color: theme.colors.textSecondary,
+                    fontSize: theme.typography.fontSize.sm,
+                    transition: theme.animations.transition.normal,
+                    textDecoration: 'none',
+                    fontWeight: theme.typography.fontWeight.medium,
+                  }}
+                  onMouseEnter={(e) => {
+                    e.target.style.color = theme.colors.primary;
+                  }}
+                  onMouseLeave={(e) => {
+                    e.target.style.color = theme.colors.textSecondary;
+                  }}
+                >
+                  Feedback
+                </Link>
+              )}
+              
+              {!isWaitlistPage && (
+                <Link
+                  to="/waitlist"
+                  style={{ 
+                    color: theme.colors.textSecondary,
+                    fontSize: theme.typography.fontSize.sm,
+                    transition: theme.animations.transition.normal,
+                    textDecoration: 'none',
+                    fontWeight: theme.typography.fontWeight.medium,
+                  }}
+                  onMouseEnter={(e) => {
+                    e.target.style.color = theme.colors.primary;
+                  }}
+                  onMouseLeave={(e) => {
+                    e.target.style.color = theme.colors.textSecondary;
+                  }}
+                >
+                  Waitlist
+                </Link>
+              )}
+            </div>
           </div>
 
           {/* Desktop Auth buttons and theme toggle */}
@@ -186,7 +258,7 @@ const Navbar = () => {
                 transition: theme.animations.transition.normal,
               }}
             >
-              {isAPIPage ? 'Get API Key' : isWaitlistPage ? 'Join Waitlist' : 'Download App'}
+              {isAPIPage ? 'Get API Key' : isWaitlistPage ? 'Join Waitlist' : isFeedbackPage ? 'Submit Feedback' : 'Download App'}
             </motion.button>
           </div>
 
@@ -247,22 +319,26 @@ const Navbar = () => {
               onClick={(e) => e.stopPropagation()}
             >
               <div className="space-y-4">
+                {/* Section Navigation (if applicable) */}
                 {navItems.map((item, index) => (
-                  <motion.a
-                    key={item}
-                    href={`#${item.toLowerCase()}`}
+                  <motion.button
+                    key={item.label}
                     initial={{ opacity: 0, x: -20 }}
                     animate={{ opacity: 1, x: 0 }}
                     transition={{ delay: index * 0.1 }}
-                    onClick={() => setIsOpen(false)}
+                    onClick={() => handleNavClick(item.href)}
                     style={{
                       display: 'block',
+                      width: '100%',
+                      textAlign: 'left',
                       color: theme.colors.text,
                       fontSize: theme.typography.fontSize.lg,
                       fontWeight: theme.typography.fontWeight.medium,
                       padding: theme.semanticSpacing.md,
                       borderRadius: '0.75rem',
-                      textDecoration: 'none',
+                      backgroundColor: 'transparent',
+                      border: 'none',
+                      cursor: 'pointer',
                       transition: theme.animations.transition.normal,
                     }}
                     onMouseEnter={(e) => {
@@ -272,61 +348,99 @@ const Navbar = () => {
                       e.target.style.backgroundColor = 'transparent';
                     }}
                   >
-                    {item}
-                  </motion.a>
+                    {item.label}
+                  </motion.button>
                 ))}
                 
-                <motion.div
-                  initial={{ opacity: 0, x: -20 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ delay: navItems.length * 0.1 }}
-                >
-                  <Link
-                    to={isAPIPage ? '/' : '/api'}
-                    onClick={() => setIsOpen(false)}
-                    style={{
-                      display: 'block',
-                      color: theme.colors.primary,
-                      fontSize: theme.typography.fontSize.lg,
-                      fontWeight: theme.typography.fontWeight.medium,
-                      padding: theme.semanticSpacing.md,
-                      borderRadius: '0.75rem',
-                      textDecoration: 'none',
-                      transition: theme.animations.transition.normal,
-                    }}
+                {/* Page Navigation */}
+                {navItems.length > 0 && (
+                  <div style={{ 
+                    height: '1px', 
+                    backgroundColor: theme.colors.border, 
+                    margin: `${theme.semanticSpacing.md} 0` 
+                  }} />
+                )}
+                
+                {!isHomePage && (
+                  <motion.div
+                    initial={{ opacity: 0, x: -20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ delay: (navItems.length) * 0.1 }}
                   >
-                    {isAPIPage ? 'App' : 'API'}
-                  </Link>
-                </motion.div>
+                    <Link
+                      to="/"
+                      onClick={() => setIsOpen(false)}
+                      style={{
+                        display: 'block',
+                        color: theme.colors.textSecondary,
+                        fontSize: theme.typography.fontSize.lg,
+                        fontWeight: theme.typography.fontWeight.medium,
+                        padding: theme.semanticSpacing.md,
+                        borderRadius: '0.75rem',
+                        textDecoration: 'none',
+                        transition: theme.animations.transition.normal,
+                      }}
+                    >
+                      App
+                    </Link>
+                  </motion.div>
+                )}
 
-                <motion.div
-                  initial={{ opacity: 0, x: -20 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ delay: (navItems.length + 1) * 0.1 }}
-                >
-                  <Link
-                    to="/feedback"
-                    onClick={() => setIsOpen(false)}
-                    style={{
-                      display: 'block',
-                      color: theme.colors.textSecondary,
-                      fontSize: theme.typography.fontSize.lg,
-                      fontWeight: theme.typography.fontWeight.medium,
-                      padding: theme.semanticSpacing.md,
-                      borderRadius: '0.75rem',
-                      textDecoration: 'none',
-                      transition: theme.animations.transition.normal,
-                    }}
+                {!isAPIPage && (
+                  <motion.div
+                    initial={{ opacity: 0, x: -20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ delay: (navItems.length + 1) * 0.1 }}
                   >
-                    Feedback
-                  </Link>
-                </motion.div>
+                    <Link
+                      to="/api"
+                      onClick={() => setIsOpen(false)}
+                      style={{
+                        display: 'block',
+                        color: theme.colors.textSecondary,
+                        fontSize: theme.typography.fontSize.lg,
+                        fontWeight: theme.typography.fontWeight.medium,
+                        padding: theme.semanticSpacing.md,
+                        borderRadius: '0.75rem',
+                        textDecoration: 'none',
+                        transition: theme.animations.transition.normal,
+                      }}
+                    >
+                      API
+                    </Link>
+                  </motion.div>
+                )}
+
+                {!isFeedbackPage && (
+                  <motion.div
+                    initial={{ opacity: 0, x: -20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ delay: (navItems.length + 2) * 0.1 }}
+                  >
+                    <Link
+                      to="/feedback"
+                      onClick={() => setIsOpen(false)}
+                      style={{
+                        display: 'block',
+                        color: theme.colors.textSecondary,
+                        fontSize: theme.typography.fontSize.lg,
+                        fontWeight: theme.typography.fontWeight.medium,
+                        padding: theme.semanticSpacing.md,
+                        borderRadius: '0.75rem',
+                        textDecoration: 'none',
+                        transition: theme.animations.transition.normal,
+                      }}
+                    >
+                      Feedback
+                    </Link>
+                  </motion.div>
+                )}
 
                 {!isWaitlistPage && (
                   <motion.div
                     initial={{ opacity: 0, x: -20 }}
                     animate={{ opacity: 1, x: 0 }}
-                    transition={{ delay: (navItems.length + 2) * 0.1 }}
+                    transition={{ delay: (navItems.length + 3) * 0.1 }}
                   >
                     <Link
                       to="/waitlist"
@@ -384,7 +498,7 @@ const Navbar = () => {
                       cursor: 'pointer',
                     }}
                   >
-                    {isAPIPage ? 'Get API Key' : isWaitlistPage ? 'Join Waitlist' : 'Download App'}
+                    {isAPIPage ? 'Get API Key' : isWaitlistPage ? 'Join Waitlist' : isFeedbackPage ? 'Submit Feedback' : 'Download App'}
                   </motion.button>
                 </div>
               </div>
