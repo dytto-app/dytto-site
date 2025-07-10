@@ -83,6 +83,24 @@ const Navbar = () => {
             >
               {isAPIPage ? 'App' : 'API'}
             </Link>
+            <Link
+              to="/feedback"
+              style={{ 
+                color: theme.colors.textSecondary,
+                fontSize: theme.typography.fontSize.sm,
+                transition: theme.animations.transition.normal,
+                textDecoration: 'none',
+                fontWeight: theme.typography.fontWeight.medium,
+              }}
+              onMouseEnter={(e) => {
+                e.target.style.color = theme.colors.primary;
+              }}
+              onMouseLeave={(e) => {
+                e.target.style.color = theme.colors.textSecondary;
+              }}
+            >
+              Feedback
+            </Link>
             {!isWaitlistPage && (
               <Link
                 to="/waitlist"
@@ -281,11 +299,34 @@ const Navbar = () => {
                   </Link>
                 </motion.div>
 
+                <motion.div
+                  initial={{ opacity: 0, x: -20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: (navItems.length + 1) * 0.1 }}
+                >
+                  <Link
+                    to="/feedback"
+                    onClick={() => setIsOpen(false)}
+                    style={{
+                      display: 'block',
+                      color: theme.colors.textSecondary,
+                      fontSize: theme.typography.fontSize.lg,
+                      fontWeight: theme.typography.fontWeight.medium,
+                      padding: theme.semanticSpacing.md,
+                      borderRadius: '0.75rem',
+                      textDecoration: 'none',
+                      transition: theme.animations.transition.normal,
+                    }}
+                  >
+                    Feedback
+                  </Link>
+                </motion.div>
+
                 {!isWaitlistPage && (
                   <motion.div
                     initial={{ opacity: 0, x: -20 }}
                     animate={{ opacity: 1, x: 0 }}
-                    transition={{ delay: (navItems.length + 1) * 0.1 }}
+                    transition={{ delay: (navItems.length + 2) * 0.1 }}
                   >
                     <Link
                       to="/waitlist"

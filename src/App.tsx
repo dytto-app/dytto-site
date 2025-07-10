@@ -4,6 +4,7 @@ import { ThemeProvider } from './components/ThemeProvider';
 import WaitlistLandingPage from './pages/WaitlistLandingPage';
 import AppLandingPage from './pages/AppLandingPage';
 import APILandingPage from './pages/APILandingPage';
+import FeedbackPage from './pages/FeedbackPage';
 
 function App() {
   return (
@@ -13,6 +14,7 @@ function App() {
           <Route path="/" element={<AppLandingPage />} />
           <Route path="/waitlist" element={<WaitlistLandingPage />} />
           <Route path="/api" element={<APILandingPage />} />
+          <Route path="/feedback" element={<FeedbackPage />} />
         </Routes>
       </Router>
     </ThemeProvider>

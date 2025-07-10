@@ -1,6 +1,7 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { Twitter, Github, Linkedin, Mail, Brain, MessageCircle, Instagram } from 'lucide-react';
+import { Link } from 'react-router-dom';
 import { useTheme } from './ThemeProvider';
 import { useThemeStyles } from '../hooks/useThemeStyles';
 
@@ -34,6 +35,7 @@ const Footer = () => {
       'About Us',
       'Careers',
       'Blog',
+      'Feedback',
       'Privacy Policy',
       'Terms of Service'
     ]
@@ -167,8 +169,105 @@ const Footer = () => {
               <ul className="space-y-2 sm:space-y-3">
                 {links.map((link, index) => (
                   <li key={index}>
-                    <a
-                      href="#"
+                    {link === 'Feedback' ? (
+                      <Link
+                        to="/feedback"
+                        style={{
+                          color: theme.colors.textSecondary,
+                          fontSize: theme.typography.fontSize.sm,
+                          transition: theme.animations.transition.normal,
+                          textDecoration: 'none',
+                          display: 'block',
+                        }}
+                        onMouseEnter={(e) => {
+                          e.target.style.color = theme.colors.primary;
+                        }}
+                        onMouseLeave={(e) => {
+                          e.target.style.color = theme.colors.textSecondary;
+                        }}
+                      >
+                        {link}
+                      </Link>
+                    ) : (
+                      <a
+                        href="#"
+                        style={{
+                          color: theme.colors.textSecondary,
+                          fontSize: theme.typography.fontSize.sm,
+                          transition: theme.animations.transition.normal,
+                          textDecoration: 'none',
+                          display: 'block',
+                        }}
+                        onMouseEnter={(e) => {
+                          e.target.style.color = theme.colors.primary;
+                        }}
+                        onMouseLeave={(e) => {
+                          e.target.style.color = theme.colors.textSecondary;
+                        }}
+                      >
+                        {link}
+                      </a>
+                    )}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ))}
+        </div>
+
+        <div 
+          style={{
+            borderTop: `1px solid ${theme.colors.border}`,
+            paddingTop: theme.semanticSpacing.lg,
+          }}
+        >
+          <div className="flex flex-col sm:flex-row items-center justify-between space-y-4 sm:space-y-0">
+            <div className="flex items-center space-x-4 sm:space-x-6">
+              <div 
+                style={{
+                  color: theme.colors.textSecondary,
+                  fontSize: theme.typography.fontSize.sm,
+                }}
+              >
+                © 2024 Dytto. All rights reserved.
+              </div>
+            </div>
+
+            <div 
+              className="flex flex-wrap items-center justify-center sm:justify-end space-x-4 sm:space-x-6"
+              style={{
+                color: theme.colors.textSecondary,
+                fontSize: theme.typography.fontSize.sm,
+              }}
+            >
+              {['Privacy Policy', 'Terms of Service', 'Security', 'Cookies'].map((item, index) => (
+                <a 
+                  key={item}
+                  href="#" 
+                  style={{
+                    color: theme.colors.textSecondary,
+                    transition: theme.animations.transition.normal,
+                    textDecoration: 'none',
+                  }}
+                  onMouseEnter={(e) => {
+                    e.target.style.color = theme.colors.primary;
+                  }}
+                  onMouseLeave={(e) => {
+                    e.target.style.color = theme.colors.textSecondary;
+                  }}
+                >
+                  {item}
+                </a>
+              ))}
+            </div>
+          </div>
+        </div>
+      </div>
+    </footer>
+  );
+};
+
+export default Footer;
                       style={{
                         color: theme.colors.textSecondary,
                         fontSize: theme.typography.fontSize.sm,
