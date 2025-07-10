@@ -11,6 +11,7 @@ import Pricing from '../components/Pricing';
 import SecuritySection from '../components/SecuritySection';
 import CallToAction from '../components/CallToAction';
 import Footer from '../components/Footer';
+import FeedbackWidget from '../components/FeedbackWidget';
 import { useThemeStyles } from '../hooks/useThemeStyles';
 
 const APILandingPage = () => {
@@ -27,6 +28,7 @@ const APILandingPage = () => {
       <Pricing />
       <CallToAction />
       <Footer />
+      <FeedbackWidget />
     </div>
   );
 };

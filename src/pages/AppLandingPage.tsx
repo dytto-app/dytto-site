@@ -6,6 +6,7 @@ import AppFeatures from '../components/app/AppFeatures';
 import AppTestimonials from '../components/app/AppTestimonials';
 import AppCTA from '../components/app/AppCTA';
 import Footer from '../components/Footer';
+import FeedbackWidget from '../components/FeedbackWidget';
 import { useThemeStyles } from '../hooks/useThemeStyles';
 
 const AppLandingPage = () => {
@@ -20,6 +21,7 @@ const AppLandingPage = () => {
      
       <AppCTA />
       <Footer />
+      <FeedbackWidget />
     </div>
   );
 };

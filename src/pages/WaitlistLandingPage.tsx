@@ -5,6 +5,7 @@ import { useThemeStyles } from '../hooks/useThemeStyles';
 import EmailCapture from '../components/waitlist/EmailCapture';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
+import FeedbackWidget from '../components/FeedbackWidget';
 import { Camera, BookOpen, MessageSquare, Brain, Sparkles } from 'lucide-react';
 
 const WaitlistLandingPage = () => {
@@ -395,6 +396,7 @@ const WaitlistLandingPage = () => {
       </section>
 
       <Footer />
+      <FeedbackWidget />
     </div>
   );
 };
