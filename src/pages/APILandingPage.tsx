@@ -21,9 +21,10 @@ const APILandingPage = () => {
     <div style={styles.bg.primary} className="min-h-screen">
       <Navbar />
       <APIHero />
+      <UseCases />
       <PlatformOverview />
       <APIShowcase />
-      <UseCases />
+     
       
 {/*       <Pricing /> */}
       <CallToAction />
