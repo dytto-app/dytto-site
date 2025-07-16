@@ -163,7 +163,7 @@ const EmailCapture: React.FC<EmailCaptureProps> = ({
             marginBottom: theme.semanticSpacing.lg,
           }}
         >
-          Join thousands of early users getting exclusive access to Dytto
+          Join thousands of early users getting exclusive access to dytto
         </p>
       </motion.div>
 
@@ -282,7 +282,7 @@ const EmailCapture: React.FC<EmailCaptureProps> = ({
           className="mt-8 space-y-3"
         >
           {[
-            "Full access to Dytto’s context API",
+            "Full access to dytto’s context API",
             "Claude desktop agent integration",
             "Get premium access for free while we’re in beta.",
             "Direct line to our team for feedback",
