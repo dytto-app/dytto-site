@@ -18,7 +18,7 @@ const Footer = () => {
       'Status Page'
     ],
     'Products': [
-      'Dytto App',
+      'dytto App',
       'Memories',
       'News Feed',
       'AI Insights',
@@ -100,7 +100,7 @@ const Footer = () => {
                   fontSize: theme.typography.fontSize.xl,
                 }}
               >
-                Dytto
+                dytto
               </span>
             </div>
             <p 
@@ -229,7 +229,7 @@ const Footer = () => {
                   fontSize: theme.typography.fontSize.sm,
                 }}
               >
-                © 2024 Dytto. All rights reserved.
+                © 2024 dytto. All rights reserved.
               </div>
             </div>
 
