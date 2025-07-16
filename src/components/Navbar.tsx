@@ -72,7 +72,7 @@ const Navbar = () => {
               fontWeight: theme.typography.fontWeight.semibold,
               fontSize: 'clamp(1rem, 4vw, 1.25rem)',
             }}>
-              Dytto
+              dytto
             </span>
           </Link>
           
