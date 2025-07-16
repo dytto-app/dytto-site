@@ -1,4 +1,4 @@
-import React from 'react';
+React from 'react';
 import { motion } from 'framer-motion';
 import { Camera, BookOpen, Newspaper, Brain, MapPin, Clock } from 'lucide-react';
 import { useTheme } from '../ThemeProvider';
@@ -194,7 +194,7 @@ const AppFeatures = () => {
               maxWidth: '280px',
             }}
           >
-            Download Dytto App
+            Download the dytto App
           </motion.button>
           
           {/* Trust Indicator */}
