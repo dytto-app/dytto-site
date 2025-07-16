@@ -171,7 +171,7 @@ const AppHero = () => {
           </motion.button>
         </motion.div>
 
-        <motion.div
+{/*         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.8 }}
@@ -187,7 +187,7 @@ const AppHero = () => {
             ))}
           </div>
           <span>4.8 • 10K+ downloads • Free to use</span>
-        </motion.div>
+        </motion.div> */}
       </div>
     </section>
   );
