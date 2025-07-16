@@ -104,7 +104,7 @@ const AppHero = () => {
             marginBottom: theme.semanticSpacing.xl,
           }}
         >
-          Dytto captures your daily moments and transforms them into 
+          dytto captures your daily moments and transforms them into 
           beautiful stories.     
           Discover patterns, get personalized insights, 
           and relive your memories like never before.
