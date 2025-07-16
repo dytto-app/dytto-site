@@ -14,7 +14,7 @@ const features = [
   {
     icon: MessageSquare,
     title: "Add Context with Comments",
-    description: "Enhance your stories by adding context to help Dytto understand what matters.",
+    description: "Enhance your stories by adding context to help dytto understand what matters.",
     image: "/IMG_4024.PNG"
   },
   {
@@ -74,7 +74,7 @@ const AppShowcase = () => {
                 display: 'inline-block',
               }}
             >
-              Dytto
+              dytto
             </motion.span>{' '}
             in action
           </h2>
@@ -87,7 +87,7 @@ const AppShowcase = () => {
               margin: '0 auto',
             }}
           >
-            Experience how Dytto transforms your daily life into stories and meaningful insights
+            Experience how dytto transforms your daily life into stories and meaningful insights
           </p>
         </motion.div>
 
