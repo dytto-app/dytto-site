@@ -51,6 +51,67 @@ const BlogPage: React.FC = () => {
 
   // Fetch blog posts
   const fetchPosts = async (search?: string, tag?: string) => {
+    if (!SUPABASE_URL) {
+      // Use mock data when Supabase is not configured
+      const mockPosts: BlogPost[] = [
+        {
+          id: '1',
+          title: 'Welcome to the Dytto Developer Blog',
+          slug: 'welcome-to-dytto-blog',
+          excerpt: 'Introducing our new developer blog where we share updates, tutorials, and insights about building with Dytto.',
+          content: '# Welcome to the Dytto Developer Blog\n\nWe\'re excited to launch our developer blog! This is where we\'ll share:\n\n- **Product Updates**: Latest features and improvements\n- **Technical Deep Dives**: How we build and scale Dytto\n- **Developer Tutorials**: Guides for using our APIs\n- **Community Highlights**: Showcasing what you\'re building\n\n## What\'s Coming Next\n\nStay tuned for upcoming posts about:\n- Building context-aware applications\n- Best practices for persona interactions\n- Performance optimization tips\n- New API features and capabilities\n\nWe\'re just getting started, and we can\'t wait to share more with you!',
+          author: 'Dytto Team',
+          tags: ['announcement', 'welcome', 'developer-blog'],
+          status: 'published',
+          published_at: new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString(),
+          created_at: new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString(),
+          updated_at: new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString()
+        },
+        {
+          id: '2',
+          title: 'Building Your First Context-Aware Application',
+          slug: 'building-context-aware-app',
+          excerpt: 'A step-by-step guide to creating intelligent applications that understand user context using Dytto\'s APIs.',
+          content: '# Building Your First Context-Aware Application\n\nContext-aware applications are the future of user experience. In this tutorial, we\'ll walk through building a simple app that adapts to user preferences and behavior.\n\n## Prerequisites\n\n- Basic knowledge of JavaScript/TypeScript\n- A Dytto API key (get one [here](/api))\n- Node.js installed on your machine\n\n## Step 1: Setting Up Your Project\n\n```bash\nnpm init -y\nnpm install @dytto/sdk\n```\n\n## Step 2: Initialize the Dytto Client\n\n```javascript\nimport { DyttoClient } from \'@dytto/sdk\';\n\nconst client = new DyttoClient({\n  apiKey: process.env.DYTTO_API_KEY\n});\n```\n\n## Step 3: Generate Simulation Agents\n\n```javascript\nconst agents = await client.simulation.generateAgents({\n  count: 10,\n  criteria: {\n    age_group: [\'25-34\'],\n    interests: [\'technology\', \'fitness\']\n  }\n});\n```\n\n## Next Steps\n\nIn our next post, we\'ll dive deeper into persona interactions and advanced context queries.\n\nHappy building! 🚀',
+          author: 'Alex Chen',
+          tags: ['tutorial', 'getting-started', 'api', 'context-aware'],
+          status: 'published',
+          published_at: new Date(Date.now() - 2 * 60 * 60 * 1000).toISOString(),
+          created_at: new Date(Date.now() - 2 * 60 * 60 * 1000).toISOString(),
+          updated_at: new Date(Date.now() - 2 * 60 * 60 * 1000).toISOString()
+        }
+      ];
+
+      // Filter mock data
+      let filteredPosts = mockPosts;
+      
+      if (search) {
+        const searchLower = search.toLowerCase();
+        filteredPosts = filteredPosts.filter(post => 
+          post.title.toLowerCase().includes(searchLower) ||
+          post.content.toLowerCase().includes(searchLower) ||
+          post.excerpt?.toLowerCase().includes(searchLower) ||
+          post.tags.some(tag => tag.toLowerCase().includes(searchLower))
+        );
+      }
+      
+      if (tag) {
+        filteredPosts = filteredPosts.filter(post => post.tags.includes(tag));
+      }
+
+      setPosts(filteredPosts);
+      
+      // Extract all unique tags
+      const tags = new Set<string>();
+      mockPosts.forEach((post) => {
+        post.tags.forEach(tag => tags.add(tag));
+      });
+      setAllTags(Array.from(tags).sort());
+      
+      setLoading(false);
+      return;
+    }
+
     setLoading(true);
     setError(null);
 
@@ -83,6 +144,46 @@ const BlogPage: React.FC = () => {
 
   // Fetch specific post by slug
   const fetchPost = async (postSlug: string) => {
+    if (!SUPABASE_URL) {
+      // Use mock data when Supabase is not configured
+      const mockPosts: BlogPost[] = [
+        {
+          id: '1',
+          title: 'Welcome to the Dytto Developer Blog',
+          slug: 'welcome-to-dytto-blog',
+          excerpt: 'Introducing our new developer blog where we share updates, tutorials, and insights about building with Dytto.',
+          content: '# Welcome to the Dytto Developer Blog\n\nWe\'re excited to launch our developer blog! This is where we\'ll share:\n\n- **Product Updates**: Latest features and improvements\n- **Technical Deep Dives**: How we build and scale Dytto\n- **Developer Tutorials**: Guides for using our APIs\n- **Community Highlights**: Showcasing what you\'re building\n\n## What\'s Coming Next\n\nStay tuned for upcoming posts about:\n- Building context-aware applications\n- Best practices for persona interactions\n- Performance optimization tips\n- New API features and capabilities\n\nWe\'re just getting started, and we can\'t wait to share more with you!',
+          author: 'Dytto Team',
+          tags: ['announcement', 'welcome', 'developer-blog'],
+          status: 'published',
+          published_at: new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString(),
+          created_at: new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString(),
+          updated_at: new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString()
+        },
+        {
+          id: '2',
+          title: 'Building Your First Context-Aware Application',
+          slug: 'building-context-aware-app',
+          excerpt: 'A step-by-step guide to creating intelligent applications that understand user context using Dytto\'s APIs.',
+          content: '# Building Your First Context-Aware Application\n\nContext-aware applications are the future of user experience. In this tutorial, we\'ll walk through building a simple app that adapts to user preferences and behavior.\n\n## Prerequisites\n\n- Basic knowledge of JavaScript/TypeScript\n- A Dytto API key (get one [here](/api))\n- Node.js installed on your machine\n\n## Step 1: Setting Up Your Project\n\n```bash\nnpm init -y\nnpm install @dytto/sdk\n```\n\n## Step 2: Initialize the Dytto Client\n\n```javascript\nimport { DyttoClient } from \'@dytto/sdk\';\n\nconst client = new DyttoClient({\n  apiKey: process.env.DYTTO_API_KEY\n});\n```\n\n## Step 3: Generate Simulation Agents\n\n```javascript\nconst agents = await client.simulation.generateAgents({\n  count: 10,\n  criteria: {\n    age_group: [\'25-34\'],\n    interests: [\'technology\', \'fitness\']\n  }\n});\n```\n\n## Next Steps\n\nIn our next post, we\'ll dive deeper into persona interactions and advanced context queries.\n\nHappy building! 🚀',
+          author: 'Alex Chen',
+          tags: ['tutorial', 'getting-started', 'api', 'context-aware'],
+          status: 'published',
+          published_at: new Date(Date.now() - 2 * 60 * 60 * 1000).toISOString(),
+          created_at: new Date(Date.now() - 2 * 60 * 60 * 1000).toISOString(),
+          updated_at: new Date(Date.now() - 2 * 60 * 60 * 1000).toISOString()
+        }
+      ];
+
+      const post = mockPosts.find(p => p.slug === postSlug);
+      if (post) {
+        setSelectedPost(post);
+      } else {
+        setError('Blog post not found');
+      }
+      return;
+    }
+
     try {
       const result = await blogService.getPost(postSlug);
       
