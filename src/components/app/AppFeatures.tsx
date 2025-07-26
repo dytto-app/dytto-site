@@ -1,4 +1,4 @@
-React from 'react';
+import React from 'react';
 import { motion } from 'framer-motion';
 import { Camera, BookOpen, Newspaper, Brain, MapPin, Clock } from 'lucide-react';
 import { useTheme } from '../ThemeProvider';
