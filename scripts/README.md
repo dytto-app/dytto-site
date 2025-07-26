@@ -200,6 +200,10 @@ All scripts include:
 - Consider using environment-specific keys for different deployments
 - All API calls are made over HTTPS
 
+## Frontend Blog Page Behavior
+
+For local development or environments where `VITE_SUPABASE_URL` is not configured, the frontend blog page (`src/pages/BlogPage.tsx`) will display mock blog post data. This allows for frontend development and testing without requiring a full Supabase setup. When `VITE_SUPABASE_URL` is configured, the page will fetch data directly from your Supabase database.
+
 ## Integration with Claude
 
 These scripts are designed to be easily called by Claude or other AI assistants:
