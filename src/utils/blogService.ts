@@ -1,4 +1,6 @@
-// Blog service for API interactions
+// Blog service for direct Supabase database access
+
+import { createClient } from '@supabase/supabase-js';
 
 const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL;
 const SUPABASE_ANON_KEY = import.meta.env.VITE_SUPABASE_ANON_KEY;
@@ -36,22 +38,12 @@ export interface BlogResponse<T = any> {
   total?: number;
 }
 
+// Initialize Supabase client
+const supabase = SUPABASE_URL && SUPABASE_ANON_KEY 
+  ? createClient(SUPABASE_URL, SUPABASE_ANON_KEY)
+  : null;
+
 class BlogService {
-  private baseUrl: string;
-  private headers: Record<string, string>;
-
-  constructor(apiKey?: string) {
-    if (!SUPABASE_URL) {
-      throw new Error('Supabase URL not configured');
-    }
-
-    this.baseUrl = `${SUPABASE_URL}/functions/v1/blog`;
-    this.headers = {
-      'Content-Type': 'application/json',
-      'Authorization': `Bearer ${apiKey || SUPABASE_ANON_KEY}`,
-    };
-  }
-
   // Get all blog posts
   async getPosts(options: {
     limit?: number;
@@ -60,27 +52,55 @@ class BlogService {
     tag?: string;
     status?: string;
   } = {}): Promise<BlogResponse<BlogPost[]>> {
+    if (!supabase) {
+      return {
+        success: false,
+        error: 'Supabase not configured',
+      };
+    }
+
     try {
-      const params = new URLSearchParams();
-      if (options.limit) params.append('limit', options.limit.toString());
-      if (options.offset) params.append('offset', options.offset.toString());
-      if (options.search) params.append('search', options.search);
-      if (options.tag) params.append('tag', options.tag);
-      if (options.status) params.append('status', options.status);
+      let query = supabase
+        .from('blog_posts')
+        .select('id, title, slug, excerpt, author, tags, featured_image, published_at, created_at, updated_at');
 
-      const response = await fetch(`${this.baseUrl}?${params}`, {
-        headers: this.headers,
-      });
+      // Filter by status (default to published for public access)
+      const status = options.status || 'published';
+      query = query.eq('status', status);
 
-      if (!response.ok) {
-        throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+      // Filter by tag if provided
+      if (options.tag) {
+        query = query.contains('tags', [options.tag]);
       }
 
-      const result = await response.json();
+      // Search functionality
+      if (options.search) {
+        const searchTerm = `%${options.search}%`;
+        query = query.or(`title.ilike.${searchTerm},excerpt.ilike.${searchTerm},content.ilike.${searchTerm}`);
+      }
+
+      // Apply pagination
+      const limit = Math.min(options.limit || 20, 100);
+      const offset = Math.max(options.offset || 0, 0);
+      
+      query = query
+        .order('published_at', { ascending: false })
+        .range(offset, offset + limit - 1);
+
+      const { data, error, count } = await query;
+
+      if (error) {
+        console.error('Error fetching blog posts:', error);
+        return {
+          success: false,
+          error: 'Failed to fetch blog posts',
+        };
+      }
+
       return {
         success: true,
-        data: result.data,
-        total: result.total,
+        data: data || [],
+        total: count || 0,
       };
     } catch (error) {
       return {
@@ -92,22 +112,40 @@ class BlogService {
 
   // Get single blog post by ID or slug
   async getPost(idOrSlug: string): Promise<BlogResponse<BlogPost>> {
-    try {
-      const response = await fetch(`${this.baseUrl}/${idOrSlug}`, {
-        headers: this.headers,
-      });
+    if (!supabase) {
+      return {
+        success: false,
+        error: 'Supabase not configured',
+      };
+    }
 
-      if (!response.ok) {
-        if (response.status === 404) {
-          throw new Error('Blog post not found');
-        }
-        throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+    try {
+      let query = supabase
+        .from('blog_posts')
+        .select('*');
+
+      // Use slug or id for lookup
+      if (idOrSlug.match(/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i)) {
+        query = query.eq('id', idOrSlug);
+      } else {
+        query = query.eq('slug', idOrSlug);
       }
 
-      const result = await response.json();
+      // Only show published posts for public access
+      query = query.eq('status', 'published');
+
+      const { data, error } = await query.single();
+
+      if (error || !data) {
+        return {
+          success: false,
+          error: 'Blog post not found',
+        };
+      }
+
       return {
         success: true,
-        data: result.data,
+        data,
       };
     } catch (error) {
       return {
@@ -117,24 +155,51 @@ class BlogService {
     }
   }
 
-  // Create new blog post (requires authentication)
-  async createPost(postData: CreateBlogPostData): Promise<BlogResponse<BlogPost>> {
-    try {
-      const response = await fetch(this.baseUrl, {
-        method: 'POST',
-        headers: this.headers,
-        body: JSON.stringify(postData),
-      });
+  // Create new blog post (requires service role key)
+  async createPost(postData: CreateBlogPostData, serviceRoleKey?: string): Promise<BlogResponse<BlogPost>> {
+    if (!SUPABASE_URL) {
+      return {
+        success: false,
+        error: 'Supabase not configured',
+      };
+    }
 
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.error || `HTTP ${response.status}: ${response.statusText}`);
+    if (!serviceRoleKey) {
+      return {
+        success: false,
+        error: 'Service role key required for creating posts',
+      };
+    }
+
+    try {
+      const adminClient = createClient(SUPABASE_URL, serviceRoleKey);
+
+      const { data, error } = await adminClient
+        .from('blog_posts')
+        .insert({
+          title: postData.title,
+          slug: postData.slug,
+          excerpt: postData.excerpt,
+          content: postData.content,
+          author: postData.author || 'Dytto Team',
+          tags: postData.tags || [],
+          featured_image: postData.featured_image,
+          status: postData.status || 'draft'
+        })
+        .select()
+        .single();
+
+      if (error) {
+        console.error('Error creating blog post:', error);
+        return {
+          success: false,
+          error: error.message,
+        };
       }
 
-      const result = await response.json();
       return {
         success: true,
-        data: result.data,
+        data,
       };
     } catch (error) {
       return {
@@ -144,24 +209,50 @@ class BlogService {
     }
   }
 
-  // Update blog post (requires authentication)
-  async updatePost(id: string, postData: Partial<CreateBlogPostData>): Promise<BlogResponse<BlogPost>> {
-    try {
-      const response = await fetch(`${this.baseUrl}/${id}`, {
-        method: 'PUT',
-        headers: this.headers,
-        body: JSON.stringify(postData),
-      });
+  // Update blog post (requires service role key)
+  async updatePost(id: string, postData: Partial<CreateBlogPostData>, serviceRoleKey?: string): Promise<BlogResponse<BlogPost>> {
+    if (!SUPABASE_URL) {
+      return {
+        success: false,
+        error: 'Supabase not configured',
+      };
+    }
 
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.error || `HTTP ${response.status}: ${response.statusText}`);
+    if (!serviceRoleKey) {
+      return {
+        success: false,
+        error: 'Service role key required for updating posts',
+      };
+    }
+
+    try {
+      const adminClient = createClient(SUPABASE_URL, serviceRoleKey);
+
+      const { data, error } = await adminClient
+        .from('blog_posts')
+        .update(postData)
+        .eq('id', id)
+        .select()
+        .single();
+
+      if (error) {
+        console.error('Error updating blog post:', error);
+        return {
+          success: false,
+          error: error.message,
+        };
       }
 
-      const result = await response.json();
+      if (!data) {
+        return {
+          success: false,
+          error: 'Blog post not found',
+        };
+      }
+
       return {
         success: true,
-        data: result.data,
+        data,
       };
     } catch (error) {
       return {
@@ -171,17 +262,36 @@ class BlogService {
     }
   }
 
-  // Delete blog post (requires authentication)
-  async deletePost(id: string): Promise<BlogResponse<void>> {
-    try {
-      const response = await fetch(`${this.baseUrl}/${id}`, {
-        method: 'DELETE',
-        headers: this.headers,
-      });
+  // Delete blog post (requires service role key)
+  async deletePost(id: string, serviceRoleKey?: string): Promise<BlogResponse<void>> {
+    if (!SUPABASE_URL) {
+      return {
+        success: false,
+        error: 'Supabase not configured',
+      };
+    }
 
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.error || `HTTP ${response.status}: ${response.statusText}`);
+    if (!serviceRoleKey) {
+      return {
+        success: false,
+        error: 'Service role key required for deleting posts',
+      };
+    }
+
+    try {
+      const adminClient = createClient(SUPABASE_URL, serviceRoleKey);
+
+      const { error } = await adminClient
+        .from('blog_posts')
+        .delete()
+        .eq('id', id);
+
+      if (error) {
+        console.error('Error deleting blog post:', error);
+        return {
+          success: false,
+          error: error.message,
+        };
       }
 
       return {
@@ -210,8 +320,11 @@ class BlogService {
 export const blogService = new BlogService();
 
 // Export authenticated service factory for admin operations
-export const createAuthenticatedBlogService = (apiKey: string) => {
-  return new BlogService(apiKey);
+export const createAuthenticatedBlogService = (serviceRoleKey: string) => {
+  const service = new BlogService();
+  // Store service role key for admin operations
+  (service as any).serviceRoleKey = serviceRoleKey;
+  return service;
 };
 
 // Utility functions
