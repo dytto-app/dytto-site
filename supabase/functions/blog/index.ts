@@ -3,7 +3,7 @@ import { createClient } from 'npm:@supabase/supabase-js@2';
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
-  'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
+  'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS'
 };
 
 interface BlogPostData {
@@ -61,7 +61,13 @@ function validateBlogPost(data: any): BlogPostData | null {
 Deno.serve(async (req: Request) => {
   // Handle CORS preflight
   if (req.method === 'OPTIONS') {
-    return new Response(null, { status: 200, headers: corsHeaders });
+    return new Response('ok', { 
+      status: 200, 
+      headers: {
+        ...corsHeaders,
+        'Access-Control-Max-Age': '86400'
+      }
+    });
   }
 
   try {
@@ -132,13 +138,25 @@ Deno.serve(async (req: Request) => {
         console.error('Error fetching blog posts:', error);
         return new Response(
           JSON.stringify({ error: 'Failed to fetch blog posts' }),
-          { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+          { 
+            status: 500, 
+            headers: { 
+              ...corsHeaders, 
+              'Content-Type': 'application/json' 
+            } 
+          }
         );
       }
 
       return new Response(
         JSON.stringify({ data, total: count }),
-        { status: 200, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+        { 
+          status: 200, 
+          headers: { 
+            ...corsHeaders, 
+            'Content-Type': 'application/json' 
+          } 
+        }
       );
     }
 
@@ -165,13 +183,25 @@ Deno.serve(async (req: Request) => {
       if (error || !data) {
         return new Response(
           JSON.stringify({ error: 'Blog post not found' }),
-          { status: 404, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+          { 
+            status: 404, 
+            headers: { 
+              ...corsHeaders, 
+              'Content-Type': 'application/json' 
+            } 
+          }
         );
       }
 
       return new Response(
         JSON.stringify({ data }),
-        { status: 200, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+        { 
+          status: 200, 
+          headers: { 
+            ...corsHeaders, 
+            'Content-Type': 'application/json' 
+          } 
+        }
       );
     }
 
@@ -180,7 +210,13 @@ Deno.serve(async (req: Request) => {
       if (!authHeader) {
         return new Response(
           JSON.stringify({ error: 'Authentication required' }),
-          { status: 401, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+          { 
+            status: 401, 
+            headers: { 
+              ...corsHeaders, 
+              'Content-Type': 'application/json' 
+            } 
+          }
         );
       }
 
@@ -188,7 +224,13 @@ Deno.serve(async (req: Request) => {
       if (!checkRateLimit(`create_${clientIP}`, 5, 300000)) { // 5 posts per 5 minutes
         return new Response(
           JSON.stringify({ error: 'Rate limit exceeded. Please wait before creating another post.' }),
-          { status: 429, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+          { 
+            status: 429, 
+            headers: { 
+              ...corsHeaders, 
+              'Content-Type': 'application/json' 
+            } 
+          }
         );
       }
 
@@ -198,7 +240,13 @@ Deno.serve(async (req: Request) => {
       if (!validatedData) {
         return new Response(
           JSON.stringify({ error: 'Invalid blog post data' }),
-          { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+          { 
+            status: 400, 
+            headers: { 
+              ...corsHeaders, 
+              'Content-Type': 'application/json' 
+            } 
+          }
         );
       }
 
@@ -212,13 +260,25 @@ Deno.serve(async (req: Request) => {
         console.error('Error creating blog post:', error);
         return new Response(
           JSON.stringify({ error: 'Failed to create blog post' }),
-          { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+          { 
+            status: 500, 
+            headers: { 
+              ...corsHeaders, 
+              'Content-Type': 'application/json' 
+            } 
+          }
         );
       }
 
       return new Response(
         JSON.stringify({ data, message: 'Blog post created successfully' }),
-        { status: 201, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+        { 
+          status: 201, 
+          headers: { 
+            ...corsHeaders, 
+            'Content-Type': 'application/json' 
+          } 
+        }
       );
     }
 
@@ -227,7 +287,13 @@ Deno.serve(async (req: Request) => {
       if (!authHeader) {
         return new Response(
           JSON.stringify({ error: 'Authentication required' }),
-          { status: 401, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+          { 
+            status: 401, 
+            headers: { 
+              ...corsHeaders, 
+              'Content-Type': 'application/json' 
+            } 
+          }
         );
       }
 
@@ -237,7 +303,13 @@ Deno.serve(async (req: Request) => {
       if (!validatedData) {
         return new Response(
           JSON.stringify({ error: 'Invalid blog post data' }),
-          { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+          { 
+            status: 400, 
+            headers: { 
+              ...corsHeaders, 
+              'Content-Type': 'application/json' 
+            } 
+          }
         );
       }
 
@@ -252,20 +324,38 @@ Deno.serve(async (req: Request) => {
         console.error('Error updating blog post:', error);
         return new Response(
           JSON.stringify({ error: 'Failed to update blog post' }),
-          { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+          { 
+            status: 500, 
+            headers: { 
+              ...corsHeaders, 
+              'Content-Type': 'application/json' 
+            } 
+          }
         );
       }
 
       if (!data) {
         return new Response(
           JSON.stringify({ error: 'Blog post not found' }),
-          { status: 404, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+          { 
+            status: 404, 
+            headers: { 
+              ...corsHeaders, 
+              'Content-Type': 'application/json' 
+            } 
+          }
         );
       }
 
       return new Response(
         JSON.stringify({ data, message: 'Blog post updated successfully' }),
-        { status: 200, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+        { 
+          status: 200, 
+          headers: { 
+            ...corsHeaders, 
+            'Content-Type': 'application/json' 
+          } 
+        }
       );
     }
 
@@ -274,7 +364,13 @@ Deno.serve(async (req: Request) => {
       if (!authHeader) {
         return new Response(
           JSON.stringify({ error: 'Authentication required' }),
-          { status: 401, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+          { 
+            status: 401, 
+            headers: { 
+              ...corsHeaders, 
+              'Content-Type': 'application/json' 
+            } 
+          }
         );
       }
 
@@ -287,27 +383,51 @@ Deno.serve(async (req: Request) => {
         console.error('Error deleting blog post:', error);
         return new Response(
           JSON.stringify({ error: 'Failed to delete blog post' }),
-          { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+          { 
+            status: 500, 
+            headers: { 
+              ...corsHeaders, 
+              'Content-Type': 'application/json' 
+            } 
+          }
         );
       }
 
       return new Response(
         JSON.stringify({ message: 'Blog post deleted successfully' }),
-        { status: 200, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+        { 
+          status: 200, 
+          headers: { 
+            ...corsHeaders, 
+            'Content-Type': 'application/json' 
+          } 
+        }
       );
     }
 
     // 404 for unknown routes
     return new Response(
       JSON.stringify({ error: 'Not found' }),
-      { status: 404, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      { 
+        status: 404, 
+        headers: { 
+          ...corsHeaders, 
+          'Content-Type': 'application/json' 
+        } 
+      }
     );
 
   } catch (error) {
     console.error('Unexpected error:', error);
     return new Response(
       JSON.stringify({ error: 'Internal server error' }),
-      { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      { 
+        status: 500, 
+        headers: { 
+          ...corsHeaders, 
+          'Content-Type': 'application/json' 
+        } 
+      }
     );
   }
 });
