@@ -5,6 +5,7 @@ import WaitlistLandingPage from './pages/WaitlistLandingPage';
 import AppLandingPage from './pages/AppLandingPage';
 import APILandingPage from './pages/APILandingPage';
 import FeedbackPage from './pages/FeedbackPage';
+import BlogPage from './pages/BlogPage';
 
 function App() {
   return (
@@ -15,6 +16,8 @@ function App() {
           <Route path="/waitlist" element={<WaitlistLandingPage />} />
           <Route path="/api" element={<APILandingPage />} />
           <Route path="/feedback" element={<FeedbackPage />} />
+          <Route path="/blog" element={<BlogPage />} />
+          <Route path="/blog/:slug" element={<BlogPage />} />
         </Routes>
       </Router>
     </ThemeProvider>

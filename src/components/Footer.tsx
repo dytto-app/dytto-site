@@ -29,7 +29,8 @@ const Footer = () => {
       'Code Examples',
       'Community',
       'Support',
-      'Changelog'
+      'Changelog',
+      'Blog'
     ],
     'Company': [
       'About Us',
@@ -189,24 +190,45 @@ const Footer = () => {
                         {link}
                       </Link>
                     ) : (
-                      <a
-                        href="#"
-                        style={{
-                          color: theme.colors.textSecondary,
-                          fontSize: theme.typography.fontSize.sm,
-                          transition: theme.animations.transition.normal,
-                          textDecoration: 'none',
-                          display: 'block',
-                        }}
-                        onMouseEnter={(e) => {
-                          e.target.style.color = theme.colors.primary;
-                        }}
-                        onMouseLeave={(e) => {
-                          e.target.style.color = theme.colors.textSecondary;
-                        }}
-                      >
-                        {link}
-                      </a>
+                      link === 'Blog' ? (
+                        <Link
+                          to="/blog"
+                          style={{
+                            color: theme.colors.textSecondary,
+                            fontSize: theme.typography.fontSize.sm,
+                            transition: theme.animations.transition.normal,
+                            textDecoration: 'none',
+                            display: 'block',
+                          }}
+                          onMouseEnter={(e) => {
+                            e.target.style.color = theme.colors.primary;
+                          }}
+                          onMouseLeave={(e) => {
+                            e.target.style.color = theme.colors.textSecondary;
+                          }}
+                        >
+                          {link}
+                        </Link>
+                      ) : (
+                        <a
+                          href="#"
+                          style={{
+                            color: theme.colors.textSecondary,
+                            fontSize: theme.typography.fontSize.sm,
+                            transition: theme.animations.transition.normal,
+                            textDecoration: 'none',
+                            display: 'block',
+                          }}
+                          onMouseEnter={(e) => {
+                            e.target.style.color = theme.colors.primary;
+                          }}
+                          onMouseLeave={(e) => {
+                            e.target.style.color = theme.colors.textSecondary;
+                          }}
+                        >
+                          {link}
+                        </a>
+                      )
                     )}
                   </li>
                 ))}

@@ -15,6 +15,7 @@ const Navbar = () => {
   const isWaitlistPage = location.pathname === '/waitlist';
   const isFeedbackPage = location.pathname === '/feedback';
   const isHomePage = location.pathname === '/';
+  const isBlogPage = location.pathname.startsWith('/blog');
 
   // Dynamic navigation items based on current page - only functional sections
   const getNavItems = () => {
@@ -168,6 +169,52 @@ const Navbar = () => {
                 </Link>
               )}
               
+              {!isBlogPage && (
+                <Link
+                  to="/blog"
+                  style={{ 
+                    color: theme.colors.textSecondary,
+                    fontSize: theme.typography.fontSize.sm,
+                    transition: theme.animations.transition.normal,
+                    textDecoration: 'none',
+                    fontWeight: theme.typography.fontWeight.medium,
+                  }}
+                  onMouseEnter={(e) => {
+                    e.target.style.color = theme.colors.primary;
+                  }}
+                  onMouseLeave={(e) => {
+                    e.target.style.color = theme.colors.textSecondary;
+                  }}
+                >
+                  Blog
+                </Link>
+              )}
+              
+              {!isBlogPage && (
+                <motion.div
+                  initial={{ opacity: 0, x: -20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: (navItems.length + 4) * 0.1 }}
+                >
+                  <Link
+                    to="/blog"
+                    onClick={() => setIsOpen(false)}
+                    style={{
+                      display: 'block',
+                      color: theme.colors.textSecondary,
+                      fontSize: theme.typography.fontSize.lg,
+                      fontWeight: theme.typography.fontWeight.medium,
+                      padding: theme.semanticSpacing.md,
+                      borderRadius: '0.75rem',
+                      textDecoration: 'none',
+                      transition: theme.animations.transition.normal,
+                    }}
+                  >
+                    Blog
+                  </Link>
+                </motion.div>
+              )}
+
               {!isWaitlistPage && (
                 <Link
                   to="/waitlist"
@@ -183,7 +230,7 @@ const Navbar = () => {
                   }}
                   onMouseLeave={(e) => {
                     e.target.style.color = theme.colors.textSecondary;
-                  }}
+                  transition={{ delay: (navItems.length + 5) * 0.1 }}
                 >
                   Waitlist
                 </Link>
@@ -231,7 +278,7 @@ const Navbar = () => {
                 transition: theme.animations.transition.normal,
               }}
             >
-              {isAPIPage ? 'Get API Key' : isWaitlistPage ? 'Join Waitlist' : isFeedbackPage ? 'Submit Feedback' : 'Download App'}
+              {isAPIPage ? 'Get API Key' : isWaitlistPage ? 'Join Waitlist' : isFeedbackPage ? 'Submit Feedback' : isBlogPage ? 'Subscribe' : 'Download App'}
             </motion.button>
           </div>
 
@@ -438,7 +485,7 @@ const Navbar = () => {
                   <motion.button
                     initial={{ opacity: 0, x: -20 }}
                     animate={{ opacity: 1, x: 0 }}
-                    transition={{ delay: 0.6 }}
+                    transition={{ delay: 0.7 }}
                     style={{
                       width: '100%',
                       backgroundColor: theme.colors.primary,
@@ -451,7 +498,7 @@ const Navbar = () => {
                       cursor: 'pointer',
                     }}
                   >
-                    {isAPIPage ? 'Get API Key' : isWaitlistPage ? 'Join Waitlist' : isFeedbackPage ? 'Submit Feedback' : 'Download App'}
+                    {isAPIPage ? 'Get API Key' : isWaitlistPage ? 'Join Waitlist' : isFeedbackPage ? 'Submit Feedback' : isBlogPage ? 'Subscribe' : 'Download App'}
                   </motion.button>
                 </div>
               </div>
