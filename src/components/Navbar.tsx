@@ -230,7 +230,7 @@ const Navbar = () => {
                   }}
                   onMouseLeave={(e) => {
                     e.target.style.color = theme.colors.textSecondary;
-                  transition={{ delay: (navItems.length + 5) * 0.1 }}
+                  }}
                 >
                   Waitlist
                 </Link>
@@ -477,6 +477,31 @@ const Navbar = () => {
                       }}
                     >
                       Waitlist
+                    </Link>
+                  </motion.div>
+                )}
+
+                {!isBlogPage && (
+                  <motion.div
+                    initial={{ opacity: 0, x: -20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ delay: (navItems.length + 4) * 0.1 }}
+                  >
+                    <Link
+                      to="/blog"
+                      onClick={() => setIsOpen(false)}
+                      style={{
+                        display: 'block',
+                        color: theme.colors.textSecondary,
+                        fontSize: theme.typography.fontSize.lg,
+                        fontWeight: theme.typography.fontWeight.medium,
+                        padding: theme.semanticSpacing.md,
+                        borderRadius: '0.75rem',
+                        textDecoration: 'none',
+                        transition: theme.animations.transition.normal,
+                      }}
+                    >
+                      Blog
                     </Link>
                   </motion.div>
                 )}
