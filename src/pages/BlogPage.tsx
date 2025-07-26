@@ -49,40 +49,36 @@ const BlogPage: React.FC = () => {
   const [selectedTag, setSelectedTag] = useState<string>('');
   const [allTags, setAllTags] = useState<string[]>([]);
 
+  // Mock data for when Supabase is not configured
+  const mockPosts: BlogPost[] = [
+    {
+      id: '1',
+      title: 'Welcome to the Dytto Developer Blog',
+      slug: 'welcome-to-dytto-blog',
+      excerpt: 'Introducing our new developer blog where we share updates, tutorials, and insights about building with Dytto.',
+      content: '# Welcome to the Dytto Developer Blog\n\nWe\'re excited to launch our developer blog! This is where we\'ll share:\n\n- **Product Updates**: Latest features and improvements\n- **Technical Deep Dives**: How we build and scale Dytto\n- **Developer Tutorials**: Guides for using our APIs\n- **Community Highlights**: Showcasing what you\'re building\n\n## What\'s Coming Next\n\nStay tuned for upcoming posts about:\n- Building context-aware applications\n- Best practices for persona interactions\n- Performance optimization tips\n- New API features and capabilities\n\nWe\'re just getting started, and we can\'t wait to share more with you!',
+      author: 'Dytto Team',
+      tags: ['announcement', 'welcome', 'developer-blog'],
+      published_at: new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString(),
+      created_at: new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString()
+    },
+    {
+      id: '2',
+      title: 'Building Your First Context-Aware Application',
+      slug: 'building-context-aware-app',
+      excerpt: 'A step-by-step guide to creating intelligent applications that understand user context using Dytto\'s APIs.',
+      content: '# Building Your First Context-Aware Application\n\nContext-aware applications are the future of user experience. In this tutorial, we\'ll walk through building a simple app that adapts to user preferences and behavior.\n\n## Prerequisites\n\n- Basic knowledge of JavaScript/TypeScript\n- A Dytto API key (get one [here](/api))\n- Node.js installed on your machine\n\n## Step 1: Setting Up Your Project\n\n```bash\nnpm init -y\nnpm install @dytto/sdk\n```\n\n## Step 2: Initialize the Dytto Client\n\n```javascript\nimport { DyttoClient } from \'@dytto/sdk\';\n\nconst client = new DyttoClient({\n  apiKey: process.env.DYTTO_API_KEY\n});\n```\n\n## Step 3: Generate Simulation Agents\n\n```javascript\nconst agents = await client.simulation.generateAgents({\n  count: 10,\n  criteria: {\n    age_group: [\'25-34\'],\n    interests: [\'technology\', \'fitness\']\n  }\n});\n```\n\n## Next Steps\n\nIn our next post, we\'ll dive deeper into persona interactions and advanced context queries.\n\nHappy building! 🚀',
+      author: 'Alex Chen',
+      tags: ['tutorial', 'getting-started', 'api', 'context-aware'],
+      published_at: new Date(Date.now() - 2 * 60 * 60 * 1000).toISOString(),
+      created_at: new Date(Date.now() - 2 * 60 * 60 * 1000).toISOString()
+    }
+  ];
+
   // Fetch blog posts
   const fetchPosts = async (search?: string, tag?: string) => {
     if (!SUPABASE_URL) {
       // Use mock data when Supabase is not configured
-      const mockPosts: BlogPost[] = [
-        {
-          id: '1',
-          title: 'Welcome to the Dytto Developer Blog',
-          slug: 'welcome-to-dytto-blog',
-          excerpt: 'Introducing our new developer blog where we share updates, tutorials, and insights about building with Dytto.',
-          content: '# Welcome to the Dytto Developer Blog\n\nWe\'re excited to launch our developer blog! This is where we\'ll share:\n\n- **Product Updates**: Latest features and improvements\n- **Technical Deep Dives**: How we build and scale Dytto\n- **Developer Tutorials**: Guides for using our APIs\n- **Community Highlights**: Showcasing what you\'re building\n\n## What\'s Coming Next\n\nStay tuned for upcoming posts about:\n- Building context-aware applications\n- Best practices for persona interactions\n- Performance optimization tips\n- New API features and capabilities\n\nWe\'re just getting started, and we can\'t wait to share more with you!',
-          author: 'Dytto Team',
-          tags: ['announcement', 'welcome', 'developer-blog'],
-          status: 'published',
-          published_at: new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString(),
-          created_at: new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString(),
-          updated_at: new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString()
-        },
-        {
-          id: '2',
-          title: 'Building Your First Context-Aware Application',
-          slug: 'building-context-aware-app',
-          excerpt: 'A step-by-step guide to creating intelligent applications that understand user context using Dytto\'s APIs.',
-          content: '# Building Your First Context-Aware Application\n\nContext-aware applications are the future of user experience. In this tutorial, we\'ll walk through building a simple app that adapts to user preferences and behavior.\n\n## Prerequisites\n\n- Basic knowledge of JavaScript/TypeScript\n- A Dytto API key (get one [here](/api))\n- Node.js installed on your machine\n\n## Step 1: Setting Up Your Project\n\n```bash\nnpm init -y\nnpm install @dytto/sdk\n```\n\n## Step 2: Initialize the Dytto Client\n\n```javascript\nimport { DyttoClient } from \'@dytto/sdk\';\n\nconst client = new DyttoClient({\n  apiKey: process.env.DYTTO_API_KEY\n});\n```\n\n## Step 3: Generate Simulation Agents\n\n```javascript\nconst agents = await client.simulation.generateAgents({\n  count: 10,\n  criteria: {\n    age_group: [\'25-34\'],\n    interests: [\'technology\', \'fitness\']\n  }\n});\n```\n\n## Next Steps\n\nIn our next post, we\'ll dive deeper into persona interactions and advanced context queries.\n\nHappy building! 🚀',
-          author: 'Alex Chen',
-          tags: ['tutorial', 'getting-started', 'api', 'context-aware'],
-          status: 'published',
-          published_at: new Date(Date.now() - 2 * 60 * 60 * 1000).toISOString(),
-          created_at: new Date(Date.now() - 2 * 60 * 60 * 1000).toISOString(),
-          updated_at: new Date(Date.now() - 2 * 60 * 60 * 1000).toISOString()
-        }
-      ];
-
-      // Filter mock data
       let filteredPosts = mockPosts;
       
       if (search) {
@@ -145,36 +141,6 @@ const BlogPage: React.FC = () => {
   // Fetch specific post by slug
   const fetchPost = async (postSlug: string) => {
     if (!SUPABASE_URL) {
-      // Use mock data when Supabase is not configured
-      const mockPosts: BlogPost[] = [
-        {
-          id: '1',
-          title: 'Welcome to the Dytto Developer Blog',
-          slug: 'welcome-to-dytto-blog',
-          excerpt: 'Introducing our new developer blog where we share updates, tutorials, and insights about building with Dytto.',
-          content: '# Welcome to the Dytto Developer Blog\n\nWe\'re excited to launch our developer blog! This is where we\'ll share:\n\n- **Product Updates**: Latest features and improvements\n- **Technical Deep Dives**: How we build and scale Dytto\n- **Developer Tutorials**: Guides for using our APIs\n- **Community Highlights**: Showcasing what you\'re building\n\n## What\'s Coming Next\n\nStay tuned for upcoming posts about:\n- Building context-aware applications\n- Best practices for persona interactions\n- Performance optimization tips\n- New API features and capabilities\n\nWe\'re just getting started, and we can\'t wait to share more with you!',
-          author: 'Dytto Team',
-          tags: ['announcement', 'welcome', 'developer-blog'],
-          status: 'published',
-          published_at: new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString(),
-          created_at: new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString(),
-          updated_at: new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString()
-        },
-        {
-          id: '2',
-          title: 'Building Your First Context-Aware Application',
-          slug: 'building-context-aware-app',
-          excerpt: 'A step-by-step guide to creating intelligent applications that understand user context using Dytto\'s APIs.',
-          content: '# Building Your First Context-Aware Application\n\nContext-aware applications are the future of user experience. In this tutorial, we\'ll walk through building a simple app that adapts to user preferences and behavior.\n\n## Prerequisites\n\n- Basic knowledge of JavaScript/TypeScript\n- A Dytto API key (get one [here](/api))\n- Node.js installed on your machine\n\n## Step 1: Setting Up Your Project\n\n```bash\nnpm init -y\nnpm install @dytto/sdk\n```\n\n## Step 2: Initialize the Dytto Client\n\n```javascript\nimport { DyttoClient } from \'@dytto/sdk\';\n\nconst client = new DyttoClient({\n  apiKey: process.env.DYTTO_API_KEY\n});\n```\n\n## Step 3: Generate Simulation Agents\n\n```javascript\nconst agents = await client.simulation.generateAgents({\n  count: 10,\n  criteria: {\n    age_group: [\'25-34\'],\n    interests: [\'technology\', \'fitness\']\n  }\n});\n```\n\n## Next Steps\n\nIn our next post, we\'ll dive deeper into persona interactions and advanced context queries.\n\nHappy building! 🚀',
-          author: 'Alex Chen',
-          tags: ['tutorial', 'getting-started', 'api', 'context-aware'],
-          status: 'published',
-          published_at: new Date(Date.now() - 2 * 60 * 60 * 1000).toISOString(),
-          created_at: new Date(Date.now() - 2 * 60 * 60 * 1000).toISOString(),
-          updated_at: new Date(Date.now() - 2 * 60 * 60 * 1000).toISOString()
-        }
-      ];
-
       const post = mockPosts.find(p => p.slug === postSlug);
       if (post) {
         setSelectedPost(post);
@@ -229,7 +195,6 @@ const BlogPage: React.FC = () => {
 
   // Render markdown content (basic implementation)
   const renderMarkdown = (content: string) => {
-    // Basic markdown parsing - in production, use a proper markdown library
     let html = content
       .replace(/^# (.*$)/gim, '<h1 style="font-size: 2rem; font-weight: bold; margin: 2rem 0 1rem 0; color: ' + theme.colors.text + ';">$1</h1>')
       .replace(/^## (.*$)/gim, '<h2 style="font-size: 1.5rem; font-weight: bold; margin: 1.5rem 0 1rem 0; color: ' + theme.colors.text + ';">$1</h2>')
@@ -253,7 +218,6 @@ const BlogPage: React.FC = () => {
         
         <article className="pt-24 sm:pt-32 pb-16 px-4 sm:px-6">
           <div className="max-w-4xl mx-auto">
-            {/* Back button */}
             <motion.button
               initial={{ opacity: 0, x: -20 }}
               animate={{ opacity: 1, x: 0 }}
@@ -271,45 +235,22 @@ const BlogPage: React.FC = () => {
                 borderRadius: '0.5rem',
                 transition: theme.animations.transition.normal,
               }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.backgroundColor = theme.colors.surface;
-                e.currentTarget.style.color = theme.colors.primary;
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.backgroundColor = 'transparent';
-                e.currentTarget.style.color = theme.colors.textSecondary;
-              }}
             >
               <ArrowLeft size={20} />
               Back to Blog
             </motion.button>
 
-            {/* Post header */}
             <motion.header
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8 }}
               className="mb-8"
             >
-              {selectedPost.featured_image && (
-                <img 
-                  src={selectedPost.featured_image}
-                  alt={selectedPost.title}
-                  style={{
-                    width: '100%',
-                    height: '300px',
-                    objectFit: 'cover',
-                    borderRadius: '1rem',
-                    marginBottom: theme.semanticSpacing.lg,
-                  }}
-                />
-              )}
-
               <h1 
                 style={{
-                  ...styles.typography.h1,
                   color: theme.colors.text,
                   fontSize: 'clamp(1.75rem, 6vw, 3rem)',
+                  fontWeight: theme.typography.fontWeight.bold,
                   marginBottom: theme.semanticSpacing.md,
                 }}
               >
@@ -331,28 +272,25 @@ const BlogPage: React.FC = () => {
                 </div>
               </div>
 
-              {selectedPost.tags.length > 0 && (
-                <div className="flex flex-wrap gap-2">
-                  {selectedPost.tags.map((tag, index) => (
-                    <span
-                      key={index}
-                      style={{
-                        backgroundColor: theme.utils.alpha(theme.colors.primary, 0.1),
-                        color: theme.colors.primary,
-                        padding: `${theme.semanticSpacing.xs} ${theme.semanticSpacing.sm}`,
-                        borderRadius: '9999px',
-                        fontSize: theme.typography.fontSize.xs,
-                        fontWeight: theme.typography.fontWeight.medium,
-                      }}
-                    >
-                      {tag}
-                    </span>
-                  ))}
-                </div>
-              )}
+              <div className="flex flex-wrap gap-2">
+                {selectedPost.tags.map((tag, index) => (
+                  <span
+                    key={index}
+                    style={{
+                      backgroundColor: theme.utils.alpha(theme.colors.primary, 0.1),
+                      color: theme.colors.primary,
+                      padding: `${theme.semanticSpacing.xs} ${theme.semanticSpacing.sm}`,
+                      borderRadius: '9999px',
+                      fontSize: theme.typography.fontSize.xs,
+                      fontWeight: theme.typography.fontWeight.medium,
+                    }}
+                  >
+                    {tag}
+                  </span>
+                ))}
+              </div>
             </motion.header>
 
-            {/* Post content */}
             <motion.div
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
@@ -382,7 +320,6 @@ const BlogPage: React.FC = () => {
       <section className="pt-24 sm:pt-32 pb-16 px-4 sm:px-6">
         <div className="max-w-6xl mx-auto">
           
-          {/* Header */}
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
@@ -399,11 +336,7 @@ const BlogPage: React.FC = () => {
               }}
             >
               Developer{' '}
-              <motion.span 
-                key={`blog-gradient-${theme.mode}`}
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ duration: 0.3 }}
+              <span 
                 style={{
                   background: `linear-gradient(135deg, ${theme.colors.primary}, ${theme.colors.accent})`,
                   WebkitBackgroundClip: 'text',
@@ -414,7 +347,7 @@ const BlogPage: React.FC = () => {
                 }}
               >
                 Blog
-              </motion.span>
+              </span>
             </h1>
             <p 
               style={{
@@ -429,7 +362,6 @@ const BlogPage: React.FC = () => {
             </p>
           </motion.div>
 
-          {/* Search and Filter */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -437,7 +369,6 @@ const BlogPage: React.FC = () => {
             className="mb-8"
           >
             <div className="flex flex-col sm:flex-row gap-4 mb-4">
-              {/* Search */}
               <div className="flex-1 relative">
                 <Search 
                   style={{ 
@@ -468,7 +399,6 @@ const BlogPage: React.FC = () => {
                 />
               </div>
 
-              {/* Tag filter */}
               <select
                 value={selectedTag}
                 onChange={(e) => handleTagFilter(e.target.value)}
@@ -490,8 +420,7 @@ const BlogPage: React.FC = () => {
               </select>
             </div>
             
-            {/* Configuration notice */}
-            {!SUPABASE_URL || !import.meta.env.VITE_SUPABASE_ANON_KEY ? (
+            {!SUPABASE_URL && (
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -516,7 +445,6 @@ const BlogPage: React.FC = () => {
             )}
           </motion.div>
 
-          {/* Error state */}
           {error && (
             <motion.div
               initial={{ opacity: 0, y: 20 }}
@@ -538,8 +466,7 @@ const BlogPage: React.FC = () => {
             </motion.div>
           )}
 
-          {/* Loading state */}
-          {loading && (
+          {loading ? (
             <div style={{ textAlign: 'center', padding: '3rem' }}>
               <Loader size={32} className="animate-spin" style={{ color: theme.colors.primary, margin: '0 auto' }} />
               <p style={{ 
@@ -550,10 +477,7 @@ const BlogPage: React.FC = () => {
                 Loading blog posts...
               </p>
             </div>
-          )}
-
-          {/* Blog posts grid */}
-          {!loading && posts.length === 0 ? (
+          ) : posts.length === 0 ? (
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
@@ -599,18 +523,6 @@ const BlogPage: React.FC = () => {
                   }}
                   onClick={() => navigate(`/blog/${post.slug}`)}
                 >
-                  {post.featured_image && (
-                    <img 
-                      src={post.featured_image}
-                      alt={post.title}
-                      style={{
-                        width: '100%',
-                        height: '200px',
-                        objectFit: 'cover',
-                      }}
-                    />
-                  )}
-
                   <div style={{ padding: theme.semanticSpacing.lg }}>
                     <div className="flex items-center gap-4 mb-3">
                       <div className="flex items-center gap-2">
@@ -658,33 +570,31 @@ const BlogPage: React.FC = () => {
                       </p>
                     )}
 
-                    {post.tags.length > 0 && (
-                      <div className="flex flex-wrap gap-2">
-                        {post.tags.slice(0, 3).map((tag, tagIndex) => (
-                          <span
-                            key={tagIndex}
-                            style={{
-                              backgroundColor: theme.utils.alpha(theme.colors.primary, 0.1),
-                              color: theme.colors.primary,
-                              padding: `${theme.semanticSpacing.xs} ${theme.semanticSpacing.sm}`,
-                              borderRadius: '9999px',
-                              fontSize: theme.typography.fontSize.xs,
-                              fontWeight: theme.typography.fontWeight.medium,
-                            }}
-                          >
-                            {tag}
-                          </span>
-                        ))}
-                        {post.tags.length > 3 && (
-                          <span style={{ 
-                            color: theme.colors.textSecondary, 
-                            fontSize: theme.typography.fontSize.xs 
-                          }}>
-                            +{post.tags.length - 3} more
-                          </span>
-                        )}
-                      </div>
-                    )}
+                    <div className="flex flex-wrap gap-2">
+                      {post.tags.slice(0, 3).map((tag, tagIndex) => (
+                        <span
+                          key={tagIndex}
+                          style={{
+                            backgroundColor: theme.utils.alpha(theme.colors.primary, 0.1),
+                            color: theme.colors.primary,
+                            padding: `${theme.semanticSpacing.xs} ${theme.semanticSpacing.sm}`,
+                            borderRadius: '9999px',
+                            fontSize: theme.typography.fontSize.xs,
+                            fontWeight: theme.typography.fontWeight.medium,
+                          }}
+                        >
+                          {tag}
+                        </span>
+                      ))}
+                      {post.tags.length > 3 && (
+                        <span style={{ 
+                          color: theme.colors.textSecondary, 
+                          fontSize: theme.typography.fontSize.xs 
+                        }}>
+                          +{post.tags.length - 3} more
+                        </span>
+                      )}
+                    </div>
                   </div>
                 </motion.article>
               ))}
