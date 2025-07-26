@@ -48,15 +48,183 @@ const BlogPage: React.FC = () => {
   const [selectedTag, setSelectedTag] = useState<string>('');
   const [allTags, setAllTags] = useState<string[]>([]);
 
+  // Mock blog posts for when Supabase is not configured
+  const mockPosts: BlogPost[] = [
+    {
+      id: '1',
+      title: 'Welcome to the Dytto Developer Blog',
+      slug: 'welcome-to-dytto-developer-blog',
+      excerpt: 'Introducing our new developer blog where we share updates, tutorials, and insights about building with Dytto.',
+      content: `# Welcome to the Dytto Developer Blog
+
+We're excited to launch our developer blog! This is where we'll share:
+
+- **Product Updates**: Latest features and improvements
+- **Technical Deep Dives**: How we build and scale Dytto
+- **Developer Tutorials**: Guides for using our APIs
+- **Community Highlights**: Showcasing what you're building
+
+## What's Coming Next
+
+Stay tuned for upcoming posts about:
+- Building context-aware applications
+- Best practices for persona interactions
+- Performance optimization tips
+- New API features and capabilities
+
+We're just getting started, and we can't wait to share more with you!`,
+      author: 'Dytto Team',
+      tags: ['announcement', 'welcome', 'developer-blog'],
+      published_at: new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString(),
+      created_at: new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString()
+    },
+    {
+      id: '2',
+      title: 'Building Your First Context-Aware Application',
+      slug: 'building-first-context-aware-application',
+      excerpt: 'A step-by-step guide to creating intelligent applications that understand user context using Dytto\'s APIs.',
+      content: `# Building Your First Context-Aware Application
+
+Context-aware applications are the future of user experience. In this tutorial, we'll walk through building a simple app that adapts to user preferences and behavior.
+
+## Prerequisites
+
+- Basic knowledge of JavaScript/TypeScript
+- A Dytto API key (get one [here](/api))
+- Node.js installed on your machine
+
+## Step 1: Setting Up Your Project
+
+\`\`\`bash
+npm init -y
+npm install @dytto/sdk
+\`\`\`
+
+## Step 2: Initialize the Dytto Client
+
+\`\`\`javascript
+import { DyttoClient } from '@dytto/sdk';
+
+const client = new DyttoClient({
+  apiKey: process.env.DYTTO_API_KEY
+});
+\`\`\`
+
+## Step 3: Generate Simulation Agents
+
+\`\`\`javascript
+const agents = await client.simulation.generateAgents({
+  count: 10,
+  criteria: {
+    age_group: ['25-34'],
+    interests: ['technology', 'fitness']
+  }
+});
+\`\`\`
+
+## Next Steps
+
+In our next post, we'll dive deeper into persona interactions and advanced context queries.
+
+Happy building! 🚀`,
+      author: 'Alex Chen',
+      tags: ['tutorial', 'getting-started', 'api', 'context-aware'],
+      published_at: new Date(Date.now() - 2 * 60 * 60 * 1000).toISOString(),
+      created_at: new Date(Date.now() - 2 * 60 * 60 * 1000).toISOString()
+    },
+    {
+      id: '3',
+      title: 'Understanding Persona Interactions',
+      slug: 'understanding-persona-interactions',
+      excerpt: 'Deep dive into how Dytto\'s persona system works and how to create meaningful interactions with AI agents.',
+      content: `# Understanding Persona Interactions
+
+Persona interactions are at the heart of Dytto's context-aware AI platform. Let's explore how to create meaningful conversations with AI agents that understand user context.
+
+## What are Personas?
+
+Personas in Dytto are AI agents that have been given specific characteristics, backgrounds, and contexts. They can:
+
+- Respond consistently based on their defined personality
+- Remember previous interactions
+- Adapt their communication style
+- Provide contextually relevant responses
+
+## Creating Your First Persona Interaction
+
+\`\`\`javascript
+const response = await client.personas.interact(personaId, {
+  prompt: {
+    type: "conversation",
+    message: "What do you think about the latest AI developments?"
+  },
+  context: {
+    include_history: true,
+    max_history_items: 10
+  }
+});
+\`\`\`
+
+## Best Practices
+
+1. **Be Specific**: The more context you provide, the better the responses
+2. **Use Structured Prompts**: Define clear scenarios and expectations
+3. **Handle Responses**: Always validate and process AI responses appropriately
+4. **Respect Rate Limits**: Don't overwhelm the API with too many requests
+
+## Advanced Features
+
+- **Multi-turn Conversations**: Build complex dialogue flows
+- **Context Injection**: Add real-time data to conversations
+- **Response Formatting**: Get structured outputs for your applications
+
+Stay tuned for more advanced tutorials!`,
+      author: 'Sarah Kim',
+      tags: ['tutorial', 'personas', 'api', 'advanced'],
+      published_at: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString(),
+      created_at: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString()
+    }
+  ];
   // Fetch blog posts
   const fetchPosts = async (search?: string, tag?: string) => {
+    setLoading(true);
+    setError(null);
+
+    // Simulate API delay
+    await new Promise(resolve => setTimeout(resolve, 500));
+
     if (!SUPABASE_URL) {
+      // Use mock data when Supabase is not configured
+      let filteredPosts = mockPosts;
+      
+      // Apply search filter
+      if (search) {
+        const searchLower = search.toLowerCase();
+        filteredPosts = filteredPosts.filter(post => 
+          post.title.toLowerCase().includes(searchLower) ||
+          post.excerpt?.toLowerCase().includes(searchLower) ||
+          post.content.toLowerCase().includes(searchLower) ||
+          post.tags.some(tag => tag.toLowerCase().includes(searchLower))
+        );
+      }
+      
+      // Apply tag filter
+      if (tag) {
+        filteredPosts = filteredPosts.filter(post => post.tags.includes(tag));
+      }
+      
+      setPosts(filteredPosts);
+      
+      // Extract all unique tags
+      const tags = new Set<string>();
+      mockPosts.forEach(post => {
+        post.tags.forEach(tag => tags.add(tag));
+      });
+      setAllTags(Array.from(tags).sort());
+      
       setLoading(false);
       return;
     }
-
-    setLoading(true);
-    setError(null);
 
     try {
       const params = new URLSearchParams();
@@ -91,7 +259,16 @@ const BlogPage: React.FC = () => {
 
   // Fetch specific post by slug
   const fetchPost = async (postSlug: string) => {
-    if (!SUPABASE_URL) return;
+    if (!SUPABASE_URL) {
+      // Use mock data when Supabase is not configured
+      const post = mockPosts.find(p => p.slug === postSlug);
+      if (post) {
+        setSelectedPost(post);
+      } else {
+        setError('Blog post not found');
+      }
+      return;
+    }
 
     try {
       const response = await fetch(`${SUPABASE_URL}/functions/v1/blog/${postSlug}`, {
@@ -162,26 +339,6 @@ const BlogPage: React.FC = () => {
 
     return '<p style="margin: 1rem 0; line-height: 1.6; color: ' + theme.colors.textSecondary + ';">' + html + '</p>';
   };
-
-  // Don't render if Supabase is not configured
-  if (!SUPABASE_URL) {
-    return (
-      <div style={styles.bg.primary} className="min-h-screen">
-        <Navbar />
-        <div className="pt-32 pb-16 px-4 sm:px-6">
-          <div className="max-w-4xl mx-auto text-center">
-            <h1 style={{ ...styles.typography.h1, color: theme.colors.text }}>
-              Developer Blog
-            </h1>
-            <p style={{ ...styles.typography.body, color: theme.colors.textSecondary }}>
-              Blog system is not configured yet.
-            </p>
-          </div>
-        </div>
-        <Footer />
-      </div>
-    );
-  }
 
   // Single post view
   if (slug && selectedPost) {
@@ -427,6 +584,31 @@ const BlogPage: React.FC = () => {
                 ))}
               </select>
             </div>
+            
+            {/* Configuration notice */}
+            {!SUPABASE_URL && (
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: theme.semanticSpacing.sm,
+                  padding: theme.semanticSpacing.md,
+                  backgroundColor: theme.utils.alpha(theme.colors.primary, 0.1),
+                  border: `1px solid ${theme.utils.alpha(theme.colors.primary, 0.3)}`,
+                  borderRadius: '0.75rem',
+                  color: theme.colors.primary,
+                  marginBottom: theme.semanticSpacing.lg,
+                  fontSize: theme.typography.fontSize.sm,
+                }}
+              >
+                <AlertCircle size={16} />
+                <span>
+                  Demo mode: Showing sample blog posts. Connect Supabase to enable full blog functionality and API updates.
+                </span>
+              </motion.div>
+            )}
           </motion.div>
 
           {/* Error state */}
