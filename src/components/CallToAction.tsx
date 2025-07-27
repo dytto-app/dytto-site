@@ -3,6 +3,7 @@ import { motion } from 'framer-motion';
 import { ArrowRight, Code, Book, MessageCircle } from 'lucide-react';
 import { useTheme } from './ThemeProvider';
 import { useThemeStyles } from '../hooks/useThemeStyles';
+import analytics from '../utils/analytics';
 
 const CallToAction = () => {
   const { theme } = useTheme();
@@ -151,6 +152,19 @@ const CallToAction = () => {
               </p>
               
               <motion.button
+                onClick={() => {
+                  analytics.trackButtonClick(item.action, 'cta_section', item.title.toLowerCase().replace(' ', '_'));
+                  analytics.trackCTA(item.action, `cta_${item.primary ? 'primary' : 'secondary'}`, 'click');
+                  
+                  // Navigation logic
+                  if (item.action === 'Get API Key') {
+                    window.location.href = '/waitlist';
+                  } else if (item.action === 'View Documentation') {
+                    window.location.href = '/api';
+                  } else if (item.action === 'Join Discord') {
+                    window.open('https://discord.gg/dytto', '_blank');
+                  }
+                }}
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
                 style={{
@@ -221,6 +235,12 @@ const CallToAction = () => {
             </p>
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
               <motion.button
+                onClick={() => {
+                  analytics.trackButtonClick('Contact Sales', 'enterprise_cta', 'contact_sales');
+                  analytics.trackCTA('Contact Sales', 'enterprise_primary', 'click');
+                  // You could redirect to a contact form or open a calendar
+                  window.location.href = '/feedback?type=enterprise';
+                }}
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
                 style={{

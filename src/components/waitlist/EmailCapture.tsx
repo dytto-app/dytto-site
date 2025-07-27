@@ -1,9 +1,10 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { ArrowRight, CheckCircle, AlertCircle, Loader } from 'lucide-react';
 import { useTheme } from '../ThemeProvider';
 import { useThemeStyles } from '../../hooks/useThemeStyles';
 import { joinWaitlist, type WaitlistSignupData } from '../../utils/supabaseWaitlist';
+import analytics, { trackWaitlistSignup } from '../../utils/analytics';
 
 interface EmailCaptureProps {
   onSuccess?: (email: string, queuePosition: number) => void;
@@ -25,6 +26,16 @@ const EmailCapture: React.FC<EmailCaptureProps> = ({
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [error, setError] = useState('');
   const [queuePosition, setQueuePosition] = useState(0);
+  const [formStartTime, setFormStartTime] = useState<number | null>(null);
+
+  useEffect(() => {
+    // Track form view when component mounts
+    analytics.trackEvent({
+      action: 'waitlist_form_view',
+      category: 'conversion',
+      label: source,
+    });
+  }, [source]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -52,12 +63,16 @@ const EmailCapture: React.FC<EmailCaptureProps> = ({
         setIsSubmitted(true);
         onSuccess?.(email, result.position || 0);
         
-        // Track analytics (optional)
-        if (typeof window !== 'undefined' && 'gtag' in window) {
-          (window as any).gtag('event', 'waitlist_signup', {
-            event_category: 'engagement',
-            event_label: source,
-            value: result.position
+        // Track enhanced analytics
+        trackWaitlistSignup(email, result.position || 0, source);
+        
+        // Track form completion time if we have start time
+        if (formStartTime) {
+          analytics.trackEvent({
+            action: 'form_completion_time',
+            category: 'conversion',
+            label: 'waitlist_signup',
+            value: Math.round((Date.now() - formStartTime) / 1000),
           });
         }
       } else {
@@ -186,7 +201,20 @@ const EmailCapture: React.FC<EmailCaptureProps> = ({
             <motion.input
               type="email"
               value={email}
-              onChange={(e) => setEmail(e.target.value)}
+              onChange={(e) => {
+                setEmail(e.target.value);
+                // Track form start on first input
+                if (!formStartTime && e.target.value.length === 1) {
+                  setFormStartTime(Date.now());
+                  analytics.trackFormInteraction('start', 'waitlist_signup', 'email');
+                }
+              }}
+              onBlur={() => {
+                // Track form field completion
+                if (email) {
+                  analytics.trackFormInteraction('complete', 'waitlist_signup', 'email');
+                }
+              }}
               placeholder="Enter your email address"
               required
               disabled={isSubmitting}
@@ -221,6 +249,11 @@ const EmailCapture: React.FC<EmailCaptureProps> = ({
           <motion.button
             type="submit"
             disabled={isSubmitting || !email}
+            onClick={() => {
+              if (!isSubmitting && email) {
+                analytics.trackButtonClick('Join the Waitlist', 'waitlist_form', 'email_capture');
+              }
+            }}
             whileHover={{ scale: isSubmitting || !email ? 1 : 1.02, y: isSubmitting || !email ? 0 : -2 }}
             whileTap={{ scale: isSubmitting || !email ? 1 : 0.98 }}
             style={{

@@ -1,8 +1,9 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Camera, BookOpen, MessageSquare, Brain, Sparkles } from 'lucide-react';
 import { useTheme } from './ThemeProvider';
 import { useThemeStyles } from '../hooks/useThemeStyles';
+import analytics from '../utils/analytics';
 
 const features = [
   {
@@ -40,6 +41,11 @@ const features = [
 const AppShowcase = () => {
   const { theme } = useTheme();
   const styles = useThemeStyles();
+
+  useEffect(() => {
+    // Track when app showcase section is viewed
+    analytics.trackFeatureInteraction('app_showcase_section', 'view');
+  }, []);
 
   return (
     <section style={styles.bg.secondary} className="py-16 sm:py-24">
@@ -97,7 +103,22 @@ const AppShowcase = () => {
             <motion.div
               key={index}
               initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
+              whileInView={{ 
+                opacity: 1, 
+                y: 0,
+                transition: {
+                  onComplete: () => {
+                    analytics.trackFeatureInteraction(feature.title.toLowerCase().replace(/ /g, '_'), 'view');
+                  }
+                }
+              }}
+              whileHover={{
+                scale: 1.02,
+                transition: { duration: 0.2 }
+              }}
+              onHoverStart={() => {
+                analytics.trackFeatureInteraction(feature.title.toLowerCase().replace(/ /g, '_'), 'interact');
+              }}
               transition={{ duration: 0.6, delay: index * 0.1 }}
               style={{
                 ...styles.glass.light,
@@ -105,6 +126,7 @@ const AppShowcase = () => {
                 borderRadius: '1.5rem',
                 padding: '1.5rem',
                 overflow: 'hidden',
+                cursor: 'pointer',
               }}
             >
               <div className="space-y-6">

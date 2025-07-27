@@ -3,6 +3,7 @@ import { motion } from 'framer-motion';
 import { Brain, Code, Sparkles, ArrowRight } from 'lucide-react';
 import { useTheme } from './ThemeProvider';
 import { useThemeStyles } from '../hooks/useThemeStyles';
+import analytics from '../utils/analytics';
 
 const Hero = () => {
   const { theme } = useTheme();
@@ -186,6 +187,12 @@ const Hero = () => {
           className="flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4 mb-12 sm:mb-16 px-4"
         >
           <motion.button
+            onClick={() => {
+              analytics.trackButtonClick('Start Building', 'hero', 'primary_cta');
+              analytics.trackCTA('Start Building', 'hero_primary', 'click');
+              // Navigate to waitlist or build page
+              window.location.href = '/waitlist';
+            }}
             whileHover={{ scale: 1.02, y: -2 }}
             whileTap={{ scale: 0.98 }}
             style={{
@@ -205,6 +212,12 @@ const Hero = () => {
           </motion.button>
           
           <motion.button
+            onClick={() => {
+              analytics.trackButtonClick('View Documentation', 'hero', 'secondary_cta');
+              analytics.trackCTA('View Documentation', 'hero_secondary', 'click');
+              // Navigate to documentation
+              window.location.href = '/api';
+            }}
             whileHover={{ scale: 1.02, y: -2 }}
             whileTap={{ scale: 0.98 }}
             style={{
