@@ -37,3 +37,7 @@ The blog page (`/blog`) is designed to work even without a full Supabase backend
 -   `npm run build`: Builds the application for production.
 -   `npm run lint`: Lints the project files.
 -   `npm run preview`: Previews the production build locally.
+
+## Analytics
+
+This site uses Google Analytics to collect anonymous usage data. The tracking code is embedded directly in `index.html`.
