@@ -31,6 +31,22 @@ The blog page (`/blog`) is designed to work even without a full Supabase backend
 
 -   **Full Functionality:** To enable full blog functionality, including dynamic content fetching and API updates, you need to configure your Supabase project and set the `VITE_SUPABASE_URL` and `VITE_SUPABASE_ANON_KEY` environment variables. Refer to the Supabase documentation for detailed setup instructions.
 
+## Analytics Tracking
+
+This project incorporates an enhanced analytics utility (`src/utils/analytics.ts`) to comprehensively track user interactions and engagement on the landing page. This utility provides insights into:
+
+-   **Page Load Performance:** Tracks metrics like page load time and First Contentful Paint.
+-   **Scroll Depth:** Monitors how far users scroll down the page (at 25%, 50%, 75%, and 90% intervals).
+-   **Exit Intent:** Detects when users are about to leave the page.
+-   **Button Clicks:** Records clicks on various interactive elements with contextual information.
+-   **Form Interactions:** Tracks the start, completion, and abandonment of forms (e.g., waitlist signup).
+-   **Feature Interactions:** Monitors views and interactions with specific UI components and features.
+-   **Call to Action (CTA) Effectiveness:** Measures engagement with CTAs.
+-   **Media Interactions:** Tracks plays, pauses, and completions of videos or other media.
+-   **Error Tracking:** Logs technical errors for debugging and performance monitoring.
+
+The analytics system also captures UTM parameters for improved attribution and calculates session duration.
+
 ## Available Scripts
 
 -   `npm run dev`: Starts the development server.
