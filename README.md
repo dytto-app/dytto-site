@@ -31,6 +31,12 @@ The blog page (`/blog`) is designed to work even without a full Supabase backend
 
 -   **Full Functionality:** To enable full blog functionality, including dynamic content fetching and API updates, you need to configure your Supabase project and set the `VITE_SUPABASE_URL` and `VITE_SUPABASE_ANON_KEY` environment variables. Refer to the Supabase documentation for detailed setup instructions.
 
+## Features
+
+### Philosophy Dashboard
+
+The Philosophy Dashboard (`/philosophy`) now automatically selects the first journal entry when a philosopher is chosen or when the page loads, improving initial user experience.
+
 ## Analytics Tracking
 
 This project incorporates an enhanced analytics utility (`src/utils/analytics.ts`) to comprehensively track user interactions and engagement on the landing page. This utility provides insights into:
