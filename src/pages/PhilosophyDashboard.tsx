@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { BookOpen, Calendar, User, MapPin, Clock, ChevronLeft, ChevronRight, Sparkles, Heart, Bot as Lotus, Cross, Filter, Search } from 'lucide-react';
+import { BookOpen, Calendar, User, MapPin, Clock, ChevronLeft, ChevronRight, Sparkles, Heart, Bot as Lotus, Cross, Filter, Search, AlertTriangle } from 'lucide-react';
 import { useTheme } from '../components/ThemeProvider';
 import { useThemeStyles } from '../hooks/useThemeStyles';
 import Navbar from '../components/Navbar';
