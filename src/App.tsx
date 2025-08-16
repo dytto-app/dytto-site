@@ -6,6 +6,7 @@ import AppLandingPage from './pages/AppLandingPage';
 import APILandingPage from './pages/APILandingPage';
 import FeedbackPage from './pages/FeedbackPage';
 import BlogPage from './pages/BlogPage';
+import PhilosophyDashboard from './pages/PhilosophyDashboard';
 
 function App() {
   return (
@@ -18,6 +19,7 @@ function App() {
           <Route path="/feedback" element={<FeedbackPage />} />
           <Route path="/blog" element={<BlogPage />} />
           <Route path="/blog/:slug" element={<BlogPage />} />
+          <Route path="/philosophy" element={<PhilosophyDashboard />} />
         </Routes>
       </Router>
     </ThemeProvider>

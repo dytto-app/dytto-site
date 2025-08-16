@@ -16,6 +16,7 @@ const Navbar = () => {
   const isFeedbackPage = location.pathname === '/feedback';
   const isHomePage = location.pathname === '/';
   const isBlogPage = location.pathname.startsWith('/blog');
+  const isPhilosophyPage = location.pathname === '/philosophy';
 
   // Dynamic navigation items based on current page - only functional sections
   const getNavItems = () => {
@@ -172,6 +173,27 @@ const Navbar = () => {
                 </Link>
               )}
               
+              {!isPhilosophyPage && (
+                <Link
+                  to="/philosophy"
+                  style={{ 
+                    color: theme.colors.textSecondary,
+                    fontSize: theme.typography.fontSize.sm,
+                    transition: theme.animations.transition.normal,
+                    textDecoration: 'none',
+                    fontWeight: theme.typography.fontWeight.medium,
+                  }}
+                  onMouseEnter={(e) => {
+                    e.target.style.color = theme.colors.primary;
+                  }}
+                  onMouseLeave={(e) => {
+                    e.target.style.color = theme.colors.textSecondary;
+                  }}
+                >
+                  Philosophy
+                </Link>
+              )}
+              
               {!isFeedbackPage && (
                 <Link
                   to="/feedback"
@@ -256,7 +278,7 @@ const Navbar = () => {
                 transition: theme.animations.transition.normal,
               }}
             >
-              {isAPIPage ? 'Get API Key' : isWaitlistPage ? 'Join Waitlist' : isFeedbackPage ? 'Submit Feedback' : isBlogPage ? 'Subscribe' : 'Download App'}
+              {isAPIPage ? 'Get API Key' : isWaitlistPage ? 'Join Waitlist' : isFeedbackPage ? 'Submit Feedback' : isBlogPage ? 'Subscribe' : isPhilosophyPage ? 'View Demo' : 'Download App'}
             </motion.button>
           </div>
 
@@ -484,6 +506,31 @@ const Navbar = () => {
                   </motion.div>
                 )}
                 
+                {!isPhilosophyPage && (
+                  <motion.div
+                    initial={{ opacity: 0, x: -20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ delay: (navItems.length + 5) * 0.1 }}
+                  >
+                    <Link
+                      to="/philosophy"
+                      onClick={() => setIsOpen(false)}
+                      style={{
+                        display: 'block',
+                        color: theme.colors.textSecondary,
+                        fontSize: theme.typography.fontSize.lg,
+                        fontWeight: theme.typography.fontWeight.medium,
+                        padding: theme.semanticSpacing.md,
+                        borderRadius: '0.75rem',
+                        textDecoration: 'none',
+                        transition: theme.animations.transition.normal,
+                      }}
+                    >
+                      Philosophy
+                    </Link>
+                  </motion.div>
+                )}
+                
                 <div className="border-t pt-4" style={{ borderColor: theme.colors.border }}>
                   <motion.button
                     initial={{ opacity: 0, x: -20 }}
@@ -501,7 +548,7 @@ const Navbar = () => {
                       cursor: 'pointer',
                     }}
                   >
-                    {isAPIPage ? 'Get API Key' : isWaitlistPage ? 'Join Waitlist' : isFeedbackPage ? 'Submit Feedback' : isBlogPage ? 'Subscribe' : 'Download App'}
+                    {isAPIPage ? 'Get API Key' : isWaitlistPage ? 'Join Waitlist' : isFeedbackPage ? 'Submit Feedback' : isBlogPage ? 'Subscribe' : isPhilosophyPage ? 'View Demo' : 'Download App'}
                   </motion.button>
                 </div>
               </div>
