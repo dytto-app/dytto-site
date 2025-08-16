@@ -47,6 +47,10 @@ This project incorporates an enhanced analytics utility (`src/utils/analytics.ts
 
 The analytics system also captures UTM parameters for improved attribution and calculates session duration.
 
+## Philosophy Journal Page
+
+The `Philosophy Journal` page (`/philosophy`) is an interactive feature that allows users to explore the simulated inner lives of various philosophers. It presents mock journal entries, showcasing their modern contexts, daily struggles, and profound insights. This page is currently populated with static, mock data for demonstration purposes, but it is designed to be extensible for integration with a dynamic backend in the future.
+
 ## Available Scripts
 
 -   `npm run dev`: Starts the development server.
