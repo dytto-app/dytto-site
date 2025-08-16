@@ -123,4 +123,4 @@ const philosophers: PhilosopherProfile[] = [
       financialState: 'comfortable'
     },
     authenticityLevel: 'realized',
-    avatar: 'https://images.pexels.com/photos/774909/pexels-photo-774909.jpeg?auto=co
+    avatar: 'https://images.pexels.com/photos/774909/pexels-photo-774909.jpeg?auto=compress&cs=tinysrgb&w=150&h=150&fit=crop',
