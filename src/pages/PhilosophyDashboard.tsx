@@ -247,318 +247,629 @@ This is the gospel: God's love made tangible through human hands, human presence
 
   const getDriftAlertColor = (alert: string) => {
     switch (alert) {
-      case 'high': return 'text-red-500';
-      case 'medium': return 'text-yellow-500';
-      case 'low': return 'text-blue-500';
-      default: return 'text-green-500';
+      case 'high': return theme.colors.error;
+      case 'medium': return '#F59E0B';
+      case 'low': return theme.colors.primary;
+      default: return theme.colors.success;
     }
   };
 
   const getFinancialStateColor = (state: string) => {
     switch (state) {
-      case 'struggling': return 'text-red-500';
-      case 'stable': return 'text-yellow-500';
-      case 'comfortable': return 'text-green-500';
-      default: return 'text-gray-500';
+      case 'struggling': return theme.colors.error;
+      case 'stable': return '#F59E0B';
+      case 'comfortable': return theme.colors.success;
+      default: return theme.colors.textSecondary;
     }
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50 dark:from-gray-900 dark:to-blue-900">
+    <div style={styles.bg.primary} className="min-h-screen">
       <Navbar />
       
-      <div className="container mx-auto px-4 py-8">
-        {/* Header */}
-        <div className="text-center mb-12">
+      <div className="pt-24 sm:pt-32 pb-16 px-4 sm:px-6">
+        <div className="max-w-7xl mx-auto">
+          {/* Header */}
           <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8 }}
+            className="text-center mb-12"
+          >
+            <div className="flex items-center justify-center gap-3 mb-4">
+              <Brain style={{ color: theme.colors.primary }} size={32} />
+              <h1 
+                style={{
+                  color: theme.colors.text,
+                  fontSize: 'clamp(2rem, 6vw, 4rem)',
+                  fontWeight: theme.typography.fontWeight.bold,
+                  background: `linear-gradient(135deg, ${theme.colors.primary}, ${theme.colors.accent})`,
+                  WebkitBackgroundClip: 'text',
+                  WebkitTextFillColor: 'transparent',
+                  backgroundClip: 'text',
+                }}
+              >
+                Philosophy Journal
+              </h1>
+            </div>
+            <p 
+              style={{
+                color: theme.colors.textSecondary,
+                fontSize: 'clamp(1rem, 3vw, 1.125rem)',
+                maxWidth: '48rem',
+                margin: '0 auto',
+              }}
+            >
+              Explore the inner lives of philosophers navigating modern challenges while staying true to ancient wisdom
+            </p>
+          </motion.div>
+
+          {/* Character Selection */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+            {philosophers.map((philosopher) => (
+              <motion.div
+                key={philosopher.id}
+                whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 0.98 }}
+                onClick={() => setSelectedPhilosopher(philosopher)}
+                style={{
+                  ...styles.glass.light,
+                  border: selectedPhilosopher.id === philosopher.id 
+                    ? `2px solid ${theme.colors.primary}` 
+                    : `1px solid ${theme.colors.border}`,
+                  borderRadius: '1rem',
+                  padding: theme.semanticSpacing.lg,
+                  cursor: 'pointer',
+                  transition: theme.animations.transition.normal,
+                }}
+              >
+                <div className="flex items-center gap-4 mb-4">
+                  <img
+                    src={philosopher.avatar}
+                    alt={philosopher.name}
+                    style={{
+                      width: '3rem',
+                      height: '3rem',
+                      borderRadius: '50%',
+                      objectFit: 'cover',
+                    }}
+                  />
+                  <div>
+                    <h3 
+                      style={{
+                        color: theme.colors.text,
+                        fontWeight: theme.typography.fontWeight.semibold,
+                        marginBottom: theme.semanticSpacing.xs,
+                      }}
+                    >
+                      {philosopher.name}
+                    </h3>
+                    <p 
+                      style={{
+                        color: theme.colors.textSecondary,
+                        fontSize: theme.typography.fontSize.sm,
+                      }}
+                    >
+                      {philosopher.displayName}
+                    </p>
+                  </div>
+                </div>
+                
+                <div className="space-y-2">
+                  <div className="flex items-center gap-2">
+                    <User style={{ color: theme.colors.textSecondary }} size={16} />
+                    <span 
+                      style={{
+                        color: theme.colors.textSecondary,
+                        fontSize: theme.typography.fontSize.sm,
+                      }}
+                    >
+                      {philosopher.modernContext.occupation}
+                    </span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <Sparkles 
+                      style={{ 
+                        color: philosopher.type === 'dynamic' ? '#F59E0B' : theme.colors.success 
+                      }} 
+                      size={16} 
+                    />
+                    <span 
+                      style={{
+                        color: theme.colors.textSecondary,
+                        fontSize: theme.typography.fontSize.sm,
+                        textTransform: 'capitalize',
+                      }}
+                    >
+                      {philosopher.authenticityLevel}
+                    </span>
+                  </div>
+                </div>
+              </motion.div>
+            ))}
+          </div>
+
+          {/* Selected Character Details */}
+          <motion.div
+            key={selectedPhilosopher.id}
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="flex items-center justify-center gap-3 mb-4"
+            style={{
+              ...styles.glass.medium,
+              border: `1px solid ${theme.colors.border}`,
+              borderRadius: '1rem',
+              padding: theme.semanticSpacing.xl,
+              marginBottom: theme.semanticSpacing.lg,
+            }}
           >
-            <Brain className="w-8 h-8 text-indigo-600" />
-            <h1 className="text-4xl font-bold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent">
-              Philosophy Journal
-            </h1>
-          </motion.div>
-          <p className="text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">
-            Explore the inner lives of philosophers navigating modern challenges while staying true to ancient wisdom
-          </p>
-        </div>
-
-        {/* Character Selection */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-          {philosophers.map((philosopher) => (
-            <motion.div
-              key={philosopher.id}
-              whileHover={{ scale: 1.02 }}
-              whileTap={{ scale: 0.98 }}
-              onClick={() => setSelectedPhilosopher(philosopher)}
-              className={`cursor-pointer rounded-xl p-6 transition-all duration-300 ${
-                selectedPhilosopher.id === philosopher.id
-                  ? 'bg-white dark:bg-gray-800 shadow-lg ring-2 ring-indigo-500'
-                  : 'bg-white/50 dark:bg-gray-800/50 hover:bg-white dark:hover:bg-gray-800 shadow-md'
-              }`}
-            >
-              <div className="flex items-center gap-4 mb-4">
-                <img
-                  src={philosopher.avatar}
-                  alt={philosopher.name}
-                  className="w-12 h-12 rounded-full object-cover"
-                />
-                <div>
-                  <h3 className="font-semibold text-gray-900 dark:text-white">
-                    {philosopher.name}
-                  </h3>
-                  <p className="text-sm text-gray-500 dark:text-gray-400">
-                    {philosopher.displayName}
-                  </p>
-                </div>
-              </div>
-              
-              <div className="space-y-2 text-sm">
-                <div className="flex items-center gap-2">
-                  <User className="w-4 h-4 text-gray-400" />
-                  <span className="text-gray-600 dark:text-gray-300">
-                    {philosopher.modernContext.occupation}
-                  </span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <Sparkles className={`w-4 h-4 ${philosopher.type === 'dynamic' ? 'text-yellow-500' : 'text-green-500'}`} />
-                  <span className="text-gray-600 dark:text-gray-300 capitalize">
-                    {philosopher.authenticityLevel}
-                  </span>
-                </div>
-              </div>
-            </motion.div>
-          ))}
-        </div>
-
-        {/* Selected Character Details */}
-        <motion.div
-          key={selectedPhilosopher.id}
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-8 mb-8"
-        >
-          <div className="flex items-start gap-6 mb-6">
-            <img
-              src={selectedPhilosopher.avatar}
-              alt={selectedPhilosopher.name}
-              className="w-20 h-20 rounded-full object-cover"
-            />
-            <div className="flex-1">
-              <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">
-                {selectedPhilosopher.name}
-              </h2>
-              <p className="text-gray-600 dark:text-gray-300 mb-4">
-                {selectedPhilosopher.displayName} • {selectedPhilosopher.tradition.charAt(0).toUpperCase() + selectedPhilosopher.tradition.slice(1)} Tradition
-              </p>
-              
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                <div>
-                  <h4 className="font-semibold text-gray-900 dark:text-white mb-2">Context</h4>
-                  <p className="text-sm text-gray-600 dark:text-gray-300">
-                    Age {selectedPhilosopher.modernContext.age} • {selectedPhilosopher.modernContext.location}
-                  </p>
-                  <p className={`text-sm font-medium ${getFinancialStateColor(selectedPhilosopher.modernContext.financialState)}`}>
-                    {selectedPhilosopher.modernContext.financialState.charAt(0).toUpperCase() + selectedPhilosopher.modernContext.financialState.slice(1)}
-                  </p>
-                </div>
-                
-                {selectedPhilosopher.modernContext.currentStruggles.length > 0 && (
-                  <div>
-                    <h4 className="font-semibold text-gray-900 dark:text-white mb-2">Current Struggles</h4>
-                    <div className="space-y-1">
-                      {selectedPhilosopher.modernContext.currentStruggles.map((struggle, index) => (
-                        <div key={index} className="flex items-center gap-2">
-                          <AlertTriangle className="w-3 h-3 text-yellow-500" />
-                          <span className="text-sm text-gray-600 dark:text-gray-300">{struggle}</span>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                )}
-                
-                <div>
-                  <h4 className="font-semibold text-gray-900 dark:text-white mb-2">Journey Stage</h4>
-                  <div className="flex items-center gap-2">
-                    <Sparkles className={`w-4 h-4 ${selectedPhilosopher.authenticityLevel === 'seeking' ? 'text-yellow-500' : 'text-green-500'}`} />
-                    <span className="text-sm text-gray-600 dark:text-gray-300 capitalize">
-                      {selectedPhilosopher.authenticityLevel}
-                    </span>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </motion.div>
-
-        {/* Journal Entries */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-          {/* Entry List */}
-          <div className="lg:col-span-1">
-            <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-4">
-              Recent Entries
-            </h3>
-            <div className="space-y-3">
-              {currentEntries.map((entry) => (
-                <motion.div
-                  key={entry.id}
-                  whileHover={{ scale: 1.02 }}
-                  onClick={() => setSelectedEntry(entry.id)}
-                  className={`cursor-pointer rounded-lg p-4 transition-all duration-200 ${
-                    selectedEntry === entry.id
-                      ? 'bg-indigo-50 dark:bg-indigo-900/20 border-2 border-indigo-200 dark:border-indigo-700'
-                      : 'bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 border border-gray-200 dark:border-gray-700'
-                  }`}
+            <div className="flex items-start gap-6 mb-6">
+              <img
+                src={selectedPhilosopher.avatar}
+                alt={selectedPhilosopher.name}
+                style={{
+                  width: '5rem',
+                  height: '5rem',
+                  borderRadius: '50%',
+                  objectFit: 'cover',
+                }}
+              />
+              <div className="flex-1">
+                <h2 
+                  style={{
+                    color: theme.colors.text,
+                    fontSize: theme.typography.fontSize['2xl'],
+                    fontWeight: theme.typography.fontWeight.bold,
+                    marginBottom: theme.semanticSpacing.sm,
+                  }}
                 >
-                  <div className="flex items-center gap-3 mb-2">
-                    <Calendar className="w-4 h-4 text-gray-400" />
-                    <span className="text-sm text-gray-500 dark:text-gray-400">
-                      {new Date(entry.date).toLocaleDateString()}
-                    </span>
+                  {selectedPhilosopher.name}
+                </h2>
+                <p 
+                  style={{
+                    color: theme.colors.textSecondary,
+                    marginBottom: theme.semanticSpacing.md,
+                  }}
+                >
+                  {selectedPhilosopher.displayName} • {selectedPhilosopher.tradition.charAt(0).toUpperCase() + selectedPhilosopher.tradition.slice(1)} Tradition
+                </p>
+                
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                  <div>
+                    <h4 
+                      style={{
+                        color: theme.colors.text,
+                        fontWeight: theme.typography.fontWeight.semibold,
+                        marginBottom: theme.semanticSpacing.sm,
+                      }}
+                    >
+                      Context
+                    </h4>
+                    <p 
+                      style={{
+                        color: theme.colors.textSecondary,
+                        fontSize: theme.typography.fontSize.sm,
+                      }}
+                    >
+                      Age {selectedPhilosopher.modernContext.age} • {selectedPhilosopher.modernContext.location}
+                    </p>
+                    <p 
+                      style={{
+                        color: getFinancialStateColor(selectedPhilosopher.modernContext.financialState),
+                        fontSize: theme.typography.fontSize.sm,
+                        fontWeight: theme.typography.fontWeight.medium,
+                        textTransform: 'capitalize',
+                      }}
+                    >
+                      {selectedPhilosopher.modernContext.financialState}
+                    </p>
                   </div>
-                  <h4 className="font-medium text-gray-900 dark:text-white mb-1">
-                    {entry.title}
-                  </h4>
-                  <p className="text-sm text-gray-600 dark:text-gray-300 line-clamp-2">
-                    {entry.content.substring(0, 100)}...
-                  </p>
-                  <div className="flex items-center gap-2 mt-2">
-                    <span className={`text-xs px-2 py-1 rounded-full ${
-                      entry.mood === 'contemplative' ? 'bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-300' :
-                      entry.mood === 'grateful' ? 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-300' :
-                      entry.mood === 'weary but hopeful' ? 'bg-yellow-100 text-yellow-700 dark:bg-yellow-900/30 dark:text-yellow-300' :
-                      'bg-purple-100 text-purple-700 dark:bg-purple-900/30 dark:text-purple-300'
-                    }`}>
-                      {entry.mood}
-                    </span>
-                  </div>
-                </motion.div>
-              ))}
-            </div>
-          </div>
-
-          {/* Entry Detail */}
-          <div className="lg:col-span-2">
-            {selectedEntry ? (
-              <motion.div
-                initial={{ opacity: 0, x: 20 }}
-                animate={{ opacity: 1, x: 0 }}
-                className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-8"
-              >
-                {(() => {
-                  const entry = currentEntries.find(e => e.id === selectedEntry);
-                  if (!entry) return null;
                   
-                  return (
-                    <>
-                      <div className="flex items-center justify-between mb-6">
-                        <div>
-                          <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">
-                            {entry.title}
-                          </h3>
-                          <div className="flex items-center gap-4 text-sm text-gray-500 dark:text-gray-400">
-                            <div className="flex items-center gap-2">
-                              <Calendar className="w-4 h-4" />
-                              {new Date(entry.date).toLocaleDateString()}
-                            </div>
-                            <span className={`px-2 py-1 rounded-full ${
-                              entry.mood === 'contemplative' ? 'bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-300' :
-                              entry.mood === 'grateful' ? 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-300' :
-                              entry.mood === 'weary but hopeful' ? 'bg-yellow-100 text-yellow-700 dark:bg-yellow-900/30 dark:text-yellow-300' :
-                              'bg-purple-100 text-purple-700 dark:bg-purple-900/30 dark:text-purple-300'
-                            }`}>
-                              {entry.mood}
+                  {selectedPhilosopher.modernContext.currentStruggles.length > 0 && (
+                    <div>
+                      <h4 
+                        style={{
+                          color: theme.colors.text,
+                          fontWeight: theme.typography.fontWeight.semibold,
+                          marginBottom: theme.semanticSpacing.sm,
+                        }}
+                      >
+                        Current Struggles
+                      </h4>
+                      <div className="space-y-1">
+                        {selectedPhilosopher.modernContext.currentStruggles.map((struggle, index) => (
+                          <div key={index} className="flex items-center gap-2">
+                            <AlertTriangle style={{ color: '#F59E0B' }} size={12} />
+                            <span 
+                              style={{
+                                color: theme.colors.textSecondary,
+                                fontSize: theme.typography.fontSize.sm,
+                              }}
+                            >
+                              {struggle}
                             </span>
                           </div>
-                        </div>
+                        ))}
                       </div>
+                    </div>
+                  )}
+                  
+                  <div>
+                    <h4 
+                      style={{
+                        color: theme.colors.text,
+                        fontWeight: theme.typography.fontWeight.semibold,
+                        marginBottom: theme.semanticSpacing.sm,
+                      }}
+                    >
+                      Journey Stage
+                    </h4>
+                    <div className="flex items-center gap-2">
+                      <Sparkles 
+                        style={{ 
+                          color: selectedPhilosopher.authenticityLevel === 'seeking' ? '#F59E0B' : theme.colors.success 
+                        }} 
+                        size={16} 
+                      />
+                      <span 
+                        style={{
+                          color: theme.colors.textSecondary,
+                          fontSize: theme.typography.fontSize.sm,
+                          textTransform: 'capitalize',
+                        }}
+                      >
+                        {selectedPhilosopher.authenticityLevel}
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </motion.div>
 
-                      <div className="prose dark:prose-invert max-w-none mb-8">
-                        <div className="text-gray-700 dark:text-gray-300 leading-relaxed whitespace-pre-line">
+          {/* Journal Entries */}
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            {/* Entry List */}
+            <div className="lg:col-span-1">
+              <h3 
+                style={{
+                  color: theme.colors.text,
+                  fontSize: theme.typography.fontSize.xl,
+                  fontWeight: theme.typography.fontWeight.semibold,
+                  marginBottom: theme.semanticSpacing.md,
+                }}
+              >
+                Recent Entries
+              </h3>
+              <div className="space-y-3">
+                {currentEntries.map((entry) => (
+                  <motion.div
+                    key={entry.id}
+                    whileHover={{ scale: 1.02 }}
+                    onClick={() => setSelectedEntry(entry.id)}
+                    style={{
+                      ...styles.glass.light,
+                      border: selectedEntry === entry.id 
+                        ? `2px solid ${theme.colors.primary}` 
+                        : `1px solid ${theme.colors.border}`,
+                      borderRadius: '0.75rem',
+                      padding: theme.semanticSpacing.md,
+                      cursor: 'pointer',
+                      transition: theme.animations.transition.normal,
+                    }}
+                  >
+                    <div className="flex items-center gap-3 mb-2">
+                      <Calendar style={{ color: theme.colors.textSecondary }} size={14} />
+                      <span 
+                        style={{
+                          color: theme.colors.textSecondary,
+                          fontSize: theme.typography.fontSize.xs,
+                        }}
+                      >
+                        {new Date(entry.date).toLocaleDateString()}
+                      </span>
+                    </div>
+                    <h4 
+                      style={{
+                        color: theme.colors.text,
+                        fontWeight: theme.typography.fontWeight.medium,
+                        marginBottom: theme.semanticSpacing.xs,
+                      }}
+                    >
+                      {entry.title}
+                    </h4>
+                    <p 
+                      style={{
+                        color: theme.colors.textSecondary,
+                        fontSize: theme.typography.fontSize.sm,
+                        lineHeight: '1.4',
+                      }}
+                    >
+                      {entry.content.substring(0, 100)}...
+                    </p>
+                    <div className="flex items-center gap-2 mt-2">
+                      <span 
+                        style={{
+                          fontSize: theme.typography.fontSize.xs,
+                          padding: `${theme.semanticSpacing.xs} ${theme.semanticSpacing.sm}`,
+                          borderRadius: '9999px',
+                          backgroundColor: theme.utils.alpha(theme.colors.primary, 0.1),
+                          color: theme.colors.primary,
+                        }}
+                      >
+                        {entry.mood}
+                      </span>
+                    </div>
+                  </motion.div>
+                ))}
+              </div>
+            </div>
+
+            {/* Entry Detail */}
+            <div className="lg:col-span-2">
+              {selectedEntry ? (
+                <motion.div
+                  initial={{ opacity: 0, x: 20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  style={{
+                    ...styles.glass.medium,
+                    border: `1px solid ${theme.colors.border}`,
+                    borderRadius: '1rem',
+                    padding: theme.semanticSpacing.xl,
+                  }}
+                >
+                  {(() => {
+                    const entry = currentEntries.find(e => e.id === selectedEntry);
+                    if (!entry) return null;
+                    
+                    return (
+                      <>
+                        <div className="flex items-center justify-between mb-6">
+                          <div>
+                            <h3 
+                              style={{
+                                color: theme.colors.text,
+                                fontSize: theme.typography.fontSize['2xl'],
+                                fontWeight: theme.typography.fontWeight.bold,
+                                marginBottom: theme.semanticSpacing.sm,
+                              }}
+                            >
+                              {entry.title}
+                            </h3>
+                            <div className="flex items-center gap-4">
+                              <div className="flex items-center gap-2">
+                                <Calendar style={{ color: theme.colors.textSecondary }} size={16} />
+                                <span 
+                                  style={{
+                                    color: theme.colors.textSecondary,
+                                    fontSize: theme.typography.fontSize.sm,
+                                  }}
+                                >
+                                  {new Date(entry.date).toLocaleDateString()}
+                                </span>
+                              </div>
+                              <span 
+                                style={{
+                                  fontSize: theme.typography.fontSize.sm,
+                                  padding: `${theme.semanticSpacing.xs} ${theme.semanticSpacing.sm}`,
+                                  borderRadius: '9999px',
+                                  backgroundColor: theme.utils.alpha(theme.colors.primary, 0.1),
+                                  color: theme.colors.primary,
+                                }}
+                              >
+                                {entry.mood}
+                              </span>
+                            </div>
+                          </div>
+                        </div>
+
+                        <div 
+                          style={{
+                            color: theme.colors.textSecondary,
+                            lineHeight: '1.7',
+                            marginBottom: theme.semanticSpacing.xl,
+                            whiteSpace: 'pre-line',
+                          }}
+                        >
                           {entry.content}
                         </div>
-                      </div>
 
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <div>
-                          <h4 className="font-semibold text-gray-900 dark:text-white mb-3 flex items-center gap-2">
-                            <CheckCircle className="w-4 h-4 text-green-500" />
-                            Practices
-                          </h4>
-                          <div className="space-y-2">
-                            {entry.practices.map((practice, index) => (
-                              <div key={index} className="flex items-center gap-2">
-                                <div className="w-2 h-2 bg-green-400 rounded-full" />
-                                <span className="text-sm text-gray-600 dark:text-gray-300">{practice}</span>
-                              </div>
-                            ))}
-                          </div>
-                        </div>
-
-                        <div>
-                          <h4 className="font-semibold text-gray-900 dark:text-white mb-3 flex items-center gap-2">
-                            <Brain className="w-4 h-4 text-purple-500" />
-                            Insights
-                          </h4>
-                          <div className="space-y-2">
-                            {entry.insights.map((insight, index) => (
-                              <div key={index} className="flex items-center gap-2">
-                                <div className="w-2 h-2 bg-purple-400 rounded-full" />
-                                <span className="text-sm text-gray-600 dark:text-gray-300">{insight}</span>
-                              </div>
-                            ))}
-                          </div>
-                        </div>
-
-                        <div>
-                          <h4 className="font-semibold text-gray-900 dark:text-white mb-3 flex items-center gap-2">
-                            <Sparkles className="w-4 h-4 text-yellow-500" />
-                            Gratitude
-                          </h4>
-                          <div className="space-y-2">
-                            {entry.gratitude.map((item, index) => (
-                              <div key={index} className="flex items-center gap-2">
-                                <div className="w-2 h-2 bg-yellow-400 rounded-full" />
-                                <span className="text-sm text-gray-600 dark:text-gray-300">{item}</span>
-                              </div>
-                            ))}
-                          </div>
-                        </div>
-
-                        {entry.struggles.length > 0 && (
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                           <div>
-                            <h4 className="font-semibold text-gray-900 dark:text-white mb-3 flex items-center gap-2">
-                              <AlertTriangle className="w-4 h-4 text-red-500" />
-                              Struggles
+                            <h4 
+                              style={{
+                                color: theme.colors.text,
+                                fontWeight: theme.typography.fontWeight.semibold,
+                                marginBottom: theme.semanticSpacing.sm,
+                                display: 'flex',
+                                alignItems: 'center',
+                                gap: theme.semanticSpacing.sm,
+                              }}
+                            >
+                              <CheckCircle style={{ color: theme.colors.success }} size={16} />
+                              Practices
                             </h4>
                             <div className="space-y-2">
-                              {entry.struggles.map((struggle, index) => (
+                              {entry.practices.map((practice, index) => (
                                 <div key={index} className="flex items-center gap-2">
-                                  <div className="w-2 h-2 bg-red-400 rounded-full" />
-                                  <span className="text-sm text-gray-600 dark:text-gray-300">{struggle}</span>
+                                  <div 
+                                    style={{
+                                      width: '0.5rem',
+                                      height: '0.5rem',
+                                      backgroundColor: theme.colors.success,
+                                      borderRadius: '50%',
+                                    }}
+                                  />
+                                  <span 
+                                    style={{
+                                      color: theme.colors.textSecondary,
+                                      fontSize: theme.typography.fontSize.sm,
+                                    }}
+                                  >
+                                    {practice}
+                                  </span>
                                 </div>
                               ))}
                             </div>
                           </div>
-                        )}
-                      </div>
-                    </>
-                  );
-                })()}
-              </motion.div>
-            ) : (
-              <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-8 text-center">
-                <MessageSquare className="w-12 h-12 text-gray-400 mx-auto mb-4" />
-                <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">
-                  Select a Journal Entry
-                </h3>
-                <p className="text-gray-600 dark:text-gray-300">
-                  Choose an entry from the list to read {selectedPhilosopher.name}'s reflections
-                </p>
-              </div>
-            )}
+
+                          <div>
+                            <h4 
+                              style={{
+                                color: theme.colors.text,
+                                fontWeight: theme.typography.fontWeight.semibold,
+                                marginBottom: theme.semanticSpacing.sm,
+                                display: 'flex',
+                                alignItems: 'center',
+                                gap: theme.semanticSpacing.sm,
+                              }}
+                            >
+                              <Brain style={{ color: theme.colors.primary }} size={16} />
+                              Insights
+                            </h4>
+                            <div className="space-y-2">
+                              {entry.insights.map((insight, index) => (
+                                <div key={index} className="flex items-center gap-2">
+                                  <div 
+                                    style={{
+                                      width: '0.5rem',
+                                      height: '0.5rem',
+                                      backgroundColor: theme.colors.primary,
+                                      borderRadius: '50%',
+                                    }}
+                                  />
+                                  <span 
+                                    style={{
+                                      color: theme.colors.textSecondary,
+                                      fontSize: theme.typography.fontSize.sm,
+                                    }}
+                                  >
+                                    {insight}
+                                  </span>
+                                </div>
+                              ))}
+                            </div>
+                          </div>
+
+                          <div>
+                            <h4 
+                              style={{
+                                color: theme.colors.text,
+                                fontWeight: theme.typography.fontWeight.semibold,
+                                marginBottom: theme.semanticSpacing.sm,
+                                display: 'flex',
+                                alignItems: 'center',
+                                gap: theme.semanticSpacing.sm,
+                              }}
+                            >
+                              <Sparkles style={{ color: '#F59E0B' }} size={16} />
+                              Gratitude
+                            </h4>
+                            <div className="space-y-2">
+                              {entry.gratitude.map((item, index) => (
+                                <div key={index} className="flex items-center gap-2">
+                                  <div 
+                                    style={{
+                                      width: '0.5rem',
+                                      height: '0.5rem',
+                                      backgroundColor: '#F59E0B',
+                                      borderRadius: '50%',
+                                    }}
+                                  />
+                                  <span 
+                                    style={{
+                                      color: theme.colors.textSecondary,
+                                      fontSize: theme.typography.fontSize.sm,
+                                    }}
+                                  >
+                                    {item}
+                                  </span>
+                                </div>
+                              ))}
+                            </div>
+                          </div>
+
+                          {entry.struggles.length > 0 && (
+                            <div>
+                              <h4 
+                                style={{
+                                  color: theme.colors.text,
+                                  fontWeight: theme.typography.fontWeight.semibold,
+                                  marginBottom: theme.semanticSpacing.sm,
+                                  display: 'flex',
+                                  alignItems: 'center',
+                                  gap: theme.semanticSpacing.sm,
+                                }}
+                              >
+                                <AlertTriangle style={{ color: theme.colors.error }} size={16} />
+                                Struggles
+                              </h4>
+                              <div className="space-y-2">
+                                {entry.struggles.map((struggle, index) => (
+                                  <div key={index} className="flex items-center gap-2">
+                                    <div 
+                                      style={{
+                                        width: '0.5rem',
+                                        height: '0.5rem',
+                                        backgroundColor: theme.colors.error,
+                                        borderRadius: '50%',
+                                      }}
+                                    />
+                                    <span 
+                                      style={{
+                                        color: theme.colors.textSecondary,
+                                        fontSize: theme.typography.fontSize.sm,
+                                      }}
+                                    >
+                                      {struggle}
+                                    </span>
+                                  </div>
+                                ))}
+                              </div>
+                            </div>
+                          )}
+                        </div>
+                      </>
+                    );
+                  })()}
+                </motion.div>
+              ) : (
+                <div 
+                  style={{
+                    ...styles.glass.light,
+                    border: `1px solid ${theme.colors.border}`,
+                    borderRadius: '1rem',
+                    padding: theme.semanticSpacing.xl,
+                    textAlign: 'center',
+                  }}
+                >
+                  <MessageSquare 
+                    style={{ 
+                      color: theme.colors.textSecondary, 
+                      margin: '0 auto', 
+                      marginBottom: theme.semanticSpacing.md 
+                    }} 
+                    size={48} 
+                  />
+                  <h3 
+                    style={{
+                      color: theme.colors.text,
+                      fontSize: theme.typography.fontSize.xl,
+                      fontWeight: theme.typography.fontWeight.semibold,
+                      marginBottom: theme.semanticSpacing.sm,
+                    }}
+                  >
+                    Select a Journal Entry
+                  </h3>
+                  <p 
+                    style={{
+                      color: theme.colors.textSecondary,
+                    }}
+                  >
+                    Choose an entry from the list to read {selectedPhilosopher.name}'s reflections
+                  </p>
+                </div>
+              )}
+            </div>
           </div>
         </div>
       </div>
