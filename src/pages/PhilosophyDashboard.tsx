@@ -522,7 +522,6 @@ const PhilosophyDashboard: React.FC = () => {
                             </div>
                           </div>
                         )}
-                        </div>
                       </>
                     );
                   })()}
