@@ -1241,24 +1241,4 @@ const PhilosophyDashboard: React.FC = () => {
                           fontSize: theme.typography.fontSize.xs,
                           padding: `${theme.semanticSpacing.xs} ${theme.semanticSpacing.sm}`,
                           borderRadius: '9999px',
-                          backgroundColor: theme.utils.alpha(theme.colors.primary, 0.1),
-                          color: theme.colors.primary,
-                        }}
-                      >
-                        {entry.mood}
-                      </span>
-                    </motion.button>
-                  ))}
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-      
-      <Footer />
-    </div>
-  );
-};
-
 export default PhilosophyDashboard;
