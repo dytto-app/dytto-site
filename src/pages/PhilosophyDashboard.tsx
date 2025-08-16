@@ -2,146 +2,78 @@ import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
   Brain, 
-  TrendingUp, 
   AlertTriangle, 
   CheckCircle, 
   User, 
   Calendar,
-  BarChart3,
-  Eye,
   MessageSquare,
   Sparkles,
-  Filter,
-  RefreshCw,
-  Download,
-  Settings
+  Loader
 } from 'lucide-react';
 import { useTheme } from '../components/ThemeProvider';
 import { useThemeStyles } from '../hooks/useThemeStyles';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
+import { createClient } from '@supabase/supabase-js';
 
-interface PhilosopherProfile {
+// Initialize Supabase client
+const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
+const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
+const supabase = supabaseUrl && supabaseAnonKey 
+  ? createClient(supabaseUrl, supabaseAnonKey)
+  : null;
+
+interface UserProfile {
   id: string;
-  name: string;
-  displayName: string;
-  type: 'dynamic' | 'static';
-  tradition: 'buddhist' | 'christian' | 'stoic' | 'sufi';
-  modernContext: {
-    age: number;
-    location: string;
-    occupation: string;
-    currentStruggles: string[];
-    financialState: 'struggling' | 'stable' | 'comfortable';
-  };
-  authenticityLevel: 'seeking' | 'realized';
+  email: string;
+  full_name?: string;
   avatar: string;
-  color: string;
+  is_demo: boolean;
+  demo_persona?: string;
+  created_at: string;
 }
 
-interface StoryQualityMetrics {
-  readability: number;
-  characterConsistency: number;
-  situationRealism: number;
-  philosophicalFlavor: number;
-  overallRating: number;
-  lastUpdated: string;
+interface JournalEntry {
+  id: string;
+  user_id: string;
+  title: string;
+  content: string;
+  mood?: string;
+  tags: string[];
+  created_at: string;
+  updated_at: string;
 }
 
-interface CharacterDriftMetrics {
-  voiceConsistency: number;
-  responsePatterns: number;
-  philosophicalGrounding: number;
-  memoryIntegration: number;
-  driftAlert: 'none' | 'low' | 'medium' | 'high';
-  lastEvaluated: string;
-}
 
-const philosophers: PhilosopherProfile[] = [
+// Mock data for when Supabase is not configured
+const mockUsers: UserProfile[] = [
   {
-    id: 'buddha-dynamic',
-    name: 'Buddha',
-    displayName: 'Buddha (Dynamic)',
-    type: 'dynamic',
-    tradition: 'buddhist',
-    modernContext: {
-      age: 34,
-      location: 'San Francisco, CA',
-      occupation: 'Former Tech Worker',
-      currentStruggles: ['Financial stress', 'Career uncertainty', 'Attachment to outcomes'],
-      financialState: 'struggling'
-    },
-    authenticityLevel: 'seeking',
+    id: 'demo-buddha',
+    email: 'buddha@demo.dytto.app',
+    full_name: 'Siddhartha (Demo)',
     avatar: 'https://images.pexels.com/photos/1043471/pexels-photo-1043471.jpeg?auto=compress&cs=tinysrgb&w=150&h=150&fit=crop',
-    color: '#F59E0B'
+    is_demo: true,
+    demo_persona: 'Modern seeker exploring Buddhist wisdom',
+    created_at: '2024-01-01T00:00:00Z'
   },
   {
-    id: 'buddha-static',
-    name: 'The Teacher',
-    displayName: 'Buddha (Static)',
-    type: 'static',
-    tradition: 'buddhist',
-    modernContext: {
-      age: 0,
-      location: 'Everywhere',
-      occupation: 'Teacher',
-      currentStruggles: [],
-      financialState: 'comfortable'
-    },
-    authenticityLevel: 'realized',
-    avatar: 'https://images.pexels.com/photos/1222271/pexels-photo-1222271.jpeg?auto=compress&cs=tinysrgb&w=150&h=150&fit=crop',
-    color: '#10B981'
-  },
-  {
-    id: 'jesus-dynamic',
-    name: 'Jesus',
-    displayName: 'Jesus (Dynamic)',
-    type: 'dynamic',
-    tradition: 'christian',
-    modernContext: {
-      age: 33,
-      location: 'Los Angeles, CA',
-      occupation: 'Social Worker',
-      currentStruggles: ['Burnout from helping others', 'Balancing love with boundaries'],
-      financialState: 'stable'
-    },
-    authenticityLevel: 'seeking',
+    id: 'demo-jesus',
+    email: 'jesus@demo.dytto.app',
+    full_name: 'Joshua (Demo)',
     avatar: 'https://images.pexels.com/photos/1681010/pexels-photo-1681010.jpeg?auto=compress&cs=tinysrgb&w=150&h=150&fit=crop',
-    color: '#3B82F6'
-  },
-  {
-    id: 'jesus-static',
-    name: 'The Carpenter',
-    displayName: 'Jesus (Static)',
-    type: 'static',
-    tradition: 'christian',
-    modernContext: {
-      age: 33,
-      location: 'Wherever needed',
-      occupation: 'Carpenter/Teacher',
-      currentStruggles: [],
-      financialState: 'comfortable'
-    },
-    authenticityLevel: 'realized',
-    avatar: 'https://images.pexels.com/photos/774909/pexels-photo-774909.jpeg?auto=compress&cs=tinysrgb&w=150&h=150&fit=crop',
-    color: '#3B82F6'
+    is_demo: true,
+    demo_persona: 'Social worker living Christian values',
+    created_at: '2024-01-01T00:00:00Z'
   }
 ];
 
-const PhilosophyDashboard: React.FC = () => {
-  const [selectedPhilosopher, setSelectedPhilosopher] = useState<PhilosopherProfile>(philosophers[0]);
-  const [selectedEntry, setSelectedEntry] = useState<string | null>('1'); // Start with first entry
-  const { theme } = useTheme();
-  const styles = useThemeStyles();
-
-  // Mock journal entries for demonstration
-  const journalEntries = {
-    'buddha-dynamic': [
-      {
-        id: '1',
-        date: '2024-01-15',
-        title: 'Morning Meditation and Job Search',
-        content: `Woke up at 5:30 AM for meditation. The mind was particularly restless today - thoughts about rent, about the interview rejection last week, about whether I'm fooling myself thinking I can find peace while unemployed.
+const mockEntries: Record<string, JournalEntry[]> = {
+  'demo-buddha': [
+    {
+      id: '1',
+      user_id: 'demo-buddha',
+      title: 'Morning Meditation and Job Search',
+      content: `Woke up at 5:30 AM for meditation. The mind was particularly restless today - thoughts about rent, about the interview rejection last week, about whether I'm fooling myself thinking I can find peace while unemployed.
 
 During sitting, I noticed how the anxiety manifests physically. Tight chest, shallow breathing. Instead of pushing it away, I tried to observe it with curiosity. "Ah, dukkha. Here you are again, old friend."
 
@@ -150,17 +82,16 @@ The Buddha taught that suffering comes from attachment to outcomes. Easy to unde
 Applied to three more positions today. Each application feels like casting a message in a bottle into an ocean of algorithms. But I'm trying to hold it lightly - do the work, release the results.
 
 Evening reflection: Maybe the real practice isn't finding a job. Maybe it's learning to be okay with uncertainty.`,
-        mood: 'contemplative',
-        practices: ['20 min morning meditation', 'Mindful job searching', 'Evening reflection'],
-        insights: ['Anxiety as teacher', 'Non-attachment to outcomes', 'Uncertainty as practice ground'],
-        gratitude: ['Roof over head', 'Meditation cushion', 'Friend who checked in'],
-        struggles: ['Financial anxiety', 'Self-worth tied to employment', 'Restless mind']
-      },
-      {
-        id: '2',
-        date: '2024-01-16',
-        title: 'Compassion Practice at the Food Bank',
-        content: `Volunteered at the food bank today. Initially went because I have time and wanted to feel useful. Left with a deeper understanding of interconnectedness.
+      mood: 'contemplative',
+      tags: ['meditation', 'job-search', 'anxiety', 'non-attachment'],
+      created_at: '2024-01-15T08:30:00Z',
+      updated_at: '2024-01-15T20:15:00Z'
+    },
+    {
+      id: '2',
+      user_id: 'demo-buddha',
+      title: 'Compassion Practice at the Food Bank',
+      content: `Volunteered at the food bank today. Initially went because I have time and wanted to feel useful. Left with a deeper understanding of interconnectedness.
 
 Met Maria, a single mother working two jobs who still needs food assistance. Her dignity, her gratitude, her strength - it shattered my assumptions about poverty and worthiness.
 
@@ -169,40 +100,18 @@ I realized I've been practicing a subtle form of spiritual materialism. "Look at
 The Buddha spoke of metta - loving-kindness. Today I felt it not as a practice I do, but as recognition of what already is. We're all just trying to get by, all deserving of care.
 
 Came home and sat for 30 minutes. The meditation felt different - less about fixing myself, more about opening to what's here.`,
-        mood: 'grateful',
-        practices: ['Volunteer service', '30 min evening meditation', 'Metta practice'],
-        insights: ['Interconnectedness in action', 'Spiritual materialism trap', 'Compassion as recognition'],
-        gratitude: ['Opportunity to serve', 'Maria\'s teaching', 'Expanded heart'],
-        struggles: ['Ego in service', 'Assumptions about others']
-      }
-    ],
-    'buddha-static': [
-      {
-        id: '1',
-        date: '2024-01-15',
-        title: 'Teaching in the Park',
-        content: `A young man approached me today while I sat beneath the oak tree. His eyes carried the weight of modern suffering - the endless scroll, the comparison trap, the hunger for more that never satisfies.
-
-"Teacher," he said, "how do I find peace in this chaotic world?"
-
-I smiled and pointed to the tree above us. "Does this oak struggle against the wind, or does it bend and remain rooted?"
-
-We sat together in silence. After some time, he began to see. Peace is not the absence of chaos - it is the deep knowing that you are not separate from the dance of existence.
-
-The dharma teaches itself through every moment, every encounter. I am simply here to point toward what is already present.`,
-        mood: 'serene',
-        practices: ['Silent presence', 'Dharma teaching', 'Mindful observation'],
-        insights: ['Peace within chaos', 'Teaching through being', 'Natural wisdom'],
-        gratitude: ['Student\'s openness', 'Oak tree teacher', 'Present moment'],
-        struggles: []
-      }
-    ],
-    'jesus-dynamic': [
-      {
-        id: '1',
-        date: '2024-01-15',
-        title: 'Burnout and Boundaries',
-        content: `Another 12-hour day at the shelter. Mrs. Rodriguez came in again - third time this week. Her son is using again, and she's caught between enabling and abandoning him.
+      mood: 'grateful',
+      tags: ['compassion', 'service', 'metta', 'interconnectedness'],
+      created_at: '2024-01-16T19:45:00Z',
+      updated_at: '2024-01-16T21:30:00Z'
+    }
+  ],
+  'demo-jesus': [
+    {
+      id: '1',
+      user_id: 'demo-jesus',
+      title: 'Burnout and Boundaries',
+      content: `Another 12-hour day at the shelter. Mrs. Rodriguez came in again - third time this week. Her son is using again, and she's caught between enabling and abandoning him.
 
 I wanted to take her pain away, to fix everything. But I'm learning that love sometimes means sitting with someone in their suffering rather than trying to rescue them from it.
 
@@ -211,49 +120,138 @@ Jesus withdrew to pray. I used to think that was selfish - how could he step awa
 Prayed the rosary on the bus home. "Hail Mary, full of grace..." The repetition quieted my racing thoughts about all the people I couldn't help today.
 
 Tomorrow I'll show up again. Not because I can save everyone, but because love calls us to be present, even when - especially when - we feel inadequate.`,
-        mood: 'weary but hopeful',
-        practices: ['Rosary prayer', 'Contemplative service', 'Setting boundaries'],
-        insights: ['Love includes limits', 'Presence over fixing', 'Self-care as service'],
-        gratitude: ['Mrs. Rodriguez\'s trust', 'Coworkers\' support', 'Safe bus ride home'],
-        struggles: ['Savior complex', 'Emotional exhaustion', 'Guilt over boundaries']
+      mood: 'weary but hopeful',
+      tags: ['service', 'boundaries', 'prayer', 'love'],
+      created_at: '2024-01-15T22:30:00Z',
+      updated_at: '2024-01-15T23:15:00Z'
+    }
+  ]
+};
+
+const PhilosophyDashboard: React.FC = () => {
+  const [users, setUsers] = useState<UserProfile[]>([]);
+  const [entries, setEntries] = useState<JournalEntry[]>([]);
+  const [selectedUser, setSelectedUser] = useState<UserProfile | null>(null);
+  const [selectedEntry, setSelectedEntry] = useState<string | null>('1'); // Start with first entry
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const { theme } = useTheme();
+  const styles = useThemeStyles();
+
+  // Fetch demo users and their journal entries
+  const fetchData = async () => {
+    if (!supabase) {
+      // Use mock data when Supabase is not configured
+      setUsers(mockUsers);
+      setSelectedUser(mockUsers[0]);
+      setEntries(mockEntries[mockUsers[0].id] || []);
+      setLoading(false);
+      return;
+    }
+
+    setLoading(true);
+    setError(null);
+
+    try {
+      // Fetch demo users
+      const { data: usersData, error: usersError } = await supabase
+        .from('profiles')
+        .select('*')
+        .eq('is_demo', true)
+        .order('created_at', { ascending: true });
+
+      if (usersError) {
+        throw new Error(`Failed to fetch users: ${usersError.message}`);
       }
-    ],
-    'jesus-static': [
-      {
-        id: '1',
-        date: '2024-01-15',
-        title: 'Building and Blessing',
-        content: `Today I worked on the Martinez family's kitchen renovation. Their old cabinets were falling apart, and they couldn't afford a contractor.
 
-As I measured and cut, I thought about how building with your hands is a form of prayer. Each nail driven with intention, each joint fitted with care. The work itself becomes worship.
+      const demoUsers = usersData || [];
+      setUsers(demoUsers);
 
-Little Sofia watched me work, asking endless questions. "Why do you help us for free?" she asked.
+      if (demoUsers.length > 0) {
+        const firstUser = demoUsers[0];
+        setSelectedUser(firstUser);
 
-"Because love isn't something you keep," I told her. "It's something you give away."
+        // Fetch entries for the first user
+        const { data: entriesData, error: entriesError } = await supabase
+          .from('journal_entries')
+          .select('*')
+          .eq('user_id', firstUser.id)
+          .order('created_at', { ascending: false });
 
-Her mother wept when she saw the finished kitchen. Not just because of the cabinets, but because someone saw their need and responded. In that moment, the kingdom of heaven was present in a small apartment in East LA.
+        if (entriesError) {
+          throw new Error(`Failed to fetch entries: ${entriesError.message}`);
+        }
 
-This is the gospel: God's love made tangible through human hands, human presence, human care.`,
-        mood: 'peaceful',
-        practices: ['Manual labor as prayer', 'Presence with family', 'Incarnational love'],
-        insights: ['Work as worship', 'Love multiplies when shared', 'Kingdom in ordinary moments'],
-        gratitude: ['Skilled hands', 'Martinez family\'s welcome', 'Sofia\'s curiosity'],
-        struggles: []
+        setEntries(entriesData || []);
+        
+        // Auto-select first entry
+        if (entriesData && entriesData.length > 0) {
+          setSelectedEntry(entriesData[0].id);
+        }
       }
-    ]
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Failed to load data');
+      // Fallback to mock data on error
+      setUsers(mockUsers);
+      setSelectedUser(mockUsers[0]);
+      setEntries(mockEntries[mockUsers[0].id] || []);
+    } finally {
+      setLoading(false);
+    }
   };
 
-  // Auto-select first entry when philosopher changes
+  // Fetch entries when user changes
+  const fetchUserEntries = async (userId: string) => {
+    if (!supabase) {
+      setEntries(mockEntries[userId] || []);
+      return;
+    }
+
+    try {
+      const { data, error } = await supabase
+        .from('journal_entries')
+        .select('*')
+        .eq('user_id', userId)
+        .order('created_at', { ascending: false });
+
+      if (error) {
+        throw new Error(`Failed to fetch entries: ${error.message}`);
+      }
+
+      setEntries(data || []);
+      
+      // Auto-select first entry
+      if (data && data.length > 0) {
+        setSelectedEntry(data[0].id);
+      } else {
+        setSelectedEntry(null);
+      }
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Failed to load entries');
+      setEntries(mockEntries[userId] || []);
+    }
+  };
+
   useEffect(() => {
-    const entries = journalEntries[selectedPhilosopher.id] || [];
+    fetchData();
+  }, []);
+
+  // Handle user selection
+  const handleUserSelect = (user: UserProfile) => {
+    setSelectedUser(user);
+    setSelectedEntry(null);
+    fetchUserEntries(user.id);
+  };
+
+  // Auto-select first entry when user changes
+  useEffect(() => {
     if (entries.length > 0) {
       setSelectedEntry(entries[0].id);
     } else {
       setSelectedEntry(null);
     }
-  }, [selectedPhilosopher.id]);
+  }, [entries]);
 
-  const currentEntries = journalEntries[selectedPhilosopher.id] || [];
 
   const getDriftAlertColor = (alert: string) => {
     switch (alert) {
@@ -310,11 +308,68 @@ This is the gospel: God's love made tangible through human hands, human presence
                 margin: '0 auto',
               }}
             >
-              Explore the inner lives of philosophers navigating modern challenges while staying true to ancient wisdom
+              Explore real user journal entries from our demo accounts showcasing context-aware AI storytelling
             </p>
+            
+            {!supabase && (
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: theme.semanticSpacing.sm,
+                  padding: theme.semanticSpacing.md,
+                  backgroundColor: theme.utils.alpha(theme.colors.primary, 0.1),
+                  border: `1px solid ${theme.utils.alpha(theme.colors.primary, 0.3)}`,
+                  borderRadius: '0.75rem',
+                  color: theme.colors.primary,
+                  marginTop: theme.semanticSpacing.lg,
+                  fontSize: theme.typography.fontSize.sm,
+                  maxWidth: '48rem',
+                  margin: `${theme.semanticSpacing.lg} auto 0`,
+                }}
+              >
+                <AlertTriangle size={16} />
+                <span>
+                  Demo mode: Connect Supabase to see real user journal entries with demo accounts.
+                </span>
+              </motion.div>
+            )}
           </motion.div>
 
-          {/* Main Content - Entry First Design */}
+          {loading ? (
+            <div style={{ textAlign: 'center', padding: '3rem' }}>
+              <Loader size={32} className="animate-spin" style={{ color: theme.colors.primary, margin: '0 auto' }} />
+              <p style={{ 
+                color: theme.colors.textSecondary, 
+                marginTop: theme.semanticSpacing.md,
+                fontSize: theme.typography.fontSize.base,
+              }}>
+                Loading journal entries...
+              </p>
+            </div>
+          ) : error ? (
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: theme.semanticSpacing.sm,
+                padding: theme.semanticSpacing.lg,
+                backgroundColor: theme.utils.alpha(theme.colors.error, 0.1),
+                border: `1px solid ${theme.colors.error}`,
+                borderRadius: '0.75rem',
+                color: theme.colors.error,
+                marginBottom: theme.semanticSpacing.lg,
+              }}
+            >
+              <AlertTriangle size={20} />
+              {error}
+            </motion.div>
+          ) : (
+          /* Main Content - Entry First Design */
           <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
             {/* Main Entry Display */}
             <div className="lg:col-span-3">
@@ -334,7 +389,7 @@ This is the gospel: God's love made tangible through human hands, human presence
                   }}
                 >
                   {(() => {
-                    const entry = currentEntries.find(e => e.id === selectedEntry) || currentEntries[0];
+                    const entry = entries.find(e => e.id === selectedEntry) || entries[0];
                     if (!entry) {
                       return (
                         <div className="text-center py-16">
@@ -357,7 +412,7 @@ This is the gospel: God's love made tangible through human hands, human presence
                             No entries available
                           </h3>
                           <p style={{ color: theme.colors.textSecondary }}>
-                            Select a different philosopher to see their journal entries
+                            Select a different user to see their journal entries
                           </p>
                         </div>
                       );
@@ -369,8 +424,8 @@ This is the gospel: God's love made tangible through human hands, human presence
                         <div className="flex items-start justify-between mb-8">
                           <div className="flex items-center gap-4">
                             <img
-                              src={selectedPhilosopher.avatar}
-                              alt={selectedPhilosopher.name}
+                              src={selectedUser?.avatar || 'https://images.pexels.com/photos/1043471/pexels-photo-1043471.jpeg?auto=compress&cs=tinysrgb&w=150&h=150&fit=crop'}
+                              alt={selectedUser?.full_name || 'User'}
                               style={{
                                 width: '3.5rem',
                                 height: '3.5rem',
@@ -398,20 +453,22 @@ This is the gospel: God's love made tangible through human hands, human presence
                                       fontSize: theme.typography.fontSize.sm,
                                     }}
                                   >
-                                    {new Date(entry.date).toLocaleDateString()}
+                                    {new Date(entry.created_at).toLocaleDateString()}
                                   </span>
                                 </div>
-                                <span 
-                                  style={{
-                                    fontSize: theme.typography.fontSize.sm,
-                                    padding: `${theme.semanticSpacing.xs} ${theme.semanticSpacing.sm}`,
-                                    borderRadius: '9999px',
-                                    backgroundColor: theme.utils.alpha(theme.colors.primary, 0.1),
-                                    color: theme.colors.primary,
-                                  }}
-                                >
-                                  {entry.mood}
-                                </span>
+                                {entry.mood && (
+                                  <span 
+                                    style={{
+                                      fontSize: theme.typography.fontSize.sm,
+                                      padding: `${theme.semanticSpacing.xs} ${theme.semanticSpacing.sm}`,
+                                      borderRadius: '9999px',
+                                      backgroundColor: theme.utils.alpha(theme.colors.primary, 0.1),
+                                      color: theme.colors.primary,
+                                    }}
+                                  >
+                                    {entry.mood}
+                                  </span>
+                                )}
                               </div>
                             </div>
                           </div>
@@ -430,8 +487,8 @@ This is the gospel: God's love made tangible through human hands, human presence
                           {entry.content}
                         </div>
 
-                        {/* Entry Metadata */}
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        {/* Entry Tags */}
+                        {entry.tags && entry.tags.length > 0 && (
                           <div>
                             <h4 
                               style={{
@@ -443,148 +500,28 @@ This is the gospel: God's love made tangible through human hands, human presence
                                 gap: theme.semanticSpacing.sm,
                               }}
                             >
-                              <CheckCircle style={{ color: theme.colors.success }} size={16} />
-                              Practices
+                              <Sparkles style={{ color: theme.colors.primary }} size={16} />
+                              Tags
                             </h4>
-                            <div className="space-y-2">
-                              {entry.practices.map((practice, index) => (
-                                <div key={index} className="flex items-center gap-2">
-                                  <div 
-                                    style={{
-                                      width: '0.5rem',
-                                      height: '0.5rem',
-                                      backgroundColor: theme.colors.success,
-                                      borderRadius: '50%',
-                                    }}
-                                  />
-                                  <span 
-                                    style={{
-                                      color: theme.colors.textSecondary,
-                                      fontSize: theme.typography.fontSize.sm,
-                                    }}
-                                  >
-                                    {practice}
-                                  </span>
-                                </div>
+                            <div className="flex flex-wrap gap-2">
+                              {entry.tags.map((tag, index) => (
+                                <span
+                                  key={index}
+                                  style={{
+                                    backgroundColor: theme.utils.alpha(theme.colors.primary, 0.1),
+                                    color: theme.colors.primary,
+                                    padding: `${theme.semanticSpacing.xs} ${theme.semanticSpacing.sm}`,
+                                    borderRadius: '9999px',
+                                    fontSize: theme.typography.fontSize.xs,
+                                    fontWeight: theme.typography.fontWeight.medium,
+                                  }}
+                                >
+                                  {tag}
+                                </span>
                               ))}
                             </div>
                           </div>
-
-                          <div>
-                            <h4 
-                              style={{
-                                color: theme.colors.text,
-                                fontWeight: theme.typography.fontWeight.semibold,
-                                marginBottom: theme.semanticSpacing.sm,
-                                display: 'flex',
-                                alignItems: 'center',
-                                gap: theme.semanticSpacing.sm,
-                              }}
-                            >
-                              <Brain style={{ color: theme.colors.primary }} size={16} />
-                              Insights
-                            </h4>
-                            <div className="space-y-2">
-                              {entry.insights.map((insight, index) => (
-                                <div key={index} className="flex items-center gap-2">
-                                  <div 
-                                    style={{
-                                      width: '0.5rem',
-                                      height: '0.5rem',
-                                      backgroundColor: theme.colors.primary,
-                                      borderRadius: '50%',
-                                    }}
-                                  />
-                                  <span 
-                                    style={{
-                                      color: theme.colors.textSecondary,
-                                      fontSize: theme.typography.fontSize.sm,
-                                    }}
-                                  >
-                                    {insight}
-                                  </span>
-                                </div>
-                              ))}
-                            </div>
-                          </div>
-
-                          <div>
-                            <h4 
-                              style={{
-                                color: theme.colors.text,
-                                fontWeight: theme.typography.fontWeight.semibold,
-                                marginBottom: theme.semanticSpacing.sm,
-                                display: 'flex',
-                                alignItems: 'center',
-                                gap: theme.semanticSpacing.sm,
-                              }}
-                            >
-                              <Sparkles style={{ color: '#F59E0B' }} size={16} />
-                              Gratitude
-                            </h4>
-                            <div className="space-y-2">
-                              {entry.gratitude.map((item, index) => (
-                                <div key={index} className="flex items-center gap-2">
-                                  <div 
-                                    style={{
-                                      width: '0.5rem',
-                                      height: '0.5rem',
-                                      backgroundColor: '#F59E0B',
-                                      borderRadius: '50%',
-                                    }}
-                                  />
-                                  <span 
-                                    style={{
-                                      color: theme.colors.textSecondary,
-                                      fontSize: theme.typography.fontSize.sm,
-                                    }}
-                                  >
-                                    {item}
-                                  </span>
-                                </div>
-                              ))}
-                            </div>
-                          </div>
-
-                          {entry.struggles.length > 0 && (
-                            <div>
-                              <h4 
-                                style={{
-                                  color: theme.colors.text,
-                                  fontWeight: theme.typography.fontWeight.semibold,
-                                  marginBottom: theme.semanticSpacing.sm,
-                                  display: 'flex',
-                                  alignItems: 'center',
-                                  gap: theme.semanticSpacing.sm,
-                                }}
-                              >
-                                <AlertTriangle style={{ color: theme.colors.error }} size={16} />
-                                Struggles
-                              </h4>
-                              <div className="space-y-2">
-                                {entry.struggles.map((struggle, index) => (
-                                  <div key={index} className="flex items-center gap-2">
-                                    <div 
-                                      style={{
-                                        width: '0.5rem',
-                                        height: '0.5rem',
-                                        backgroundColor: theme.colors.error,
-                                        borderRadius: '50%',
-                                      }}
-                                    />
-                                    <span 
-                                      style={{
-                                        color: theme.colors.textSecondary,
-                                        fontSize: theme.typography.fontSize.sm,
-                                      }}
-                                    >
-                                      {struggle}
-                                    </span>
-                                  </div>
-                                ))}
-                              </div>
-                            </div>
-                          )}
+                        )}
                         </div>
                       </>
                     );
@@ -595,7 +532,7 @@ This is the gospel: God's love made tangible through human hands, human presence
 
             {/* Sidebar Navigation */}
             <div className="lg:col-span-1">
-              {/* Character Selector */}
+              {/* User Selector */}
               <div className="mb-6">
                 <h3 
                   style={{
@@ -605,38 +542,37 @@ This is the gospel: God's love made tangible through human hands, human presence
                     marginBottom: theme.semanticSpacing.md,
                   }}
                 >
-                  Philosophers
+                  Demo Users
                 </h3>
                 <div className="space-y-3">
-                  {philosophers.map((philosopher) => (
+                  {users.map((user) => (
                     <motion.button
-                      key={philosopher.id}
+                      key={user.id}
                       whileHover={{ scale: 1.02 }}
                       whileTap={{ scale: 0.98 }}
                       onClick={() => {
-                        setSelectedPhilosopher(philosopher);
-                        setSelectedEntry(null); // Reset entry selection
+                        handleUserSelect(user);
                       }}
                       style={{
                         width: '100%',
                         textAlign: 'left',
                         ...styles.glass.light,
-                        border: selectedPhilosopher.id === philosopher.id 
+                        border: selectedUser?.id === user.id 
                           ? `2px solid ${theme.colors.primary}` 
                           : `1px solid ${theme.colors.border}`,
                         borderRadius: '0.75rem',
                         padding: theme.semanticSpacing.md,
                         cursor: 'pointer',
                         transition: theme.animations.transition.normal,
-                        backgroundColor: selectedPhilosopher.id === philosopher.id 
+                        backgroundColor: selectedUser?.id === user.id 
                           ? theme.utils.alpha(theme.colors.primary, 0.05)
                           : 'transparent',
                       }}
                     >
                       <div className="flex items-center gap-3">
                         <img
-                          src={philosopher.avatar}
-                          alt={philosopher.name}
+                          src={user.avatar}
+                          alt={user.full_name || user.email}
                           style={{
                             width: '2.5rem',
                             height: '2.5rem',
@@ -653,7 +589,7 @@ This is the gospel: God's love made tangible through human hands, human presence
                               fontSize: theme.typography.fontSize.sm,
                             }}
                           >
-                            {philosopher.name}
+                            {user.full_name || user.email.split('@')[0]}
                           </div>
                           <div 
                             style={{
@@ -661,13 +597,13 @@ This is the gospel: God's love made tangible through human hands, human presence
                               fontSize: theme.typography.fontSize.xs,
                             }}
                           >
-                            {philosopher.type === 'dynamic' ? 'Modern Context' : 'Timeless Wisdom'}
+                            {user.demo_persona || 'Demo Account'}
                           </div>
                         </div>
                         <div className="flex items-center gap-1">
                           <Sparkles 
                             style={{ 
-                              color: philosopher.type === 'dynamic' ? '#F59E0B' : theme.colors.success 
+                              color: theme.colors.primary
                             }} 
                             size={14} 
                           />
@@ -691,7 +627,7 @@ This is the gospel: God's love made tangible through human hands, human presence
                   Entries
                 </h3>
                 <div className="space-y-2">
-                  {currentEntries.map((entry) => (
+                  {entries.map((entry) => (
                     <motion.button
                       key={entry.id}
                       whileHover={{ scale: 1.02 }}
@@ -720,7 +656,7 @@ This is the gospel: God's love made tangible through human hands, human presence
                             fontSize: theme.typography.fontSize.xs,
                           }}
                         >
-                          {new Date(entry.date).toLocaleDateString()}
+                          {new Date(entry.created_at).toLocaleDateString()}
                         </span>
                       </div>
                       <div 
@@ -733,23 +669,26 @@ This is the gospel: God's love made tangible through human hands, human presence
                       >
                         {entry.title}
                       </div>
-                      <span 
-                        style={{
-                          fontSize: theme.typography.fontSize.xs,
-                          padding: `${theme.semanticSpacing.xs} ${theme.semanticSpacing.sm}`,
-                          borderRadius: '9999px',
-                          backgroundColor: theme.utils.alpha(theme.colors.primary, 0.1),
-                          color: theme.colors.primary,
-                        }}
-                      >
-                        {entry.mood}
-                      </span>
+                      {entry.mood && (
+                        <span 
+                          style={{
+                            fontSize: theme.typography.fontSize.xs,
+                            padding: `${theme.semanticSpacing.xs} ${theme.semanticSpacing.sm}`,
+                            borderRadius: '9999px',
+                            backgroundColor: theme.utils.alpha(theme.colors.primary, 0.1),
+                            color: theme.colors.primary,
+                          }}
+                        >
+                          {entry.mood}
+                        </span>
+                      )}
                     </motion.button>
                   ))}
                 </div>
               </div>
             </div>
           </div>
+          )}
         </div>
       </div>
       
