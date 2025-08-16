@@ -124,8 +124,9 @@ const philosophers: PhilosopherProfile[] = [
     },
     authenticityLevel: 'realized',
     avatar: 'https://images.pexels.com/photos/774909/pexels-photo-774909.jpeg?auto=compress&cs=tinysrgb&w=150&h=150&fit=crop',
+    color: '#3B82F6'
   }
-]
+];
 
 const PhilosophyDashboard: React.FC = () => {
   const [selectedPhilosopher, setSelectedPhilosopher] = useState<PhilosopherProfile>(philosophers[0]);
@@ -508,6 +509,9 @@ This is the gospel: God's love made tangible through human hands, human presence
                                 <span className="text-sm text-gray-600 dark:text-gray-300">{insight}</span>
                               </div>
                             ))}
+                          </div>
+                        </div>
+
                         <div>
                           <h4 className="font-semibold text-gray-900 dark:text-white mb-3 flex items-center gap-2">
                             <Sparkles className="w-4 h-4 text-yellow-500" />
@@ -522,7 +526,7 @@ This is the gospel: God's love made tangible through human hands, human presence
                             ))}
                           </div>
                         </div>
-                          </div>
+
                         {entry.struggles.length > 0 && (
                           <div>
                             <h4 className="font-semibold text-gray-900 dark:text-white mb-3 flex items-center gap-2">
@@ -563,5 +567,5 @@ This is the gospel: God's love made tangible through human hands, human presence
     </div>
   );
 };
-                        </div>
+
 export default PhilosophyDashboard;
