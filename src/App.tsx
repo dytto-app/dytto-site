@@ -19,7 +19,7 @@ function App() {
           <Route path="/feedback" element={<FeedbackPage />} />
           <Route path="/blog" element={<BlogPage />} />
           <Route path="/blog/:slug" element={<BlogPage />} />
-          <Route path="/philosophy" element={<PhilosophyDashboard />} />
+          <Route path="/demo" element={<PhilosophyDashboard />} />
         </Routes>
       </Router>
     </ThemeProvider>

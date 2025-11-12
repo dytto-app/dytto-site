@@ -16,7 +16,7 @@ const Navbar = () => {
   const isFeedbackPage = location.pathname === '/feedback';
   const isHomePage = location.pathname === '/';
   const isBlogPage = location.pathname.startsWith('/blog');
-  const isPhilosophyPage = location.pathname === '/philosophy';
+  const isDemoPage = location.pathname === '/demo';
 
   // Dynamic navigation items based on current page - only functional sections
   const getNavItems = () => {
@@ -52,7 +52,7 @@ const Navbar = () => {
     if (isWaitlistPage) return 'Join Waitlist';
     if (isFeedbackPage) return 'Submit Feedback';
     if (isBlogPage) return 'Subscribe';
-    if (isPhilosophyPage) return 'View Demo';
+    if (isDemoPage) return 'View Demo';
     return 'Download App';
   };
 
@@ -198,9 +198,9 @@ const Navbar = () => {
             </Link>
 
             <Link
-              to="/philosophy"
+              to="/demo"
               style={{
-                color: isPhilosophyPage ? theme.colors.primary : theme.colors.textSecondary,
+                color: isDemoPage ? theme.colors.primary : theme.colors.textSecondary,
                 fontSize: theme.typography.fontSize.sm,
                 transition: theme.animations.transition.normal,
                 textDecoration: 'none',
@@ -211,7 +211,7 @@ const Navbar = () => {
                 (e.target as HTMLAnchorElement).style.color = theme.colors.primary;
               }}
               onMouseLeave={(e) => {
-                (e.target as HTMLAnchorElement).style.color = isPhilosophyPage ? theme.colors.primary : theme.colors.textSecondary;
+                (e.target as HTMLAnchorElement).style.color = isDemoPage ? theme.colors.primary : theme.colors.textSecondary;
               }}
             >
               Demo
@@ -507,11 +507,11 @@ const Navbar = () => {
                   transition={{ delay: (navItems.length + 3) * 0.1 }}
                 >
                   <Link
-                    to="/philosophy"
+                    to="/demo"
                     onClick={() => setIsOpen(false)}
                     style={{
                       display: 'block',
-                      color: isPhilosophyPage ? theme.colors.primary : theme.colors.textSecondary,
+                      color: isDemoPage ? theme.colors.primary : theme.colors.textSecondary,
                       fontSize: theme.typography.fontSize.lg,
                       fontWeight: theme.typography.fontWeight.medium,
                       padding: theme.semanticSpacing.md,

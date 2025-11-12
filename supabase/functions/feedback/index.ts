@@ -13,10 +13,6 @@ interface FeedbackSubmission {
   category: 'bug' | 'idea' | 'ux';
 }
 
-interface VoteSubmission {
-  feedback_id: string;
-}
-
 // Rate limiting store (in-memory for simplicity)
 const rateLimitStore = new Map<string, { count: number; resetTime: number }>();
 
@@ -31,16 +27,16 @@ function generateVoterHash(ip: string, userAgent: string): Promise<string> {
 function checkRateLimit(identifier: string, maxRequests = 5, windowMs = 60000): boolean {
   const now = Date.now();
   const userLimit = rateLimitStore.get(identifier);
-  
+
   if (!userLimit || now > userLimit.resetTime) {
     rateLimitStore.set(identifier, { count: 1, resetTime: now + windowMs });
     return true;
   }
-  
+
   if (userLimit.count >= maxRequests) {
     return false;
   }
-  
+
   userLimit.count++;
   return true;
 }
@@ -50,10 +46,10 @@ function validateFeedback(data: any): FeedbackSubmission | null {
   if (data.title.length < 3 || data.title.length > 200) return null;
   if (data.body && (typeof data.body !== 'string' || data.body.length > 1000)) return null;
   if (!['bug', 'idea', 'ux'].includes(data.category)) return null;
-  
+
   return {
     title: data.title.trim(),
-    body: data.body?.trim() || null,
+    body: data.body?.trim(),
     category: data.category
   };
 }
@@ -78,9 +74,15 @@ Deno.serve(async (req: Request) => {
     // GET /feedback - Get top feedback
     if (req.method === 'GET' && url.pathname === '/feedback') {
       const limit = parseInt(url.searchParams.get('limit') || '20');
-      
+
+      // Get feedback ordered by votes and date
       const { data, error } = await supabase
-        .rpc('get_top_feedback', { limit_count: Math.min(limit, 100) });
+        .from('feedback')
+        .select('*')
+        .neq('status', 'closed')
+        .order('upvotes', { ascending: false })
+        .order('created_at', { ascending: false })
+        .limit(Math.min(limit, 100));
 
       if (error) {
         console.error('Error fetching feedback:', error);
@@ -93,10 +95,14 @@ Deno.serve(async (req: Request) => {
       // Add user vote status to each feedback item
       const feedbackWithVoteStatus = await Promise.all(
         data.map(async (item: any) => {
-          const { data: hasVoted } = await supabase
-            .rpc('has_user_voted', { feedback_uuid: item.id, user_hash: voterHash });
-          
-          return { ...item, user_has_voted: hasVoted || false };
+          const { data: votes } = await supabase
+            .from('votes')
+            .select('id')
+            .eq('feedback_id', item.id)
+            .eq('voter_hash', voterHash)
+            .limit(1);
+
+          return { ...item, user_has_voted: (votes && votes.length > 0) || false };
         })
       );
 
@@ -118,7 +124,7 @@ Deno.serve(async (req: Request) => {
 
       const body = await req.json();
       const validatedData = validateFeedback(body);
-      
+
       if (!validatedData) {
         return new Response(
           JSON.stringify({ error: 'Invalid feedback data' }),
@@ -155,7 +161,7 @@ Deno.serve(async (req: Request) => {
     // POST /feedback/:id/vote - Vote on feedback
     if (req.method === 'POST' && url.pathname.match(/^\/feedback\/[^\/]+\/vote$/)) {
       const feedbackId = url.pathname.split('/')[2];
-      
+
       // Rate limiting
       if (!checkRateLimit(`vote_${voterHash}`, 10, 60000)) { // 10 votes per minute
         return new Response(
@@ -190,7 +196,7 @@ Deno.serve(async (req: Request) => {
             { status: 409, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
           );
         }
-        
+
         console.error('Error creating vote:', voteError);
         return new Response(
           JSON.stringify({ error: 'Failed to record vote' }),
@@ -206,9 +212,9 @@ Deno.serve(async (req: Request) => {
         .single();
 
       return new Response(
-        JSON.stringify({ 
+        JSON.stringify({
           data: { ...updatedFeedback, user_has_voted: true },
-          message: 'Vote recorded successfully' 
+          message: 'Vote recorded successfully'
         }),
         { status: 200, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
       );
