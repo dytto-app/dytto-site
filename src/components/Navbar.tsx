@@ -10,7 +10,7 @@ const Navbar = () => {
   const { theme, mode, toggleMode } = useTheme();
   const styles = useThemeStyles();
   const location = useLocation();
-  
+
   const isAPIPage = location.pathname === '/api';
   const isWaitlistPage = location.pathname === '/waitlist';
   const isFeedbackPage = location.pathname === '/feedback';
@@ -47,6 +47,15 @@ const Navbar = () => {
     }
   }, []);
 
+  const getCTAText = () => {
+    if (isAPIPage) return 'Get API Key';
+    if (isWaitlistPage) return 'Join Waitlist';
+    if (isFeedbackPage) return 'Submit Feedback';
+    if (isBlogPage) return 'Subscribe';
+    if (isPhilosophyPage) return 'View Demo';
+    return 'Download App';
+  };
+
   return (
     <>
       <motion.nav
@@ -56,9 +65,20 @@ const Navbar = () => {
           border: `1px solid ${theme.colors.border}`,
         }}
       >
-        <div className="hidden lg:flex items-center justify-between w-full">
-          {/* Left Logo */}
-          <Link to="/" className="flex items-center space-x-2" style={{ flex: '0 0 auto' }}>
+        {/* Desktop Navigation */}
+        <div className="hidden lg:flex items-center justify-center w-full" style={{ position: 'relative', minHeight: '2.5rem' }}>
+
+          {/* Left Logo - Absolutely positioned */}
+          <Link
+            to="/"
+            className="flex items-center space-x-2"
+            style={{
+              position: 'absolute',
+              left: '0',
+              top: '50%',
+              transform: 'translateY(-50%)'
+            }}
+          >
             <img
               src="/adaptive-icon.png"
               alt="dytto"
@@ -77,11 +97,17 @@ const Navbar = () => {
             </span>
           </Link>
 
-          {/* Center - All Navigation Links */}
-          <div className="flex items-center justify-center space-x-3" style={{ gap: '0.75rem', flex: '1 0 0' }}>
+          {/* Center Navigation - Will be centered naturally */}
+          <div className="flex items-center space-x-3" style={{ gap: '0.75rem' }}>
             {/* Section Navigation */}
             {navItems.length > 0 && (
-              <>
+              <motion.div
+                className="flex items-center space-x-3"
+                initial={{ opacity: 0, x: 20 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ duration: 0.3 }}
+                style={{ gap: '0.75rem' }}
+              >
                 {navItems.map((item) => (
                   <button
                     key={item.label}
@@ -94,19 +120,20 @@ const Navbar = () => {
                       border: 'none',
                       cursor: 'pointer',
                       padding: `${theme.semanticSpacing.sm} 0`,
+                      whiteSpace: 'nowrap',
                     }}
                     onMouseEnter={(e) => {
-                      e.target.style.color = theme.colors.primary;
+                      (e.target as HTMLButtonElement).style.color = theme.colors.primary;
                     }}
                     onMouseLeave={(e) => {
-                      e.target.style.color = theme.colors.textSecondary;
+                      (e.target as HTMLButtonElement).style.color = theme.colors.textSecondary;
                     }}
                   >
                     {item.label}
                   </button>
                 ))}
                 <div style={{ width: '1px', height: '1rem', backgroundColor: theme.colors.border, margin: '0 0.25rem' }} />
-              </>
+              </motion.div>
             )}
 
             {/* Page Links */}
@@ -118,12 +145,13 @@ const Navbar = () => {
                 transition: theme.animations.transition.normal,
                 textDecoration: 'none',
                 fontWeight: theme.typography.fontWeight.medium,
+                whiteSpace: 'nowrap',
               }}
               onMouseEnter={(e) => {
-                e.target.style.color = theme.colors.primary;
+                (e.target as HTMLAnchorElement).style.color = theme.colors.primary;
               }}
               onMouseLeave={(e) => {
-                e.target.style.color = isHomePage ? theme.colors.primary : theme.colors.textSecondary;
+                (e.target as HTMLAnchorElement).style.color = isHomePage ? theme.colors.primary : theme.colors.textSecondary;
               }}
             >
               App
@@ -137,12 +165,13 @@ const Navbar = () => {
                 transition: theme.animations.transition.normal,
                 textDecoration: 'none',
                 fontWeight: theme.typography.fontWeight.medium,
+                whiteSpace: 'nowrap',
               }}
               onMouseEnter={(e) => {
-                e.target.style.color = theme.colors.primary;
+                (e.target as HTMLAnchorElement).style.color = theme.colors.primary;
               }}
               onMouseLeave={(e) => {
-                e.target.style.color = isAPIPage ? theme.colors.primary : theme.colors.textSecondary;
+                (e.target as HTMLAnchorElement).style.color = isAPIPage ? theme.colors.primary : theme.colors.textSecondary;
               }}
             >
               API
@@ -156,12 +185,13 @@ const Navbar = () => {
                 transition: theme.animations.transition.normal,
                 textDecoration: 'none',
                 fontWeight: theme.typography.fontWeight.medium,
+                whiteSpace: 'nowrap',
               }}
               onMouseEnter={(e) => {
-                e.target.style.color = theme.colors.primary;
+                (e.target as HTMLAnchorElement).style.color = theme.colors.primary;
               }}
               onMouseLeave={(e) => {
-                e.target.style.color = isBlogPage ? theme.colors.primary : theme.colors.textSecondary;
+                (e.target as HTMLAnchorElement).style.color = isBlogPage ? theme.colors.primary : theme.colors.textSecondary;
               }}
             >
               Blog
@@ -175,12 +205,13 @@ const Navbar = () => {
                 transition: theme.animations.transition.normal,
                 textDecoration: 'none',
                 fontWeight: theme.typography.fontWeight.medium,
+                whiteSpace: 'nowrap',
               }}
               onMouseEnter={(e) => {
-                e.target.style.color = theme.colors.primary;
+                (e.target as HTMLAnchorElement).style.color = theme.colors.primary;
               }}
               onMouseLeave={(e) => {
-                e.target.style.color = isPhilosophyPage ? theme.colors.primary : theme.colors.textSecondary;
+                (e.target as HTMLAnchorElement).style.color = isPhilosophyPage ? theme.colors.primary : theme.colors.textSecondary;
               }}
             >
               Demo
@@ -194,12 +225,13 @@ const Navbar = () => {
                 transition: theme.animations.transition.normal,
                 textDecoration: 'none',
                 fontWeight: theme.typography.fontWeight.medium,
+                whiteSpace: 'nowrap',
               }}
               onMouseEnter={(e) => {
-                e.target.style.color = theme.colors.primary;
+                (e.target as HTMLAnchorElement).style.color = theme.colors.primary;
               }}
               onMouseLeave={(e) => {
-                e.target.style.color = isFeedbackPage ? theme.colors.primary : theme.colors.textSecondary;
+                (e.target as HTMLAnchorElement).style.color = isFeedbackPage ? theme.colors.primary : theme.colors.textSecondary;
               }}
             >
               Feedback
@@ -213,20 +245,30 @@ const Navbar = () => {
                 transition: theme.animations.transition.normal,
                 textDecoration: 'none',
                 fontWeight: theme.typography.fontWeight.medium,
+                whiteSpace: 'nowrap',
               }}
               onMouseEnter={(e) => {
-                e.target.style.color = theme.colors.primary;
+                (e.target as HTMLAnchorElement).style.color = theme.colors.primary;
               }}
               onMouseLeave={(e) => {
-                e.target.style.color = isWaitlistPage ? theme.colors.primary : theme.colors.textSecondary;
+                (e.target as HTMLAnchorElement).style.color = isWaitlistPage ? theme.colors.primary : theme.colors.textSecondary;
               }}
             >
               Waitlist
             </Link>
           </div>
 
-          {/* Right - CTA + Theme */}
-          <div className="flex items-center space-x-4" style={{ flex: '0 0 auto', gap: '0.75rem' }}>
+          {/* Right CTA + Theme - Absolutely positioned */}
+          <div
+            className="flex items-center space-x-4"
+            style={{
+              gap: '0.75rem',
+              position: 'absolute',
+              right: '0',
+              top: '50%',
+              transform: 'translateY(-50%)'
+            }}
+          >
             <motion.button
               style={{
                 backgroundColor: theme.colors.primary,
@@ -238,11 +280,12 @@ const Navbar = () => {
                 border: 'none',
                 cursor: 'pointer',
                 transition: theme.animations.transition.normal,
-                minWidth: '140px',
+                minWidth: '160px',
                 textAlign: 'center',
+                whiteSpace: 'nowrap',
               }}
             >
-              {isAPIPage ? 'Get API Key' : isWaitlistPage ? 'Join Waitlist' : isFeedbackPage ? 'Submit Feedback' : isBlogPage ? 'Subscribe' : isPhilosophyPage ? 'View Demo' : 'Download App'}
+              {getCTAText()}
             </motion.button>
 
             <button
@@ -257,12 +300,12 @@ const Navbar = () => {
                 cursor: 'pointer',
               }}
               onMouseEnter={(e) => {
-                e.target.style.color = theme.colors.primary;
-                e.target.style.backgroundColor = theme.colors.surface;
+                (e.target as HTMLButtonElement).style.color = theme.colors.primary;
+                (e.target as HTMLButtonElement).style.backgroundColor = theme.colors.surface;
               }}
               onMouseLeave={(e) => {
-                e.target.style.color = theme.colors.textSecondary;
-                e.target.style.backgroundColor = 'transparent';
+                (e.target as HTMLButtonElement).style.color = theme.colors.textSecondary;
+                (e.target as HTMLButtonElement).style.backgroundColor = 'transparent';
               }}
             >
               {mode === 'light' ? <Moon size={18} /> : <Sun size={18} />}
@@ -271,34 +314,55 @@ const Navbar = () => {
         </div>
 
         {/* Mobile controls */}
-        <div className="flex items-center space-x-2 lg:hidden">
-          <button
-            onClick={toggleMode}
-            style={{
-              color: theme.colors.textSecondary,
-              padding: theme.semanticSpacing.sm,
-              borderRadius: '0.5rem',
-              transition: theme.animations.transition.normal,
-              backgroundColor: 'transparent',
-              border: 'none',
-              cursor: 'pointer',
-            }}
-          >
-            {mode === 'light' ? <Moon size={18} /> : <Sun size={18} />}
-          </button>
-
-          <button
-            style={{
+        <div className="flex items-center justify-between lg:hidden w-full">
+          <Link to="/" className="flex items-center space-x-2">
+            <img
+              src="/adaptive-icon.png"
+              alt="dytto"
+              style={{
+                width: '1.75rem',
+                height: '1.75rem',
+                borderRadius: '0.4rem',
+              }}
+            />
+            <span style={{
               color: theme.colors.text,
-              backgroundColor: 'transparent',
-              border: 'none',
-              cursor: 'pointer',
-              padding: theme.semanticSpacing.sm,
-            }}
-            onClick={() => setIsOpen(!isOpen)}
-          >
-            {isOpen ? <X size={20} /> : <Menu size={20} />}
-          </button>
+              fontWeight: theme.typography.fontWeight.semibold,
+              fontSize: '1rem',
+            }}>
+              dytto
+            </span>
+          </Link>
+
+          <div className="flex items-center space-x-2">
+            <button
+              onClick={toggleMode}
+              style={{
+                color: theme.colors.textSecondary,
+                padding: theme.semanticSpacing.sm,
+                borderRadius: '0.5rem',
+                transition: theme.animations.transition.normal,
+                backgroundColor: 'transparent',
+                border: 'none',
+                cursor: 'pointer',
+              }}
+            >
+              {mode === 'light' ? <Moon size={18} /> : <Sun size={18} />}
+            </button>
+
+            <button
+              style={{
+                color: theme.colors.text,
+                backgroundColor: 'transparent',
+                border: 'none',
+                cursor: 'pointer',
+                padding: theme.semanticSpacing.sm,
+              }}
+              onClick={() => setIsOpen(!isOpen)}
+            >
+              {isOpen ? <X size={20} /> : <Menu size={20} />}
+            </button>
+          </div>
         </div>
       </motion.nav>
 
@@ -349,22 +413,22 @@ const Navbar = () => {
                       transition: theme.animations.transition.normal,
                     }}
                     onMouseEnter={(e) => {
-                      e.target.style.backgroundColor = theme.colors.surface;
+                      (e.target as HTMLButtonElement).style.backgroundColor = theme.colors.surface;
                     }}
                     onMouseLeave={(e) => {
-                      e.target.style.backgroundColor = 'transparent';
+                      (e.target as HTMLButtonElement).style.backgroundColor = 'transparent';
                     }}
                   >
                     {item.label}
                   </motion.button>
                 ))}
-                
+
                 {/* Page Navigation - Always show */}
                 {navItems.length > 0 && (
-                  <div style={{ 
-                    height: '1px', 
-                    backgroundColor: theme.colors.border, 
-                    margin: `${theme.semanticSpacing.md} 0` 
+                  <div style={{
+                    height: '1px',
+                    backgroundColor: theme.colors.border,
+                    margin: `${theme.semanticSpacing.md} 0`
                   }} />
                 )}
 
@@ -505,7 +569,7 @@ const Navbar = () => {
                     Waitlist
                   </Link>
                 </motion.div>
-                
+
                 <div className="border-t pt-4" style={{ borderColor: theme.colors.border }}>
                   <motion.button
                     initial={{ opacity: 0, x: -20 }}
@@ -523,7 +587,7 @@ const Navbar = () => {
                       cursor: 'pointer',
                     }}
                   >
-                    {isAPIPage ? 'Get API Key' : isWaitlistPage ? 'Join Waitlist' : isFeedbackPage ? 'Submit Feedback' : isBlogPage ? 'Subscribe' : isPhilosophyPage ? 'View Demo' : 'Download App'}
+                    {getCTAText()}
                   </motion.button>
                 </div>
               </div>
