@@ -1,6 +1,6 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { Twitter, Github, Linkedin, Mail, Brain, MessageCircle, Instagram } from 'lucide-react';
+import { Twitter, Github, Linkedin, Mail, MessageCircle, Instagram } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { useTheme } from './ThemeProvider';
 import { useThemeStyles } from '../hooks/useThemeStyles';
@@ -81,20 +81,16 @@ const Footer = () => {
           {/* Brand */}
           <div className="sm:col-span-2 lg:col-span-2">
             <div className="flex items-center space-x-3 mb-4 sm:mb-6">
-              <div 
+              <img
+                src="/adaptive-icon.png"
+                alt="dytto"
                 style={{
                   width: '2.5rem',
                   height: '2.5rem',
-                  backgroundColor: theme.colors.primary,
                   borderRadius: '0.75rem',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
                 }}
-              >
-                <Brain style={{ color: theme.colors.background }} size={24} />
-              </div>
-              <span 
+              />
+              <span
                 style={{
                   color: theme.colors.text,
                   fontWeight: theme.typography.fontWeight.semibold,

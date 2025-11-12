@@ -255,16 +255,21 @@ const AppTestimonials = () => {
             >
               Join the community of users discovering meaningful insights about their lives
             </p>
-            <button 
+            <a
+              href="https://apps.apple.com/us/app/dytto-journal/id6745741994"
+              target="_blank"
+              rel="noopener noreferrer"
               style={{
                 ...styles.button.primary,
                 boxShadow: theme.shadows.brand,
                 width: '100%',
                 maxWidth: '200px',
+                textDecoration: 'none',
+                display: 'inline-block',
               }}
             >
               Download Now
-            </button>
+            </a>
           </div>
         </motion.div>
       </div>

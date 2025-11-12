@@ -237,7 +237,10 @@ const AppPricing = () => {
                 ))}
               </div>
 
-              <motion.button
+              <motion.a
+                href={plan.name === 'Free' ? 'https://apps.apple.com/us/app/dytto-journal/id6745741994' : '#'}
+                target={plan.name === 'Free' ? '_blank' : undefined}
+                rel={plan.name === 'Free' ? 'noopener noreferrer' : undefined}
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
                 style={{
@@ -252,6 +255,7 @@ const AppPricing = () => {
                   gap: theme.semanticSpacing.sm,
                   border: 'none',
                   cursor: 'pointer',
+                  textDecoration: 'none',
                   ...(plan.popular
                     ? {
                         backgroundColor: theme.colors.primary,
@@ -268,7 +272,7 @@ const AppPricing = () => {
               >
                 <span>{plan.cta}</span>
                 <ArrowRight size={18} />
-              </motion.button>
+              </motion.a>
             </motion.div>
           ))}
         </div>

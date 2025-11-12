@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Menu, X, Brain, Sun, Moon } from 'lucide-react';
+import { Menu, X, Sun, Moon } from 'lucide-react';
 import { Link, useLocation } from 'react-router-dom';
 import { useTheme } from './ThemeProvider';
 import { useThemeStyles } from '../hooks/useThemeStyles';
@@ -23,9 +23,7 @@ const Navbar = () => {
     if (isAPIPage) {
       return [
         { label: 'Platform', href: '#platform' },
-        { label: 'API', href: '#api' },
-        { label: 'Use Cases', href: '#usecases' },
-        { label: 'Pricing', href: '#pricing' }
+        { label: 'API', href: '#api' }
       ];
     } else if (isHomePage) {
       return [
@@ -39,7 +37,7 @@ const Navbar = () => {
 
   const navItems = getNavItems();
 
-  const handleNavClick = (href: string) => {
+  const handleNavClick = useCallback((href: string) => {
     setIsOpen(false);
     if (href.startsWith('#')) {
       const element = document.querySelector(href);
@@ -47,199 +45,206 @@ const Navbar = () => {
         element.scrollIntoView({ behavior: 'smooth' });
       }
     }
-  };
+  }, []);
 
   return (
     <>
       <motion.nav
-        initial={{ y: -100 }}
-        animate={{ y: 0 }}
         className="fixed top-3 sm:top-6 left-3 sm:left-6 right-3 sm:right-6 z-50 rounded-2xl sm:rounded-full px-4 sm:px-6 py-3"
         style={{
           ...styles.glass.medium,
           border: `1px solid ${theme.colors.border}`,
         }}
       >
-        <div className="flex items-center justify-between">
-          {/* Logo */}
-          <Link to="/" className="flex items-center space-x-2 sm:space-x-3">
-            <div 
-              className="w-8 h-8 sm:w-10 sm:h-10 rounded-lg sm:rounded-xl flex items-center justify-center"
-              style={{ backgroundColor: theme.colors.primary }}
-            >
-              <Brain style={{ color: theme.colors.background }} size={20} />
-            </div>
-            <span style={{ 
-              color: theme.colors.text, 
+        <div className="hidden lg:flex items-center justify-between w-full">
+          {/* Left Logo */}
+          <Link to="/" className="flex items-center space-x-2" style={{ flex: '0 0 auto' }}>
+            <img
+              src="/adaptive-icon.png"
+              alt="dytto"
+              style={{
+                width: '2rem',
+                height: '2rem',
+                borderRadius: '0.5rem',
+              }}
+            />
+            <span style={{
+              color: theme.colors.text,
               fontWeight: theme.typography.fontWeight.semibold,
-              fontSize: 'clamp(1rem, 4vw, 1.25rem)',
+              fontSize: '1.125rem',
             }}>
               dytto
             </span>
           </Link>
-          
-          {/* Desktop Navigation Menu */}
-          <div className="hidden lg:flex items-center space-x-6">
-            {/* Section Navigation (only on home/api pages) */}
-            {navItems.map((item) => (
-              <button
-                key={item.label}
-                onClick={() => handleNavClick(item.href)}
-                style={{ 
-                  color: theme.colors.textSecondary,
-                  fontSize: theme.typography.fontSize.sm,
-                  transition: theme.animations.transition.normal,
-                  background: 'none',
-                  border: 'none',
-                  cursor: 'pointer',
-                  padding: `${theme.semanticSpacing.sm} 0`,
-                }}
-                onMouseEnter={(e) => {
-                  e.target.style.color = theme.colors.primary;
-                }}
-                onMouseLeave={(e) => {
-                  e.target.style.color = theme.colors.textSecondary;
-                }}
-              >
-                {item.label}
-              </button>
-            ))}
-            
-            {/* Page Navigation - Always show main pages */}
+
+          {/* Center - All Navigation Links */}
+          <div className="flex items-center justify-center space-x-3" style={{ gap: '0.75rem', flex: '1 0 0' }}>
+            {/* Section Navigation */}
             {navItems.length > 0 && (
-              <div style={{ width: '1px', height: '1rem', backgroundColor: theme.colors.border, margin: '0 1rem' }} />
+              <>
+                {navItems.map((item) => (
+                  <button
+                    key={item.label}
+                    onClick={() => handleNavClick(item.href)}
+                    style={{
+                      color: theme.colors.textSecondary,
+                      fontSize: theme.typography.fontSize.sm,
+                      transition: theme.animations.transition.normal,
+                      background: 'none',
+                      border: 'none',
+                      cursor: 'pointer',
+                      padding: `${theme.semanticSpacing.sm} 0`,
+                    }}
+                    onMouseEnter={(e) => {
+                      e.target.style.color = theme.colors.primary;
+                    }}
+                    onMouseLeave={(e) => {
+                      e.target.style.color = theme.colors.textSecondary;
+                    }}
+                  >
+                    {item.label}
+                  </button>
+                ))}
+                <div style={{ width: '1px', height: '1rem', backgroundColor: theme.colors.border, margin: '0 0.25rem' }} />
+              </>
             )}
-            <div className="flex items-center space-x-4">
-              {!isHomePage && (
-                <Link
-                  to="/"
-                  style={{ 
-                    color: theme.colors.textSecondary,
-                    fontSize: theme.typography.fontSize.sm,
-                    transition: theme.animations.transition.normal,
-                    textDecoration: 'none',
-                    fontWeight: theme.typography.fontWeight.medium,
-                  }}
-                  onMouseEnter={(e) => {
-                    e.target.style.color = theme.colors.primary;
-                  }}
-                  onMouseLeave={(e) => {
-                    e.target.style.color = theme.colors.textSecondary;
-                  }}
-                >
-                  App
-                </Link>
-              )}
-              
-              {!isAPIPage && (
-                <Link
-                  to="/api"
-                  style={{ 
-                    color: theme.colors.textSecondary,
-                    fontSize: theme.typography.fontSize.sm,
-                    transition: theme.animations.transition.normal,
-                    textDecoration: 'none',
-                    fontWeight: theme.typography.fontWeight.medium,
-                  }}
-                  onMouseEnter={(e) => {
-                    e.target.style.color = theme.colors.primary;
-                  }}
-                  onMouseLeave={(e) => {
-                    e.target.style.color = theme.colors.textSecondary;
-                  }}
-                >
-                  API
-                </Link>
-              )}
-              
-              {!isBlogPage && (
-                <Link
-                  to="/blog"
-                  style={{ 
-                    color: theme.colors.textSecondary,
-                    fontSize: theme.typography.fontSize.sm,
-                    transition: theme.animations.transition.normal,
-                    textDecoration: 'none',
-                    fontWeight: theme.typography.fontWeight.medium,
-                  }}
-                  onMouseEnter={(e) => {
-                    e.target.style.color = theme.colors.primary;
-                  }}
-                  onMouseLeave={(e) => {
-                    e.target.style.color = theme.colors.textSecondary;
-                  }}
-                >
-                  Blog
-                </Link>
-              )}
-              
-              {!isPhilosophyPage && (
-                <Link
-                  to="/philosophy"
-                  style={{ 
-                    color: theme.colors.textSecondary,
-                    fontSize: theme.typography.fontSize.sm,
-                    transition: theme.animations.transition.normal,
-                    textDecoration: 'none',
-                    fontWeight: theme.typography.fontWeight.medium,
-                  }}
-                  onMouseEnter={(e) => {
-                    e.target.style.color = theme.colors.primary;
-                  }}
-                  onMouseLeave={(e) => {
-                    e.target.style.color = theme.colors.textSecondary;
-                  }}
-                >
-                  Philosophy
-                </Link>
-              )}
-              
-              {!isFeedbackPage && (
-                <Link
-                  to="/feedback"
-                  style={{ 
-                    color: theme.colors.textSecondary,
-                    fontSize: theme.typography.fontSize.sm,
-                    transition: theme.animations.transition.normal,
-                    textDecoration: 'none',
-                    fontWeight: theme.typography.fontWeight.medium,
-                  }}
-                  onMouseEnter={(e) => {
-                    e.target.style.color = theme.colors.primary;
-                  }}
-                  onMouseLeave={(e) => {
-                    e.target.style.color = theme.colors.textSecondary;
-                  }}
-                >
-                  Feedback
-                </Link>
-              )}
-              
-              {!isWaitlistPage && (
-                <Link
-                  to="/waitlist"
-                  style={{ 
-                    color: theme.colors.textSecondary,
-                    fontSize: theme.typography.fontSize.sm,
-                    transition: theme.animations.transition.normal,
-                    textDecoration: 'none',
-                    fontWeight: theme.typography.fontWeight.medium,
-                  }}
-                  onMouseEnter={(e) => {
-                    e.target.style.color = theme.colors.primary;
-                  }}
-                  onMouseLeave={(e) => {
-                    e.target.style.color = theme.colors.textSecondary;
-                  }}
-                >
-                  Waitlist
-                </Link>
-              )}
-            </div>
+
+            {/* Page Links */}
+            <Link
+              to="/"
+              style={{
+                color: isHomePage ? theme.colors.primary : theme.colors.textSecondary,
+                fontSize: theme.typography.fontSize.sm,
+                transition: theme.animations.transition.normal,
+                textDecoration: 'none',
+                fontWeight: theme.typography.fontWeight.medium,
+              }}
+              onMouseEnter={(e) => {
+                e.target.style.color = theme.colors.primary;
+              }}
+              onMouseLeave={(e) => {
+                e.target.style.color = isHomePage ? theme.colors.primary : theme.colors.textSecondary;
+              }}
+            >
+              App
+            </Link>
+
+            <Link
+              to="/api"
+              style={{
+                color: isAPIPage ? theme.colors.primary : theme.colors.textSecondary,
+                fontSize: theme.typography.fontSize.sm,
+                transition: theme.animations.transition.normal,
+                textDecoration: 'none',
+                fontWeight: theme.typography.fontWeight.medium,
+              }}
+              onMouseEnter={(e) => {
+                e.target.style.color = theme.colors.primary;
+              }}
+              onMouseLeave={(e) => {
+                e.target.style.color = isAPIPage ? theme.colors.primary : theme.colors.textSecondary;
+              }}
+            >
+              API
+            </Link>
+
+            <Link
+              to="/blog"
+              style={{
+                color: isBlogPage ? theme.colors.primary : theme.colors.textSecondary,
+                fontSize: theme.typography.fontSize.sm,
+                transition: theme.animations.transition.normal,
+                textDecoration: 'none',
+                fontWeight: theme.typography.fontWeight.medium,
+              }}
+              onMouseEnter={(e) => {
+                e.target.style.color = theme.colors.primary;
+              }}
+              onMouseLeave={(e) => {
+                e.target.style.color = isBlogPage ? theme.colors.primary : theme.colors.textSecondary;
+              }}
+            >
+              Blog
+            </Link>
+
+            <Link
+              to="/philosophy"
+              style={{
+                color: isPhilosophyPage ? theme.colors.primary : theme.colors.textSecondary,
+                fontSize: theme.typography.fontSize.sm,
+                transition: theme.animations.transition.normal,
+                textDecoration: 'none',
+                fontWeight: theme.typography.fontWeight.medium,
+              }}
+              onMouseEnter={(e) => {
+                e.target.style.color = theme.colors.primary;
+              }}
+              onMouseLeave={(e) => {
+                e.target.style.color = isPhilosophyPage ? theme.colors.primary : theme.colors.textSecondary;
+              }}
+            >
+              Demo
+            </Link>
+
+            <Link
+              to="/feedback"
+              style={{
+                color: isFeedbackPage ? theme.colors.primary : theme.colors.textSecondary,
+                fontSize: theme.typography.fontSize.sm,
+                transition: theme.animations.transition.normal,
+                textDecoration: 'none',
+                fontWeight: theme.typography.fontWeight.medium,
+              }}
+              onMouseEnter={(e) => {
+                e.target.style.color = theme.colors.primary;
+              }}
+              onMouseLeave={(e) => {
+                e.target.style.color = isFeedbackPage ? theme.colors.primary : theme.colors.textSecondary;
+              }}
+            >
+              Feedback
+            </Link>
+
+            <Link
+              to="/waitlist"
+              style={{
+                color: isWaitlistPage ? theme.colors.primary : theme.colors.textSecondary,
+                fontSize: theme.typography.fontSize.sm,
+                transition: theme.animations.transition.normal,
+                textDecoration: 'none',
+                fontWeight: theme.typography.fontWeight.medium,
+              }}
+              onMouseEnter={(e) => {
+                e.target.style.color = theme.colors.primary;
+              }}
+              onMouseLeave={(e) => {
+                e.target.style.color = isWaitlistPage ? theme.colors.primary : theme.colors.textSecondary;
+              }}
+            >
+              Waitlist
+            </Link>
           </div>
 
-          {/* Desktop Auth buttons and theme toggle */}
-          <div className="hidden lg:flex items-center space-x-4">
+          {/* Right - CTA + Theme */}
+          <div className="flex items-center space-x-4" style={{ flex: '0 0 auto', gap: '0.75rem' }}>
+            <motion.button
+              style={{
+                backgroundColor: theme.colors.primary,
+                color: theme.colors.background,
+                padding: `${theme.semanticSpacing.sm} ${theme.semanticSpacing.md}`,
+                borderRadius: '9999px',
+                fontSize: theme.typography.fontSize.sm,
+                fontWeight: theme.typography.fontWeight.semibold,
+                border: 'none',
+                cursor: 'pointer',
+                transition: theme.animations.transition.normal,
+                minWidth: '140px',
+                textAlign: 'center',
+              }}
+            >
+              {isAPIPage ? 'Get API Key' : isWaitlistPage ? 'Join Waitlist' : isFeedbackPage ? 'Submit Feedback' : isBlogPage ? 'Subscribe' : isPhilosophyPage ? 'View Demo' : 'Download App'}
+            </motion.button>
+
             <button
               onClick={toggleMode}
               style={{
@@ -262,56 +267,38 @@ const Navbar = () => {
             >
               {mode === 'light' ? <Moon size={18} /> : <Sun size={18} />}
             </button>
-            
-            <motion.button
-              whileHover={{ scale: 1.02 }}
-              whileTap={{ scale: 0.98 }}
-              style={{
-                backgroundColor: theme.colors.primary,
-                color: theme.colors.background,
-                padding: `${theme.semanticSpacing.sm} ${theme.semanticSpacing.md}`,
-                borderRadius: '9999px',
-                fontSize: theme.typography.fontSize.sm,
-                fontWeight: theme.typography.fontWeight.semibold,
-                border: 'none',
-                cursor: 'pointer',
-                transition: theme.animations.transition.normal,
-              }}
-            >
-              {isAPIPage ? 'Get API Key' : isWaitlistPage ? 'Join Waitlist' : isFeedbackPage ? 'Submit Feedback' : isBlogPage ? 'Subscribe' : isPhilosophyPage ? 'View Demo' : 'Download App'}
-            </motion.button>
           </div>
+        </div>
 
-          {/* Mobile controls */}
-          <div className="flex items-center space-x-2 lg:hidden">
-            <button
-              onClick={toggleMode}
-              style={{
-                color: theme.colors.textSecondary,
-                padding: theme.semanticSpacing.sm,
-                borderRadius: '0.5rem',
-                transition: theme.animations.transition.normal,
-                backgroundColor: 'transparent',
-                border: 'none',
-                cursor: 'pointer',
-              }}
-            >
-              {mode === 'light' ? <Moon size={18} /> : <Sun size={18} />}
-            </button>
-            
-            <button
-              style={{ 
-                color: theme.colors.text,
-                backgroundColor: 'transparent',
-                border: 'none',
-                cursor: 'pointer',
-                padding: theme.semanticSpacing.sm,
-              }}
-              onClick={() => setIsOpen(!isOpen)}
-            >
-              {isOpen ? <X size={20} /> : <Menu size={20} />}
-            </button>
-          </div>
+        {/* Mobile controls */}
+        <div className="flex items-center space-x-2 lg:hidden">
+          <button
+            onClick={toggleMode}
+            style={{
+              color: theme.colors.textSecondary,
+              padding: theme.semanticSpacing.sm,
+              borderRadius: '0.5rem',
+              transition: theme.animations.transition.normal,
+              backgroundColor: 'transparent',
+              border: 'none',
+              cursor: 'pointer',
+            }}
+          >
+            {mode === 'light' ? <Moon size={18} /> : <Sun size={18} />}
+          </button>
+
+          <button
+            style={{
+              color: theme.colors.text,
+              backgroundColor: 'transparent',
+              border: 'none',
+              cursor: 'pointer',
+              padding: theme.semanticSpacing.sm,
+            }}
+            onClick={() => setIsOpen(!isOpen)}
+          >
+            {isOpen ? <X size={20} /> : <Menu size={20} />}
+          </button>
         </div>
       </motion.nav>
 
@@ -380,156 +367,144 @@ const Navbar = () => {
                     margin: `${theme.semanticSpacing.md} 0` 
                   }} />
                 )}
-                
-                {!isHomePage && (
-                  <motion.div
-                    initial={{ opacity: 0, x: -20 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={{ delay: (navItems.length) * 0.1 }}
-                  >
-                    <Link
-                      to="/"
-                      onClick={() => setIsOpen(false)}
-                      style={{
-                        display: 'block',
-                        color: theme.colors.textSecondary,
-                        fontSize: theme.typography.fontSize.lg,
-                        fontWeight: theme.typography.fontWeight.medium,
-                        padding: theme.semanticSpacing.md,
-                        borderRadius: '0.75rem',
-                        textDecoration: 'none',
-                        transition: theme.animations.transition.normal,
-                      }}
-                    >
-                      App
-                    </Link>
-                  </motion.div>
-                )}
 
-                {!isAPIPage && (
-                  <motion.div
-                    initial={{ opacity: 0, x: -20 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={{ delay: (navItems.length + 1) * 0.1 }}
+                <motion.div
+                  initial={{ opacity: 0, x: -20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: (navItems.length) * 0.1 }}
+                >
+                  <Link
+                    to="/"
+                    onClick={() => setIsOpen(false)}
+                    style={{
+                      display: 'block',
+                      color: isHomePage ? theme.colors.primary : theme.colors.textSecondary,
+                      fontSize: theme.typography.fontSize.lg,
+                      fontWeight: theme.typography.fontWeight.medium,
+                      padding: theme.semanticSpacing.md,
+                      borderRadius: '0.75rem',
+                      textDecoration: 'none',
+                      transition: theme.animations.transition.normal,
+                    }}
                   >
-                    <Link
-                      to="/api"
-                      onClick={() => setIsOpen(false)}
-                      style={{
-                        display: 'block',
-                        color: theme.colors.textSecondary,
-                        fontSize: theme.typography.fontSize.lg,
-                        fontWeight: theme.typography.fontWeight.medium,
-                        padding: theme.semanticSpacing.md,
-                        borderRadius: '0.75rem',
-                        textDecoration: 'none',
-                        transition: theme.animations.transition.normal,
-                      }}
-                    >
-                      API
-                    </Link>
-                  </motion.div>
-                )}
+                    App
+                  </Link>
+                </motion.div>
 
-                {!isFeedbackPage && (
-                  <motion.div
-                    initial={{ opacity: 0, x: -20 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={{ delay: (navItems.length + 2) * 0.1 }}
+                <motion.div
+                  initial={{ opacity: 0, x: -20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: (navItems.length + 1) * 0.1 }}
+                >
+                  <Link
+                    to="/api"
+                    onClick={() => setIsOpen(false)}
+                    style={{
+                      display: 'block',
+                      color: isAPIPage ? theme.colors.primary : theme.colors.textSecondary,
+                      fontSize: theme.typography.fontSize.lg,
+                      fontWeight: theme.typography.fontWeight.medium,
+                      padding: theme.semanticSpacing.md,
+                      borderRadius: '0.75rem',
+                      textDecoration: 'none',
+                      transition: theme.animations.transition.normal,
+                    }}
                   >
-                    <Link
-                      to="/feedback"
-                      onClick={() => setIsOpen(false)}
-                      style={{
-                        display: 'block',
-                        color: theme.colors.textSecondary,
-                        fontSize: theme.typography.fontSize.lg,
-                        fontWeight: theme.typography.fontWeight.medium,
-                        padding: theme.semanticSpacing.md,
-                        borderRadius: '0.75rem',
-                        textDecoration: 'none',
-                        transition: theme.animations.transition.normal,
-                      }}
-                    >
-                      Feedback
-                    </Link>
-                  </motion.div>
-                )}
+                    API
+                  </Link>
+                </motion.div>
 
-                {!isWaitlistPage && (
-                  <motion.div
-                    initial={{ opacity: 0, x: -20 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={{ delay: (navItems.length + 3) * 0.1 }}
+                <motion.div
+                  initial={{ opacity: 0, x: -20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: (navItems.length + 2) * 0.1 }}
+                >
+                  <Link
+                    to="/blog"
+                    onClick={() => setIsOpen(false)}
+                    style={{
+                      display: 'block',
+                      color: isBlogPage ? theme.colors.primary : theme.colors.textSecondary,
+                      fontSize: theme.typography.fontSize.lg,
+                      fontWeight: theme.typography.fontWeight.medium,
+                      padding: theme.semanticSpacing.md,
+                      borderRadius: '0.75rem',
+                      textDecoration: 'none',
+                      transition: theme.animations.transition.normal,
+                    }}
                   >
-                    <Link
-                      to="/waitlist"
-                      onClick={() => setIsOpen(false)}
-                      style={{
-                        display: 'block',
-                        color: theme.colors.textSecondary,
-                        fontSize: theme.typography.fontSize.lg,
-                        fontWeight: theme.typography.fontWeight.medium,
-                        padding: theme.semanticSpacing.md,
-                        borderRadius: '0.75rem',
-                        textDecoration: 'none',
-                        transition: theme.animations.transition.normal,
-                      }}
-                    >
-                      Waitlist
-                    </Link>
-                  </motion.div>
-                )}
+                    Blog
+                  </Link>
+                </motion.div>
 
-                {!isBlogPage && (
-                  <motion.div
-                    initial={{ opacity: 0, x: -20 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={{ delay: (navItems.length + 4) * 0.1 }}
+                <motion.div
+                  initial={{ opacity: 0, x: -20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: (navItems.length + 3) * 0.1 }}
+                >
+                  <Link
+                    to="/philosophy"
+                    onClick={() => setIsOpen(false)}
+                    style={{
+                      display: 'block',
+                      color: isPhilosophyPage ? theme.colors.primary : theme.colors.textSecondary,
+                      fontSize: theme.typography.fontSize.lg,
+                      fontWeight: theme.typography.fontWeight.medium,
+                      padding: theme.semanticSpacing.md,
+                      borderRadius: '0.75rem',
+                      textDecoration: 'none',
+                      transition: theme.animations.transition.normal,
+                    }}
                   >
-                    <Link
-                      to="/blog"
-                      onClick={() => setIsOpen(false)}
-                      style={{
-                        display: 'block',
-                        color: theme.colors.textSecondary,
-                        fontSize: theme.typography.fontSize.lg,
-                        fontWeight: theme.typography.fontWeight.medium,
-                        padding: theme.semanticSpacing.md,
-                        borderRadius: '0.75rem',
-                        textDecoration: 'none',
-                        transition: theme.animations.transition.normal,
-                      }}
-                    >
-                      Blog
-                    </Link>
-                  </motion.div>
-                )}
-                
-                {!isPhilosophyPage && (
-                  <motion.div
-                    initial={{ opacity: 0, x: -20 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={{ delay: (navItems.length + 5) * 0.1 }}
+                    Demo
+                  </Link>
+                </motion.div>
+
+                <motion.div
+                  initial={{ opacity: 0, x: -20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: (navItems.length + 4) * 0.1 }}
+                >
+                  <Link
+                    to="/feedback"
+                    onClick={() => setIsOpen(false)}
+                    style={{
+                      display: 'block',
+                      color: isFeedbackPage ? theme.colors.primary : theme.colors.textSecondary,
+                      fontSize: theme.typography.fontSize.lg,
+                      fontWeight: theme.typography.fontWeight.medium,
+                      padding: theme.semanticSpacing.md,
+                      borderRadius: '0.75rem',
+                      textDecoration: 'none',
+                      transition: theme.animations.transition.normal,
+                    }}
                   >
-                    <Link
-                      to="/philosophy"
-                      onClick={() => setIsOpen(false)}
-                      style={{
-                        display: 'block',
-                        color: theme.colors.textSecondary,
-                        fontSize: theme.typography.fontSize.lg,
-                        fontWeight: theme.typography.fontWeight.medium,
-                        padding: theme.semanticSpacing.md,
-                        borderRadius: '0.75rem',
-                        textDecoration: 'none',
-                        transition: theme.animations.transition.normal,
-                      }}
-                    >
-                      Philosophy
-                    </Link>
-                  </motion.div>
-                )}
+                    Feedback
+                  </Link>
+                </motion.div>
+
+                <motion.div
+                  initial={{ opacity: 0, x: -20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: (navItems.length + 5) * 0.1 }}
+                >
+                  <Link
+                    to="/waitlist"
+                    onClick={() => setIsOpen(false)}
+                    style={{
+                      display: 'block',
+                      color: isWaitlistPage ? theme.colors.primary : theme.colors.textSecondary,
+                      fontSize: theme.typography.fontSize.lg,
+                      fontWeight: theme.typography.fontWeight.medium,
+                      padding: theme.semanticSpacing.md,
+                      borderRadius: '0.75rem',
+                      textDecoration: 'none',
+                      transition: theme.animations.transition.normal,
+                    }}
+                  >
+                    Waitlist
+                  </Link>
+                </motion.div>
                 
                 <div className="border-t pt-4" style={{ borderColor: theme.colors.border }}>
                   <motion.button
@@ -560,4 +535,4 @@ const Navbar = () => {
   );
 };
 
-export default Navbar;
+export default React.memo(Navbar);

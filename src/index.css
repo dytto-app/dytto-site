@@ -3,12 +3,19 @@
 @tailwind utilities;
 
 /* Global mobile optimization */
-html, body {
+html {
   overflow-x: hidden;
+  overflow-y: scroll; /* Always reserve scrollbar space to prevent layout shift */
   touch-action: pan-y;
   width: 100%;
   max-width: 100vw;
   font-size: 16px; /* Ensure base font size for mobile */
+}
+
+body {
+  overflow-x: hidden;
+  width: 100%;
+  max-width: 100vw;
 }
 
 /* Prevent horizontal scrolling globally */

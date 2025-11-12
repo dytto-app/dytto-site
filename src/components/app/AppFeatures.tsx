@@ -176,7 +176,10 @@ const AppFeatures = () => {
           transition={{ duration: 0.8, delay: 0.5 }}
           className="text-center mt-12 sm:mt-16"
         >
-          <motion.button 
+          <motion.a
+            href="https://apps.apple.com/us/app/dytto-journal/id6745741994"
+            target="_blank"
+            rel="noopener noreferrer"
             whileHover={{ scale: 1.02, y: -2 }}
             whileTap={{ scale: 0.98 }}
             style={{
@@ -192,10 +195,12 @@ const AppFeatures = () => {
               transition: 'all 0.3s ease',
               width: '100%',
               maxWidth: '280px',
+              textDecoration: 'none',
+              display: 'inline-block',
             }}
           >
             Download the dytto App
-          </motion.button>
+          </motion.a>
           
           {/* Trust Indicator */}
           <p 

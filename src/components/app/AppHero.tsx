@@ -116,7 +116,10 @@ const AppHero = () => {
           transition={{ duration: 0.8, delay: 0.4 }}
           className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-8"
         >
-          <motion.button
+          <motion.a
+            href="https://apps.apple.com/us/app/dytto-journal/id6745741994"
+            target="_blank"
+            rel="noopener noreferrer"
             whileHover={{ scale: 1.02, y: -2 }}
             whileTap={{ scale: 0.98 }}
             style={{
@@ -134,6 +137,8 @@ const AppHero = () => {
               width: '100%',
               maxWidth: '200px',
               boxShadow: theme.shadows.md,
+              textDecoration: 'none',
+              cursor: 'pointer',
             }}
           >
             <Apple size={20} />
@@ -141,13 +146,14 @@ const AppHero = () => {
               <div style={{ fontSize: '0.75rem', opacity: 0.7 }}>Download on the</div>
               <div style={{ fontSize: '0.875rem', fontWeight: theme.typography.fontWeight.semibold }}>App Store</div>
             </div>
-          </motion.button>
+          </motion.a>
           
           <motion.button
+            disabled
             whileHover={{ scale: 1.02, y: -2 }}
             whileTap={{ scale: 0.98 }}
             style={{
-              backgroundColor: theme.colors.text,
+              backgroundColor: theme.utils.alpha(theme.colors.text, 0.5),
               border: `1px solid ${theme.colors.border}`,
               color: theme.colors.background,
               padding: '1rem 1.5rem',
@@ -161,11 +167,13 @@ const AppHero = () => {
               width: '100%',
               maxWidth: '200px',
               boxShadow: theme.shadows.md,
+              opacity: 0.6,
+              cursor: 'not-allowed',
             }}
           >
             <Play size={20} />
             <div style={{ textAlign: 'left' }}>
-              <div style={{ fontSize: '0.75rem', opacity: 0.7 }}>Get it on</div>
+              <div style={{ fontSize: '0.75rem', opacity: 0.7 }}>Coming soon on</div>
               <div style={{ fontSize: '0.875rem', fontWeight: theme.typography.fontWeight.semibold }}>Google Play</div>
             </div>
           </motion.button>
