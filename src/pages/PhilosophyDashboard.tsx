@@ -11,14 +11,7 @@ import { useTheme } from '../components/ThemeProvider';
 import { useThemeStyles } from '../hooks/useThemeStyles';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
-import { createClient } from '@supabase/supabase-js';
-
-// Initialize Supabase client with service key (bypasses RLS for demo)
-const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
-const supabaseServiceKey = import.meta.env.VITE_SUPABASE_SERVICE_KEY;
-const supabase = supabaseUrl && supabaseServiceKey
-  ? createClient(supabaseUrl, supabaseServiceKey)
-  : null;
+const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL;
 
 interface EnrichedData {
   metadata?: {
@@ -60,7 +53,7 @@ const PhilosophyDashboard: React.FC = () => {
 
   // Fetch user profile and their stories
   const fetchData = async () => {
-    if (!supabase) {
+    if (!SUPABASE_URL) {
       setError('Supabase not configured');
       setLoading(false);
       return;
@@ -70,26 +63,21 @@ const PhilosophyDashboard: React.FC = () => {
     setError(null);
 
     try {
-      // Fetch stories for this user (10 most recent)
-      const { data: storiesData, error: storiesError } = await supabase
-        .from('stories')
-        .select('*')
-        .eq('user_id', USER_ID)
-        .order('date', { ascending: false })
-        .limit(10);
+      const response = await fetch(`${SUPABASE_URL}/functions/v1/demo`, {
+        headers: {
+          'Authorization': `Bearer ${import.meta.env.VITE_SUPABASE_ANON_KEY}`,
+        },
+      });
 
-      if (storiesError) {
-        throw new Error(`Failed to fetch stories: ${storiesError.message}`);
-      }
+      if (!response.ok) throw new Error('Failed to fetch stories');
 
-      const sortedStories = (storiesData || []).sort((a, b) =>
-        new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
-      );
-      setStories(sortedStories);
+      const result = await response.json();
+      const stories = result.data || [];
+      setStories(stories);
 
       // Auto-select first story
-      if (sortedStories.length > 0) {
-        setSelectedStory(sortedStories[0].id);
+      if (stories.length > 0) {
+        setSelectedStory(stories[0].id);
       }
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to load data');
