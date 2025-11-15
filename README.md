@@ -29,7 +29,7 @@ The blog page (`/blog`) is designed to work even without a full Supabase backend
 
 -   **Demo Mode:** If the `VITE_SUPABASE_URL` environment variable is not set, the blog page will automatically display a set of sample blog posts. This allows for local development and demonstration of the blog's UI and features without requiring a live Supabase instance. A "Demo mode" notice will be displayed on the page.
 
--   **Full Functionality:** To enable full blog functionality, including dynamic content fetching and API updates, you need to configure your Supabase project and set the `VITE_SUPABASE_URL` and `VITE_SUPABASE_ANON_KEY` environment variables. Refer to the Supabase documentation for detailed setup instructions.
+-   **Full Functionality:** To enable full blog functionality and the Supabase Edge Functions, you need to configure your Supabase project and set the `VITE_SUPABASE_URL`, `VITE_SUPABASE_ANON_KEY`, and `VITE_SUPABASE_SERVICE_ROLE_KEY` environment variables. Refer to the Supabase documentation for detailed setup instructions.
 
 ## Analytics Tracking
 
@@ -46,6 +46,12 @@ This project incorporates an enhanced analytics utility (`src/utils/analytics.ts
 -   **Error Tracking:** Logs technical errors for debugging and performance monitoring.
 
 The analytics system also captures UTM parameters for improved attribution and calculates session duration.
+
+## Supabase Edge Functions
+
+This project utilizes Supabase Edge Functions for certain backend logic.
+
+-   **Demo Function (`supabase/functions/demo/index.ts`):** This edge function serves as an API endpoint (`/functions/v1/demo`) to fetch the 10 most recent stories for a demo user. It is consumed by the `PhilosophyDashboard` page to display sample data without directly exposing the Supabase service key on the client-side.
 
 ## Available Scripts
 
