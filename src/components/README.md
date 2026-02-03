@@ -16,6 +16,7 @@ The `Navbar` component provides the main navigation for the Dytto website. It fe
     -   `/waitlist`: "Join Waitlist"
     -   `/feedback`: "Submit Feedback"
     -   `/blog` (or any path starting with `/blog`): "Subscribe"
+    -   `/demo`: "View Demo"
     -   Other pages: "Download App"
 -   **Smooth Scrolling:** Section navigation links (`#platform`, `#api`, etc.) trigger smooth scrolling to the respective sections on the page.
 -   **Framer Motion Animations:** Incorporates subtle animations for menu transitions and button interactions.

@@ -75,7 +75,10 @@ Deno.serve(async (req: Request) => {
     if (req.method === 'GET' && url.pathname === '/feedback') {
       const limit = parseInt(url.searchParams.get('limit') || '20');
 
-      // Get feedback ordered by votes and date
+      // Fetch feedback directly from the 'feedback' table.
+      // Previously, this used an RPC function 'get_top_feedback'.
+      // Now, it directly queries the table, filters out 'closed' status,
+      // and orders by 'upvotes' (descending) and 'created_at' (descending).
       const { data, error } = await supabase
         .from('feedback')
         .select('*')
@@ -92,7 +95,10 @@ Deno.serve(async (req: Request) => {
         );
       }
 
-      // Add user vote status to each feedback item
+      // Add user vote status to each feedback item.
+      // Previously, this used an RPC function 'has_user_voted'.
+      // Now, it directly queries the 'votes' table to see if a record exists
+      // for the current feedback item and voter hash.
       const feedbackWithVoteStatus = await Promise.all(
         data.map(async (item: any) => {
           const { data: votes } = await supabase
