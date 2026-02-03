@@ -23,13 +23,13 @@ To set up the project locally, follow these steps:
     ```
     The site will be accessible at `http://localhost:5173` (or another port if 5173 is in use).
 
-## Blog Page Functionality
+## Supabase Integration and Demo Mode
 
-The blog page (`/blog`) is designed to work even without a full Supabase backend configuration.
+Both the blog page (`/blog`) and the Philosophy Dashboard (Journal) page (`/philosophy`) are designed to work even without a full Supabase backend configuration.
 
--   **Demo Mode:** If the `VITE_SUPABASE_URL` environment variable is not set, the blog page will automatically display a set of sample blog posts. This allows for local development and demonstration of the blog's UI and features without requiring a live Supabase instance. A "Demo mode" notice will be displayed on the page.
+-   **Demo Mode:** If the `VITE_SUPABASE_URL` environment variable is not set, these pages will automatically display a set of sample data (blog posts for the blog, and demo user journal entries for the Philosophy Dashboard). This allows for local development and demonstration of the UI and features without requiring a live Supabase instance. A "Demo mode" notice will be displayed on the respective pages.
 
--   **Full Functionality:** To enable full blog functionality, including dynamic content fetching and API updates, you need to configure your Supabase project and set the `VITE_SUPABASE_URL` and `VITE_SUPABASE_ANON_KEY` environment variables. Refer to the Supabase documentation for detailed setup instructions.
+-   **Full Functionality:** To enable full functionality, including dynamic content fetching and API updates, you need to configure your Supabase project and set the `VITE_SUPABASE_URL` and `VITE_SUPABASE_ANON_KEY` environment variables. Refer to the Supabase documentation for detailed setup instructions.
 
 ## Analytics Tracking
 
