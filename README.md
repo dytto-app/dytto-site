@@ -2,6 +2,8 @@
 
 This repository contains the Dytto marketing and developer site.
 
+Dytto is your AI-powered journal that effortlessly captures your daily life, transforms your moments into beautiful stories, and builds a rich personal context layer to make every AI you use smarter and truly personalized. It helps you discover patterns about your lifestyle and preferences, providing context-aware recommendations and insights.
+
 ## Project Setup
 
 To set up the project locally, follow these steps:
