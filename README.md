@@ -2,6 +2,18 @@
 
 This repository contains the Dytto marketing and developer site.
 
+## Dytto's Core Concept
+
+Dytto is built around the concept of creating a rich, personal context from your daily life. It continuously learns about you by capturing locations, photos, weather, and activities. This personal context serves as the engine that powers all of Dytto's features, including:
+
+-   **AI-Powered Stories:** Your daily experiences are transformed into personalized narratives.
+-   **Personalized News Feed:** Content is curated based on your real interests and preferences.
+-   **Smart Insights:** Discover patterns about your lifestyle and preferences as Dytto learns more about you.
+-   **Context-Aware Recommendations:** Get suggestions for places and activities relevant to your life.
+-   **Context-Aware AI Chat:** Interact with an AI that truly knows you, providing personalized advice without needing constant re-explanation.
+
+Essentially, Dytto builds a living profile of who you are, with stories, insights, and recommendations all flowing from the personal context it collects every day. This context makes every AI you use smarter and more personal.
+
 ## Project Setup
 
 To set up the project locally, follow these steps:
