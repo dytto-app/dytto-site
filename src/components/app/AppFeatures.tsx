@@ -8,42 +8,42 @@ const features = [
   {
     icon: Camera,
     title: 'Automatic Context Collection',
-    description: 'Seamlessly captures your photos, locations, and activities throughout the day.',
+    description: 'Quietly captures location, calendar, health, weather, and activity data — building a rich personal context layer in the background.',
     color: '#3B82F6',
     bgColor: 'rgba(59, 130, 246, 0.1)'
   },
   {
     icon: BookOpen,
-    title: 'AI-Powered Stories',
-    description: 'Transforms your daily experiences into meaningful, personalized narratives.',
+    title: 'AI That Actually Knows You',
+    description: 'Any AI that plugs into Dytto gets instant personal context. Three words in, perfect personalized answer out.',
     color: '#8B5CF6',
     bgColor: 'rgba(139, 92, 246, 0.1)'
   },
   {
     icon: Newspaper,
-    title: 'Personalized News Feed',
-    description: 'Curated content that adapts to your interests and reading preferences.',
+    title: 'Personalized Content Feed',
+    description: 'Content and recommendations that reflect who you actually are — powered by your real context, not generic algorithms.',
     color: '#EF4444',
     bgColor: 'rgba(239, 68, 68, 0.1)'
   },
   {
     icon: Brain,
     title: 'Smart Insights',
-    description: 'Discover patterns and insights about your lifestyle and preferences.',
+    description: 'Surface patterns across your habits, routines, and preferences that help AI serve you better over time.',
     color: '#F59E0B',
     bgColor: 'rgba(245, 158, 11, 0.1)'
   },
   {
     icon: MapPin,
     title: 'Location Intelligence',
-    description: 'Context-aware recommendations based on where you are and where you go.',
+    description: 'Context-aware understanding of where you are and where you go — so AI recommendations are always relevant.',
     color: '#10B981',
     bgColor: 'rgba(16, 185, 129, 0.1)'
   },
   {
     icon: Clock,
-    title: 'Timeline View',
-    description: 'Beautiful chronological view of your memories and experiences.',
+    title: 'Bidirectional Context',
+    description: 'AI agents don\'t just read your context — they write back what they learn. Your personal context grows smarter with every interaction.',
     color: '#6366F1',
     bgColor: 'rgba(99, 102, 241, 0.1)'
   }
@@ -100,8 +100,8 @@ const AppFeatures = () => {
               margin: '0 auto',
             }}
           >
-            Experience the power of context-aware AI through features designed 
-            to enhance your daily life and help you discover meaningful insights.
+            Dytto builds a personal context layer that makes every AI you use 
+            smarter, more personal, and more helpful — without you lifting a finger.
           </p>
         </motion.div>
 

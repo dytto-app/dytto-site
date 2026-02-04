@@ -120,7 +120,7 @@ const Hero = () => {
                 fontWeight: theme.typography.fontWeight.medium 
               }}
             >
-              AI Context Platform
+              The Context Layer for AI
             </span>
           </div>
         </motion.div>
@@ -175,9 +175,9 @@ const Hero = () => {
             fontSize: 'clamp(1rem, 4vw, 1.125rem)',
           }}
         >
-          Dytto provides the context infrastructure for intelligent applications. 
-          Access rich user personas, generate simulation agents, and build AI that 
-          truly understands human context.
+          Plaid for personal context — any AI plugs in, instantly personalized. 
+          Dytto collects rich user context and serves it via API so your AI 
+          actually knows who it's talking to.
         </motion.p>
 
         <motion.div

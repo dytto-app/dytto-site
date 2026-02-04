@@ -1,6 +1,6 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { Twitter, Github, Linkedin, Mail, MessageCircle, Instagram } from 'lucide-react';
+import { Twitter, Mail, MessageCircle, Instagram } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { useTheme } from './ThemeProvider';
 import { useThemeStyles } from '../hooks/useThemeStyles';
@@ -9,37 +9,20 @@ const Footer = () => {
   const { theme } = useTheme();
   const styles = useThemeStyles();
 
-  const footerLinks = {
-    'Platform': [
-      'API Documentation',
-      'Authentication',
-      'Rate Limits',
-      'SDKs',
-      'Status Page'
+  const footerLinks: Record<string, { label: string; href: string; external?: boolean }[]> = {
+    'Apps': [
+      { label: 'FundFish', href: 'https://fundfish.pro', external: true },
+      { label: 'BackLog', href: 'https://back-log.com', external: true },
+      { label: 'Dytto Gen', href: 'https://dytto-gen.vercel.app', external: true },
     ],
-    'Products': [
-      'dytto App',
-      'Memories',
-      'News Feed',
-      'AI Insights',
-      'Context API'
+    'Product': [
+      { label: 'Blog', href: '/blog' },
+      { label: 'Demo', href: '/demo' },
+      { label: 'Feedback', href: '/feedback' },
     ],
     'Developers': [
-      'Getting Started',
-      'Code Examples',
-      'Community',
-      'Support',
-      'Changelog',
-      'Blog'
+      { label: 'API Documentation', href: '/api' },
     ],
-    'Company': [
-      'About Us',
-      'Careers',
-      'Blog',
-      'Feedback',
-      'Privacy Policy',
-      'Terms of Service'
-    ]
   };
 
   const socialLinks = [
@@ -77,7 +60,7 @@ const Footer = () => {
       }}
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 py-12 sm:py-16">
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-6 gap-8 mb-8 sm:mb-12">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-8 mb-8 sm:mb-12">
           {/* Brand */}
           <div className="sm:col-span-2 lg:col-span-2">
             <div className="flex items-center space-x-3 mb-4 sm:mb-6">
@@ -153,7 +136,7 @@ const Footer = () => {
           {/* Links */}
           {Object.entries(footerLinks).map(([category, links]) => (
             <div key={category} className="sm:col-span-1">
-              <h3 
+              <h3
                 style={{
                   color: theme.colors.text,
                   fontWeight: theme.typography.fontWeight.semibold,
@@ -166,9 +149,11 @@ const Footer = () => {
               <ul className="space-y-2 sm:space-y-3">
                 {links.map((link, index) => (
                   <li key={index}>
-                    {link === 'Feedback' ? (
-                      <Link
-                        to="/feedback"
+                    {link.external ? (
+                      <a
+                        href={link.href}
+                        target="_blank"
+                        rel="noopener noreferrer"
                         style={{
                           color: theme.colors.textSecondary,
                           fontSize: theme.typography.fontSize.sm,
@@ -177,54 +162,33 @@ const Footer = () => {
                           display: 'block',
                         }}
                         onMouseEnter={(e) => {
-                          e.target.style.color = theme.colors.primary;
+                          (e.target as HTMLAnchorElement).style.color = theme.colors.primary;
                         }}
                         onMouseLeave={(e) => {
-                          e.target.style.color = theme.colors.textSecondary;
+                          (e.target as HTMLAnchorElement).style.color = theme.colors.textSecondary;
                         }}
                       >
-                        {link}
-                      </Link>
+                        {link.label}
+                      </a>
                     ) : (
-                      link === 'Blog' ? (
-                        <Link
-                          to="/blog"
-                          style={{
-                            color: theme.colors.textSecondary,
-                            fontSize: theme.typography.fontSize.sm,
-                            transition: theme.animations.transition.normal,
-                            textDecoration: 'none',
-                            display: 'block',
-                          }}
-                          onMouseEnter={(e) => {
-                            e.target.style.color = theme.colors.primary;
-                          }}
-                          onMouseLeave={(e) => {
-                            e.target.style.color = theme.colors.textSecondary;
-                          }}
-                        >
-                          {link}
-                        </Link>
-                      ) : (
-                        <a
-                          href="#"
-                          style={{
-                            color: theme.colors.textSecondary,
-                            fontSize: theme.typography.fontSize.sm,
-                            transition: theme.animations.transition.normal,
-                            textDecoration: 'none',
-                            display: 'block',
-                          }}
-                          onMouseEnter={(e) => {
-                            e.target.style.color = theme.colors.primary;
-                          }}
-                          onMouseLeave={(e) => {
-                            e.target.style.color = theme.colors.textSecondary;
-                          }}
-                        >
-                          {link}
-                        </a>
-                      )
+                      <Link
+                        to={link.href}
+                        style={{
+                          color: theme.colors.textSecondary,
+                          fontSize: theme.typography.fontSize.sm,
+                          transition: theme.animations.transition.normal,
+                          textDecoration: 'none',
+                          display: 'block',
+                        }}
+                        onMouseEnter={(e) => {
+                          (e.target as HTMLAnchorElement).style.color = theme.colors.primary;
+                        }}
+                        onMouseLeave={(e) => {
+                          (e.target as HTMLAnchorElement).style.color = theme.colors.textSecondary;
+                        }}
+                      >
+                        {link.label}
+                      </Link>
                     )}
                   </li>
                 ))}
@@ -251,33 +215,6 @@ const Footer = () => {
               </div>
             </div>
 
-            <div 
-              className="flex flex-wrap items-center justify-center sm:justify-end space-x-4 sm:space-x-6"
-              style={{
-                color: theme.colors.textSecondary,
-                fontSize: theme.typography.fontSize.sm,
-              }}
-            >
-              {['Privacy Policy', 'Terms of Service', 'Security', 'Cookies'].map((item, index) => (
-                <a 
-                  key={item}
-                  href="#" 
-                  style={{
-                    color: theme.colors.textSecondary,
-                    transition: theme.animations.transition.normal,
-                    textDecoration: 'none',
-                  }}
-                  onMouseEnter={(e) => {
-                    e.target.style.color = theme.colors.primary;
-                  }}
-                  onMouseLeave={(e) => {
-                    e.target.style.color = theme.colors.textSecondary;
-                  }}
-                >
-                  {item}
-                </a>
-              ))}
-            </div>
           </div>
         </div>
       </div>

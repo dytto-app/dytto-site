@@ -12,7 +12,7 @@ const Navbar = () => {
   const location = useLocation();
 
   const isAPIPage = location.pathname === '/api';
-  const isWaitlistPage = location.pathname === '/waitlist';
+
   const isFeedbackPage = location.pathname === '/feedback';
   const isHomePage = location.pathname === '/';
   const isBlogPage = location.pathname.startsWith('/blog');
@@ -49,7 +49,7 @@ const Navbar = () => {
 
   const getCTAText = () => {
     if (isAPIPage) return 'Get API Key';
-    if (isWaitlistPage) return 'Join Waitlist';
+
     if (isFeedbackPage) return 'Submit Feedback';
     if (isBlogPage) return 'Subscribe';
     if (isDemoPage) return 'View Demo';
@@ -237,25 +237,6 @@ const Navbar = () => {
               Feedback
             </Link>
 
-            <Link
-              to="/waitlist"
-              style={{
-                color: isWaitlistPage ? theme.colors.primary : theme.colors.textSecondary,
-                fontSize: theme.typography.fontSize.sm,
-                transition: theme.animations.transition.normal,
-                textDecoration: 'none',
-                fontWeight: theme.typography.fontWeight.medium,
-                whiteSpace: 'nowrap',
-              }}
-              onMouseEnter={(e) => {
-                (e.target as HTMLAnchorElement).style.color = theme.colors.primary;
-              }}
-              onMouseLeave={(e) => {
-                (e.target as HTMLAnchorElement).style.color = isWaitlistPage ? theme.colors.primary : theme.colors.textSecondary;
-              }}
-            >
-              Waitlist
-            </Link>
           </div>
 
           {/* Right CTA + Theme - Absolutely positioned */}
@@ -547,28 +528,6 @@ const Navbar = () => {
                   </Link>
                 </motion.div>
 
-                <motion.div
-                  initial={{ opacity: 0, x: -20 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ delay: (navItems.length + 5) * 0.1 }}
-                >
-                  <Link
-                    to="/waitlist"
-                    onClick={() => setIsOpen(false)}
-                    style={{
-                      display: 'block',
-                      color: isWaitlistPage ? theme.colors.primary : theme.colors.textSecondary,
-                      fontSize: theme.typography.fontSize.lg,
-                      fontWeight: theme.typography.fontWeight.medium,
-                      padding: theme.semanticSpacing.md,
-                      borderRadius: '0.75rem',
-                      textDecoration: 'none',
-                      transition: theme.animations.transition.normal,
-                    }}
-                  >
-                    Waitlist
-                  </Link>
-                </motion.div>
 
                 <div className="border-t pt-4" style={{ borderColor: theme.colors.border }}>
                   <motion.button

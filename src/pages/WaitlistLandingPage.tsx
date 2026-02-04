@@ -15,32 +15,32 @@ const WaitlistLandingPage = () => {
   const features = [
     {
       icon: Camera,
-      title: "Beautiful Home Dashboard",
-      description: "Your personal timeline at a glance. See your recent stories, upcoming events, and daily insights all in one elegant interface.",
+      title: "Your Context Dashboard",
+      description: "See everything Dytto knows about your day at a glance — location, activity, health, weather, and more. The foundation that makes AI personal.",
       image: "/IMG_4026.PNG"
     },
     {
       icon: MessageSquare,
-      title: "Add Context with Simple Comments",
-      description: "Enhance your stories by adding simple comments and context to your daily entries. Help Dytto understand what matters most to you.",
+      title: "Teach It What Matters",
+      description: "Add quick notes and preferences to refine your context. The more Dytto understands you, the better every AI you use becomes.",
       image: "/IMG_4024.PNG"
     },
     {
       icon: BookOpen,
-      title: "Beautifully Crafted Stories",
-      description: "Every evening, discover a thoughtfully written story about your day. Each narrative captures the essence of your experiences with literary quality.",
+      title: "Context-Powered Insights",
+      description: "Dytto synthesizes your daily context into meaningful summaries and patterns — a living record that any AI can tap into to understand you.",
       image: "/IMG_4021.PNG"
     },
     {
       icon: Sparkles,
       title: "Personalized Recommendations",
-      description: "Get intelligent suggestions for places to visit, activities to try, and experiences to explore based on your patterns and preferences.",
+      description: "Get intelligent suggestions based on your real context — not generic algorithms. Because AI that knows you gives better answers.",
       image: "/IMG_4025.PNG"
     },
     {
       icon: Brain,
-      title: "Context-Aware AI Chat",
-      description: "Chat with an AI that truly knows you. Ask questions about your past, get insights about your patterns, and receive personalized advice.",
+      title: "AI That Actually Knows You",
+      description: "Chat with an AI that has your full context. Three words in, perfect personalized answer out — no more explaining yourself every time.",
       image: "/IMG_3843.PNG"
     }
   ];
@@ -131,7 +131,7 @@ const WaitlistLandingPage = () => {
                 margin: '0 auto',
               }}
             >
-              Everything you need to capture, understand, and relive your life's moments
+              The personal context layer that makes any AI understand you
             </p>
           </motion.div>
 
@@ -355,7 +355,7 @@ const WaitlistLandingPage = () => {
                   marginBottom: '1rem',
                 }}
               >
-                Ready to transform your daily life?
+                Ready to make AI personal?
               </h3>
               <p 
                 style={{
