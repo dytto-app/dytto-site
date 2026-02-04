@@ -159,7 +159,7 @@ const EmailCapture: React.FC<EmailCaptureProps> = ({
             lineHeight: '1.1',
           }}
         >
-          Your journal. Your context. Your{' '}
+          Your context. Your stories. Your{' '}
           <span 
             style={{
               background: `linear-gradient(135deg, ${theme.colors.primary}, ${theme.colors.accent})`,

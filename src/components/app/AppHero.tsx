@@ -104,9 +104,9 @@ const AppHero = () => {
             marginBottom: theme.semanticSpacing.xl,
           }}
         >
-          dytto captures your daily moments and transforms them into 
-          beautiful, personalized stories — while building a personal context layer 
-          that makes every AI you use smarter.
+          dytto learns who you are — your places, habits, preferences, and routines — 
+          then turns your days into beautiful stories and makes every AI 
+          you use actually personal.
         </motion.p>
 
         <motion.div

@@ -15,32 +15,32 @@ const WaitlistLandingPage = () => {
   const features = [
     {
       icon: Camera,
-      title: "Beautiful Home Dashboard",
-      description: "Your personal timeline at a glance. See your recent stories, upcoming events, and daily insights — all building a context layer that makes your AI smarter.",
+      title: "Your Context at a Glance",
+      description: "Dytto builds a living profile of who you are — your stories, events, and insights all flow from the personal context it collects every day.",
       image: "/IMG_4026.PNG"
     },
     {
       icon: MessageSquare,
-      title: "Add Context with Simple Comments",
-      description: "Enhance your stories by adding quick notes and context to your daily entries. The more Dytto understands you, the more personalized everything becomes.",
+      title: "Add What Matters to You",
+      description: "Drop in quick notes and reactions. Everything you add enriches your context — making stories, recommendations, and AI interactions more personal.",
       image: "/IMG_4024.PNG"
     },
     {
       icon: BookOpen,
       title: "Beautifully Crafted Stories",
-      description: "Every evening, discover a thoughtfully written story about your day. Each narrative captures your experiences — and teaches your AI who you really are.",
+      description: "Your personal context turns into a thoughtfully written story every day. It's one of the most visible ways dytto shows you what it knows.",
       image: "/IMG_4021.PNG"
     },
     {
       icon: Sparkles,
       title: "Personalized Recommendations",
-      description: "Get intelligent suggestions for places, activities, and experiences based on your real patterns and preferences — not generic algorithms.",
+      description: "Suggestions powered by your actual context — places you'd love, things you'd enjoy — because dytto knows your real patterns and preferences.",
       image: "/IMG_4025.PNG"
     },
     {
       icon: Brain,
       title: "Context-Aware AI Chat",
-      description: "Chat with an AI that truly knows you. Ask about your past, get personalized advice — no more explaining yourself every time you talk to AI.",
+      description: "Chat with an AI that has your full context. No more explaining yourself — just ask, and get answers that already know who you are.",
       image: "/IMG_3843.PNG"
     }
   ];
@@ -131,7 +131,7 @@ const WaitlistLandingPage = () => {
                 margin: '0 auto',
               }}
             >
-              A journal that captures your life — and makes every AI you use truly personal
+              Your personal context powers stories, insights, and AI that actually knows you
             </p>
           </motion.div>
 
