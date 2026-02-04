@@ -8,42 +8,42 @@ const features = [
   {
     icon: Camera,
     title: 'Automatic Context Collection',
-    description: 'Quietly captures location, calendar, health, weather, and activity data — building a rich personal context layer in the background.',
+    description: 'Seamlessly captures your photos, locations, weather, and activities throughout the day — building a rich personal context in the background.',
     color: '#3B82F6',
     bgColor: 'rgba(59, 130, 246, 0.1)'
   },
   {
     icon: BookOpen,
-    title: 'AI That Actually Knows You',
-    description: 'Any AI that plugs into Dytto gets instant personal context. Three words in, perfect personalized answer out.',
+    title: 'AI-Powered Stories',
+    description: 'Transforms your daily experiences into meaningful, personalized narratives — every story also builds context that makes your AI smarter over time.',
     color: '#8B5CF6',
     bgColor: 'rgba(139, 92, 246, 0.1)'
   },
   {
     icon: Newspaper,
-    title: 'Personalized Content Feed',
-    description: 'Content and recommendations that reflect who you actually are — powered by your real context, not generic algorithms.',
+    title: 'Personalized News Feed',
+    description: 'Curated content that adapts to your real interests and preferences — powered by your actual context, not generic algorithms.',
     color: '#EF4444',
     bgColor: 'rgba(239, 68, 68, 0.1)'
   },
   {
     icon: Brain,
     title: 'Smart Insights',
-    description: 'Surface patterns across your habits, routines, and preferences that help AI serve you better over time.',
+    description: 'Discover patterns about your lifestyle and preferences. The more dytto learns, the more personalized every AI interaction becomes.',
     color: '#F59E0B',
     bgColor: 'rgba(245, 158, 11, 0.1)'
   },
   {
     icon: MapPin,
     title: 'Location Intelligence',
-    description: 'Context-aware understanding of where you are and where you go — so AI recommendations are always relevant.',
+    description: 'Context-aware recommendations based on where you are and where you go — so your AI always knows what\'s relevant.',
     color: '#10B981',
     bgColor: 'rgba(16, 185, 129, 0.1)'
   },
   {
     icon: Clock,
-    title: 'Bidirectional Context',
-    description: 'AI agents don\'t just read your context — they write back what they learn. Your personal context grows smarter with every interaction.',
+    title: 'Timeline View',
+    description: 'A beautiful chronological view of your memories and experiences — and a growing context layer that any AI can tap into to understand you.',
     color: '#6366F1',
     bgColor: 'rgba(99, 102, 241, 0.1)'
   }
@@ -100,8 +100,8 @@ const AppFeatures = () => {
               margin: '0 auto',
             }}
           >
-            Dytto builds a personal context layer that makes every AI you use 
-            smarter, more personal, and more helpful — without you lifting a finger.
+            Capture your daily life effortlessly. Get beautiful stories and insights. 
+            And behind the scenes, build a personal context layer that makes every AI you use smarter.
           </p>
         </motion.div>
 

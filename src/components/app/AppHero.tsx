@@ -54,7 +54,7 @@ const AppHero = () => {
                 fontWeight: theme.typography.fontWeight.medium 
               }}
             >
-              Personal Context for AI
+              AI-Powered Journal
             </span>
           </div>
         </motion.div>
@@ -71,7 +71,7 @@ const AppHero = () => {
             marginBottom: theme.semanticSpacing.lg,
           }}
         >
-          AI that knows you like your{' '}
+          Your story,{' '}
           <motion.span 
             key={`gradient-${theme.mode}`}
             initial={{ opacity: 0 }}
@@ -86,9 +86,9 @@ const AppHero = () => {
               display: 'inline-block',
             }}
           >
-            best friend
+            beautifully
           </motion.span>{' '}
-          does
+          told
         </motion.h1>
 
         <motion.p
@@ -104,9 +104,9 @@ const AppHero = () => {
             marginBottom: theme.semanticSpacing.xl,
           }}
         >
-          dytto quietly learns your context — location, calendar, health, 
-          preferences — and makes any AI you use instantly personal. 
-          No more explaining yourself every time.
+          dytto captures your daily moments and transforms them into 
+          beautiful, personalized stories — while building a personal context layer 
+          that makes every AI you use smarter.
         </motion.p>
 
         <motion.div

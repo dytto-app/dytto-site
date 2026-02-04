@@ -159,7 +159,7 @@ const EmailCapture: React.FC<EmailCaptureProps> = ({
             lineHeight: '1.1',
           }}
         >
-          Make AI know you like your{' '}
+          Your journal. Your context. Your{' '}
           <span 
             style={{
               background: `linear-gradient(135deg, ${theme.colors.primary}, ${theme.colors.accent})`,
@@ -168,7 +168,7 @@ const EmailCapture: React.FC<EmailCaptureProps> = ({
               backgroundClip: 'text',
             }}
           >
-            best friend
+            AI, personalized
           </span>
         </h2>
         <p 
