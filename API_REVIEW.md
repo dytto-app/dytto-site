@@ -1,8 +1,14 @@
 # Dytto API Documentation Review
-**Last Updated:** 2026-02-05
+**Last Updated:** 2026-02-06
 **Reviewer:** Maya
 
 ## ✅ Updates Made This Cycle
+
+### 3. Added API Key Management Endpoints
+New API endpoints for managing user API keys:
+- `/api/keys` (POST) - Create a new API key with specified scopes and optional expiration.
+- `/api/keys/{id}` (DELETE) - Revoke an existing API key.
+- Authentication uses User JWT.
 
 ### 1. Created `src/components/api/APIDocumentation.tsx`
 New comprehensive API reference component with:
@@ -47,6 +53,13 @@ Fixed code examples:
 | `/api/agent/social` | GET | Service Key | ⚠️ Exists, not documented |
 | `/api/agent/places` | GET | Service Key | ⚠️ Exists, not documented |
 | `/api/agent/messages` | GET | Service Key | ⚠️ Exists, not documented |
+
+### API Key Management API — Manage API Keys for Third-Party Agents
+
+| Endpoint | Method | Auth | Status |
+|----------|--------|------|--------|
+| `/api/keys` | POST | User JWT | ✅ Documented (NEW) |
+| `/api/keys/{id}` | DELETE | User JWT | ✅ Documented (NEW) |
 
 ### Context API — User-facing context endpoints
 
@@ -96,6 +109,11 @@ import APIDocumentation from '../components/api/APIDocumentation';
 
 - `src/components/api/APIDocumentation.tsx` — NEW
 - `src/components/APIShowcase.tsx` — UPDATED
+- `src/components/AuthProvider.tsx` — NEW
+- `src/pages/ApiKeysPage.tsx` — NEW
+- `src/pages/LoginPage.tsx` — NEW
+- `src/utils/supabaseAuth.ts` — NEW
+- `src/App.tsx` — UPDATED
 - `API_REVIEW.md` — UPDATED
 
 ---
