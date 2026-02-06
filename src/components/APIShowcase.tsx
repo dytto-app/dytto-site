@@ -5,93 +5,98 @@ import { useTheme } from './ThemeProvider';
 import { useThemeStyles } from '../hooks/useThemeStyles';
 
 const codeExamples = {
-  simulation: `// Generate simulation agents
-const response = await fetch('/v1/simulation-contexts/request', {
+  simulation: `// Generate anonymized user personas for research
+// Auth: OAuth 2.0 with scope "simulation:generate_profiles"
+const response = await fetch('https://api.dytto.app/v1/simulation-contexts/request', {
   method: 'POST',
   headers: {
-    'Authorization': 'Bearer YOUR_API_KEY',
+    'Authorization': 'Bearer YOUR_OAUTH_ACCESS_TOKEN',
     'Content-Type': 'application/json'
   },
   body: JSON.stringify({
-    experiment_id: "social_study_2024",
-    num_agents_requested: 100,
+    experiment_id: "user_research_2026",
+    num_agents_requested: 50,
     anonymization_level: "high",
     profile_criteria: [{
       count: 50,
       demographics_desired: {
-        age_group: ["25-34"],
-        education_level: ["university"]
+        age_group: ["25-34", "35-44"],
+        location_type: ["urban"]
       }
     }],
     requested_profile_fields: {
-      dytto_standard_demographics: {
-        age: true,
-        education_level_derived: true
-      },
+      dytto_standard_demographics: { age: true, education_level_derived: true },
+      dytto_standard_narrative_summary: { include: true, length: "medium" },
       custom_fields: [{
         field_name: "tech_adoption_score",
-        description_for_llm: "Rate user's likelihood to adopt new technology on scale 1-10",
+        description_for_llm: "Rate user's technology adoption tendency 1-10",
         desired_format: "integer"
       }]
     }
   })
 });
 
-const { generated_agent_profiles } = await response.json();`,
+const { generated_agent_profiles, status } = await response.json();`,
 
-  interaction: `// Interact with a persona
-const response = await fetch('/v1/personas/{persona_id}/interact', {
+  interaction: `// Make Dytto respond AS a user persona
+// Auth: User JWT (user must consent to your app)
+const response = await fetch('https://api.dytto.app/v1/personas/USER_ID/interact', {
   method: 'POST',
   headers: {
-    'Authorization': 'Bearer YOUR_API_KEY',
+    'Authorization': 'Bearer USER_JWT_TOKEN',
     'Content-Type': 'application/json'
   },
   body: JSON.stringify({
     prompt: {
-      type: "structured_task",
-      scenario: "You're considering a new smartphone purchase",
-      instruction: "Rate your interest in the following features"
+      type: "freeform_chat",
+      instruction: "What restaurants do you like?",
+      scenario: "An AI assistant is helping find dinner options"
     },
     output_directives: {
-      format: "json_object",
-      json_schema_inline: {
-        type: "object",
-        properties: {
-          camera_quality: { type: "number", minimum: 1, maximum: 10 },
-          battery_life: { type: "number", minimum: 1, maximum: 10 },
-          price_sensitivity: { type: "number", minimum: 1, maximum: 10 }
-        }
-      },
-      include_rationale: true
-    }
+      format: "text",
+      include_rationale: false
+    },
+    session_id: "optional-for-multi-turn",
+    save_history: true
   })
 });
 
-const { parsed_response, rationale } = await response.json();`,
+const { parsed_response, session_id, dytto_metadata } = await response.json();
+// Response is grounded in the user's real context, preferences, and history`,
 
-  context: `// Query live user context
-const response = await fetch('/v1/personas/{user_id}/query-context', {
+  context: `// Query specific aspects of user context
+// Auth: User JWT (user must consent to your app)
+const response = await fetch('https://api.dytto.app/v1/personas/USER_ID/query-context', {
   method: 'POST',
   headers: {
-    'Authorization': 'Bearer YOUR_API_KEY',
+    'Authorization': 'Bearer USER_JWT_TOKEN',
     'Content-Type': 'application/json'
   },
   body: JSON.stringify({
     context_query: {
-      requested_elements: [{
-        element_type: "answer_specific_question",
-        question_for_llm: "What are the user's main life goals and priorities?",
-        desired_format: "string"
-      }, {
-        element_type: "derived_mood_over_time",
-        period: "last_30_days"
-      }],
+      requested_elements: [
+        {
+          element_type: "answer_specific_question",
+          question_for_llm: "What are the user's main life goals?",
+          desired_format: "string"
+        },
+        {
+          element_type: "derived_mood_over_time",
+          period: "last_30_days"
+        },
+        {
+          element_type: "custom_inference",
+          field_name: "work_schedule",
+          description_for_llm: "Describe user's typical work schedule",
+          desired_format: "string"
+        }
+      ],
       purpose_of_query: "Personalized coaching recommendations"
     }
   })
 });
 
-const { retrieved_context_elements } = await response.json();`
+const { retrieved_context_elements, access_metadata } = await response.json();`
 };
 
 const APIShowcase = () => {
