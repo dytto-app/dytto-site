@@ -17,6 +17,7 @@ const Navbar = () => {
   const isHomePage = location.pathname === '/';
   const isBlogPage = location.pathname.startsWith('/blog');
   const isDemoPage = location.pathname === '/demo';
+  const isLoginPage = location.pathname === '/login';
 
   // Dynamic navigation items based on current page - only functional sections
   const getNavItems = () => {
@@ -235,6 +236,26 @@ const Navbar = () => {
               }}
             >
               Feedback
+            </Link>
+
+            <Link
+              to="/login"
+              style={{
+                color: isLoginPage ? theme.colors.primary : theme.colors.textSecondary,
+                fontSize: theme.typography.fontSize.sm,
+                transition: theme.animations.transition.normal,
+                textDecoration: 'none',
+                fontWeight: theme.typography.fontWeight.medium,
+                whiteSpace: 'nowrap',
+              }}
+              onMouseEnter={(e) => {
+                (e.target as HTMLAnchorElement).style.color = theme.colors.primary;
+              }}
+              onMouseLeave={(e) => {
+                (e.target as HTMLAnchorElement).style.color = isLoginPage ? theme.colors.primary : theme.colors.textSecondary;
+              }}
+            >
+              Login
             </Link>
 
           </div>
@@ -525,6 +546,29 @@ const Navbar = () => {
                     }}
                   >
                     Feedback
+                  </Link>
+                </motion.div>
+
+                <motion.div
+                  initial={{ opacity: 0, x: -20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: (navItems.length + 5) * 0.1 }}
+                >
+                  <Link
+                    to="/login"
+                    onClick={() => setIsOpen(false)}
+                    style={{
+                      display: 'block',
+                      color: isLoginPage ? theme.colors.primary : theme.colors.textSecondary,
+                      fontSize: theme.typography.fontSize.lg,
+                      fontWeight: theme.typography.fontWeight.medium,
+                      padding: theme.semanticSpacing.md,
+                      borderRadius: '0.75rem',
+                      textDecoration: 'none',
+                      transition: theme.animations.transition.normal,
+                    }}
+                  >
+                    Login
                   </Link>
                 </motion.div>
 
