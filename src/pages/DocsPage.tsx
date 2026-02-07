@@ -1,10 +1,10 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useParams, useNavigate, useLocation } from 'react-router-dom';
 import { 
   Book, Key, Shield, Zap, Server, AlertTriangle, Gauge, 
   ChevronDown, ChevronRight, Copy, Check, ExternalLink,
-  Play, Code, Terminal, Menu, X
+  Code, Terminal, Menu, X, FileText, Cpu, ArrowRight
 } from 'lucide-react';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
@@ -404,7 +404,7 @@ interface CodeBlockProps {
   title?: string;
 }
 
-const CodeBlock: React.FC<CodeBlockProps> = ({ code, language = 'javascript', title }) => {
+const CodeBlock: React.FC<CodeBlockProps> = ({ code, title }) => {
   const [copied, setCopied] = useState(false);
   const { theme } = useTheme();
 
@@ -415,41 +415,40 @@ const CodeBlock: React.FC<CodeBlockProps> = ({ code, language = 'javascript', ti
   };
 
   return (
-    <div style={{ borderRadius: '0.75rem', overflow: 'hidden', marginBottom: '1rem' }}>
+    <div style={{ borderRadius: '0.75rem', overflow: 'hidden', marginBottom: 'clamp(0.75rem, 3vw, 1rem)' }}>
       <div 
-        className="flex items-center justify-between px-4 py-2"
+        className="flex items-center justify-between px-3 sm:px-4 py-2"
         style={{ backgroundColor: '#0d1117', borderBottom: '1px solid #21262d' }}
       >
-        <span style={{ color: '#8b949e', fontSize: '0.75rem' }}>{title || language}</span>
-        <button
+        <span style={{ color: '#8b949e', fontSize: 'clamp(0.625rem, 2.5vw, 0.75rem)' }}>{title || 'javascript'}</span>
+        <motion.button
+          whileHover={{ scale: 1.05 }}
+          whileTap={{ scale: 0.95 }}
           onClick={copyToClipboard}
           className="flex items-center gap-1"
           style={{ 
-            color: '#8b949e', 
-            fontSize: '0.75rem', 
+            color: copied ? '#7ee787' : '#8b949e', 
+            fontSize: 'clamp(0.625rem, 2.5vw, 0.75rem)', 
             background: 'none', 
             border: 'none', 
             cursor: 'pointer',
-            padding: '0.25rem 0.5rem',
+            padding: '0.375rem 0.5rem',
             borderRadius: '0.25rem',
-            transition: 'all 0.2s'
-          }}
-          onMouseEnter={(e) => {
-            (e.target as HTMLButtonElement).style.backgroundColor = '#21262d';
-          }}
-          onMouseLeave={(e) => {
-            (e.target as HTMLButtonElement).style.backgroundColor = 'transparent';
+            transition: 'all 0.2s',
+            minHeight: '32px',
+            display: 'flex',
+            alignItems: 'center',
           }}
         >
           {copied ? <Check size={14} /> : <Copy size={14} />}
-          {copied ? 'Copied!' : 'Copy'}
-        </button>
+          <span className="hidden sm:inline">{copied ? 'Copied!' : 'Copy'}</span>
+        </motion.button>
       </div>
       <pre style={{
-        padding: '1rem',
+        padding: 'clamp(0.75rem, 3vw, 1rem)',
         margin: 0,
         overflow: 'auto',
-        fontSize: '0.8rem',
+        fontSize: 'clamp(0.7rem, 2.5vw, 0.8rem)',
         lineHeight: 1.6,
         color: '#c9d1d9',
         fontFamily: 'ui-monospace, SFMono-Regular, "SF Mono", Menlo, monospace',
@@ -466,18 +465,18 @@ const CodeBlock: React.FC<CodeBlockProps> = ({ code, language = 'javascript', ti
 // ============================================================
 const ResponseBlock: React.FC<{ response: string }> = ({ response }) => {
   return (
-    <div style={{ borderRadius: '0.75rem', overflow: 'hidden', marginBottom: '1rem' }}>
+    <div style={{ borderRadius: '0.75rem', overflow: 'hidden', marginBottom: 'clamp(0.75rem, 3vw, 1rem)' }}>
       <div 
-        className="px-4 py-2"
+        className="px-3 sm:px-4 py-2"
         style={{ backgroundColor: '#161b22', borderBottom: '1px solid #21262d' }}
       >
-        <span style={{ color: '#8b949e', fontSize: '0.75rem' }}>Response</span>
+        <span style={{ color: '#8b949e', fontSize: 'clamp(0.625rem, 2.5vw, 0.75rem)' }}>Response</span>
       </div>
       <pre style={{
-        padding: '1rem',
+        padding: 'clamp(0.75rem, 3vw, 1rem)',
         margin: 0,
         overflow: 'auto',
-        fontSize: '0.8rem',
+        fontSize: 'clamp(0.7rem, 2.5vw, 0.8rem)',
         lineHeight: 1.6,
         color: '#7ee787',
         fontFamily: 'ui-monospace, SFMono-Regular, "SF Mono", Menlo, monospace',
@@ -517,22 +516,32 @@ const EndpointCard: React.FC<EndpointCardProps> = ({ endpoint }) => {
       style={{
         ...styles.glass.light,
         border: `1px solid ${theme.colors.border}`,
-        borderRadius: '1rem',
+        borderRadius: 'clamp(0.75rem, 3vw, 1rem)',
         overflow: 'hidden',
-        marginBottom: '2rem',
+        marginBottom: 'clamp(1.5rem, 4vw, 2rem)',
       }}
     >
       {/* Header */}
       <div style={{ 
-        padding: theme.semanticSpacing.lg, 
+        padding: 'clamp(1rem, 4vw, 1.5rem)', 
         borderBottom: `1px solid ${theme.colors.border}` 
       }}>
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-          <div>
-            <h3 style={{ ...styles.typography.h4, color: theme.colors.text, marginBottom: '0.5rem' }}>
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-4">
+          <div className="min-w-0">
+            <h3 style={{ 
+              fontSize: 'clamp(1rem, 4vw, 1.25rem)',
+              fontWeight: theme.typography.fontWeight.semibold,
+              color: theme.colors.text, 
+              marginBottom: 'clamp(0.25rem, 1vw, 0.5rem)',
+              lineHeight: 1.3,
+            }}>
               {endpoint.title}
             </h3>
-            <p style={{ ...styles.typography.body, color: theme.colors.textSecondary }}>
+            <p style={{ 
+              fontSize: 'clamp(0.8rem, 3vw, 0.9rem)',
+              color: theme.colors.textSecondary,
+              lineHeight: 1.5,
+            }}>
               {endpoint.description}
             </p>
           </div>
@@ -542,7 +551,7 @@ const EndpointCard: React.FC<EndpointCardProps> = ({ endpoint }) => {
               backgroundColor: methodColors[endpoint.method] || theme.colors.primary,
               color: '#0d1117',
               borderRadius: '0.25rem',
-              fontSize: theme.typography.fontSize.sm,
+              fontSize: 'clamp(0.7rem, 2.5vw, 0.8rem)',
               fontWeight: 600,
               fontFamily: 'monospace'
             }}>
@@ -552,29 +561,30 @@ const EndpointCard: React.FC<EndpointCardProps> = ({ endpoint }) => {
         </div>
         
         <div style={{ 
-          marginTop: '1rem',
-          padding: '0.75rem 1rem',
+          marginTop: 'clamp(0.75rem, 3vw, 1rem)',
+          padding: 'clamp(0.5rem, 2vw, 0.75rem) clamp(0.75rem, 3vw, 1rem)',
           backgroundColor: theme.colors.surface,
           borderRadius: '0.5rem',
           fontFamily: 'monospace',
-          fontSize: theme.typography.fontSize.sm,
+          fontSize: 'clamp(0.7rem, 2.5vw, 0.85rem)',
           color: theme.colors.primary,
-          overflowX: 'auto'
+          overflowX: 'auto',
+          whiteSpace: 'nowrap',
         }}>
           {endpoint.path}
         </div>
 
-        <div className="flex flex-wrap gap-4 mt-4">
-          <span style={{ fontSize: theme.typography.fontSize.xs, color: theme.colors.textSecondary }}>
+        <div className="flex flex-wrap gap-3 sm:gap-4 mt-3 sm:mt-4">
+          <span style={{ fontSize: 'clamp(0.65rem, 2.5vw, 0.75rem)', color: theme.colors.textSecondary }}>
             Auth: <strong style={{ color: theme.colors.text }}>{endpoint.auth}</strong>
           </span>
           {endpoint.rateLimit && (
-            <span style={{ fontSize: theme.typography.fontSize.xs, color: theme.colors.textSecondary }}>
+            <span style={{ fontSize: 'clamp(0.65rem, 2.5vw, 0.75rem)', color: theme.colors.textSecondary }}>
               Rate limit: <strong style={{ color: theme.colors.text }}>{endpoint.rateLimit}</strong>
             </span>
           )}
           {endpoint.scope && (
-            <span style={{ fontSize: theme.typography.fontSize.xs, color: theme.colors.textSecondary }}>
+            <span style={{ fontSize: 'clamp(0.65rem, 2.5vw, 0.75rem)', color: theme.colors.textSecondary }}>
               Scope: <strong style={{ color: theme.colors.text }}>{endpoint.scope}</strong>
             </span>
           )}
@@ -582,7 +592,7 @@ const EndpointCard: React.FC<EndpointCardProps> = ({ endpoint }) => {
       </div>
 
       {/* Code Examples */}
-      <div style={{ padding: theme.semanticSpacing.lg }}>
+      <div style={{ padding: 'clamp(1rem, 4vw, 1.5rem)' }}>
         <CodeBlock code={endpoint.example} title="Request" />
         {endpoint.response && <ResponseBlock response={endpoint.response} />}
       </div>
@@ -616,40 +626,37 @@ const Sidebar: React.FC<SidebarProps> = ({ activeSection, onNavigate, isMobileOp
   };
 
   const sidebarContent = (
-    <div style={{ padding: '1rem' }}>
+    <div style={{ padding: 'clamp(0.75rem, 3vw, 1rem)' }}>
       {sidebarSections.map((section) => (
-        <div key={section.id} style={{ marginBottom: '0.5rem' }}>
-          <button
+        <div key={section.id} style={{ marginBottom: 'clamp(0.25rem, 1vw, 0.5rem)' }}>
+          <motion.button
+            whileHover={{ scale: 1.01 }}
+            whileTap={{ scale: 0.99 }}
             onClick={() => toggleSection(section.id)}
             className="w-full flex items-center justify-between"
             style={{
-              padding: '0.75rem',
+              padding: 'clamp(0.5rem, 2vw, 0.75rem)',
               borderRadius: '0.5rem',
               background: 'none',
               border: 'none',
               cursor: 'pointer',
               color: theme.colors.text,
-              fontSize: theme.typography.fontSize.sm,
+              fontSize: 'clamp(0.8rem, 3vw, 0.9rem)',
               fontWeight: theme.typography.fontWeight.medium,
               transition: 'all 0.2s',
-            }}
-            onMouseEnter={(e) => {
-              (e.currentTarget as HTMLButtonElement).style.backgroundColor = theme.colors.surface;
-            }}
-            onMouseLeave={(e) => {
-              (e.currentTarget as HTMLButtonElement).style.backgroundColor = 'transparent';
+              minHeight: '44px',
             }}
           >
             <div className="flex items-center gap-2">
-              <section.icon size={16} style={{ color: theme.colors.primary }} />
+              <section.icon size={16} style={{ color: theme.colors.primary, flexShrink: 0 }} />
               <span>{section.title}</span>
             </div>
             {expandedSections.includes(section.id) ? (
-              <ChevronDown size={14} style={{ color: theme.colors.textSecondary }} />
+              <ChevronDown size={14} style={{ color: theme.colors.textSecondary, flexShrink: 0 }} />
             ) : (
-              <ChevronRight size={14} style={{ color: theme.colors.textSecondary }} />
+              <ChevronRight size={14} style={{ color: theme.colors.textSecondary, flexShrink: 0 }} />
             )}
-          </button>
+          </motion.button>
           
           <AnimatePresence>
             {expandedSections.includes(section.id) && (
@@ -658,11 +665,12 @@ const Sidebar: React.FC<SidebarProps> = ({ activeSection, onNavigate, isMobileOp
                 animate={{ height: 'auto', opacity: 1 }}
                 exit={{ height: 0, opacity: 0 }}
                 transition={{ duration: 0.2 }}
-                style={{ overflow: 'hidden', paddingLeft: '1.5rem' }}
+                style={{ overflow: 'hidden', paddingLeft: 'clamp(1rem, 4vw, 1.5rem)' }}
               >
                 {section.items.map((item) => (
-                  <button
+                  <motion.button
                     key={item.id}
+                    whileHover={{ x: 2 }}
                     onClick={() => {
                       onNavigate(item.id);
                       onMobileClose();
@@ -670,31 +678,23 @@ const Sidebar: React.FC<SidebarProps> = ({ activeSection, onNavigate, isMobileOp
                     className="w-full text-left"
                     style={{
                       display: 'block',
-                      padding: '0.5rem 0.75rem',
+                      padding: 'clamp(0.375rem, 1.5vw, 0.5rem) clamp(0.5rem, 2vw, 0.75rem)',
                       borderRadius: '0.375rem',
                       background: activeSection === item.id ? theme.colors.surface : 'none',
                       border: 'none',
                       cursor: 'pointer',
                       color: activeSection === item.id ? theme.colors.primary : theme.colors.textSecondary,
-                      fontSize: theme.typography.fontSize.sm,
+                      fontSize: 'clamp(0.75rem, 2.5vw, 0.85rem)',
                       transition: 'all 0.2s',
                       borderLeft: activeSection === item.id 
                         ? `2px solid ${theme.colors.primary}` 
                         : '2px solid transparent',
-                    }}
-                    onMouseEnter={(e) => {
-                      if (activeSection !== item.id) {
-                        (e.currentTarget as HTMLButtonElement).style.color = theme.colors.text;
-                      }
-                    }}
-                    onMouseLeave={(e) => {
-                      if (activeSection !== item.id) {
-                        (e.currentTarget as HTMLButtonElement).style.color = theme.colors.textSecondary;
-                      }
+                      minHeight: '36px',
+                      lineHeight: '1.4',
                     }}
                   >
                     {item.title}
-                  </button>
+                  </motion.button>
                 ))}
               </motion.div>
             )}
@@ -747,18 +747,20 @@ const Sidebar: React.FC<SidebarProps> = ({ activeSection, onNavigate, isMobileOp
                 backgroundColor: theme.colors.background,
                 borderRight: `1px solid ${theme.colors.border}`,
                 overflowY: 'auto',
-                paddingTop: '1rem',
+                paddingTop: 'clamp(0.75rem, 3vw, 1rem)',
               }}
             >
               <div className="flex items-center justify-between px-4 mb-4">
                 <span style={{ 
                   color: theme.colors.text, 
                   fontWeight: theme.typography.fontWeight.semibold,
-                  fontSize: theme.typography.fontSize.lg
+                  fontSize: 'clamp(1rem, 4vw, 1.125rem)'
                 }}>
                   Documentation
                 </span>
-                <button
+                <motion.button
+                  whileHover={{ scale: 1.1 }}
+                  whileTap={{ scale: 0.9 }}
                   onClick={onMobileClose}
                   style={{
                     background: 'none',
@@ -766,10 +768,15 @@ const Sidebar: React.FC<SidebarProps> = ({ activeSection, onNavigate, isMobileOp
                     cursor: 'pointer',
                     color: theme.colors.textSecondary,
                     padding: '0.5rem',
+                    minHeight: '44px',
+                    minWidth: '44px',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
                   }}
                 >
                   <X size={20} />
-                </button>
+                </motion.button>
               </div>
               {sidebarContent}
             </motion.aside>
@@ -799,15 +806,25 @@ const GettingStartedSection: React.FC = () => {
         style={{
           ...styles.glass.light,
           border: `1px solid ${theme.colors.border}`,
-          borderRadius: '1rem',
-          padding: theme.semanticSpacing.xl,
-          marginBottom: '2rem',
+          borderRadius: 'clamp(0.75rem, 3vw, 1rem)',
+          padding: 'clamp(1.25rem, 5vw, 2rem)',
+          marginBottom: 'clamp(1.5rem, 4vw, 2rem)',
         }}
       >
-        <h2 style={{ ...styles.typography.h2, color: theme.colors.text, marginBottom: '1rem' }}>
+        <h2 style={{ 
+          fontSize: 'clamp(1.25rem, 5vw, 1.75rem)',
+          fontWeight: theme.typography.fontWeight.bold,
+          color: theme.colors.text, 
+          marginBottom: 'clamp(0.75rem, 3vw, 1rem)',
+          lineHeight: 1.3,
+        }}>
           What is Dytto?
         </h2>
-        <p style={{ ...styles.typography.bodyLarge, color: theme.colors.textSecondary, lineHeight: 1.8 }}>
+        <p style={{ 
+          fontSize: 'clamp(0.9rem, 3.5vw, 1.1rem)',
+          color: theme.colors.textSecondary, 
+          lineHeight: 1.8 
+        }}>
           Dytto is a personal context API that gives AI agents memory of the humans they serve. 
           Instead of every app asking the same onboarding questions, Dytto maintains a living, 
           evolving understanding of each user — their preferences, history, goals, and context — 
@@ -826,15 +843,26 @@ const GettingStartedSection: React.FC = () => {
         style={{
           ...styles.glass.light,
           border: `1px solid ${theme.colors.border}`,
-          borderRadius: '1rem',
-          padding: theme.semanticSpacing.xl,
-          marginBottom: '2rem',
+          borderRadius: 'clamp(0.75rem, 3vw, 1rem)',
+          padding: 'clamp(1.25rem, 5vw, 2rem)',
+          marginBottom: 'clamp(1.5rem, 4vw, 2rem)',
         }}
       >
-        <h2 style={{ ...styles.typography.h2, color: theme.colors.text, marginBottom: '1rem' }}>
+        <h2 style={{ 
+          fontSize: 'clamp(1.25rem, 5vw, 1.75rem)',
+          fontWeight: theme.typography.fontWeight.bold,
+          color: theme.colors.text, 
+          marginBottom: 'clamp(0.75rem, 3vw, 1rem)',
+          lineHeight: 1.3,
+        }}>
           Quick Start
         </h2>
-        <p style={{ ...styles.typography.body, color: theme.colors.textSecondary, marginBottom: '1.5rem' }}>
+        <p style={{ 
+          fontSize: 'clamp(0.85rem, 3vw, 1rem)',
+          color: theme.colors.textSecondary, 
+          marginBottom: 'clamp(1rem, 4vw, 1.5rem)',
+          lineHeight: 1.6,
+        }}>
           Get started with Dytto in under 5 minutes. Here's a simple example using the Agent API:
         </p>
         
@@ -861,8 +889,10 @@ const aiResponse = await yourLLM.chat({
           title="Quick Start Example"
         />
 
-        <div className="flex flex-wrap gap-4 mt-6">
-          <a
+        <div className="flex flex-wrap gap-3 sm:gap-4 mt-6">
+          <motion.a
+            whileHover={{ scale: 1.02 }}
+            whileTap={{ scale: 0.98 }}
             href="#auth-overview"
             onClick={(e) => {
               e.preventDefault();
@@ -871,21 +901,25 @@ const aiResponse = await yourLLM.chat({
             style={{
               display: 'inline-flex',
               alignItems: 'center',
-              gap: '0.5rem',
-              padding: '0.75rem 1.5rem',
+              gap: 'clamp(0.375rem, 1.5vw, 0.5rem)',
+              padding: 'clamp(0.625rem, 2.5vw, 0.75rem) clamp(1rem, 4vw, 1.5rem)',
               backgroundColor: theme.colors.primary,
               color: theme.colors.background,
               borderRadius: '0.5rem',
               textDecoration: 'none',
-              fontSize: theme.typography.fontSize.sm,
+              fontSize: 'clamp(0.8rem, 3vw, 0.9rem)',
               fontWeight: theme.typography.fontWeight.medium,
+              minHeight: '44px',
+              boxShadow: theme.shadows.brand,
             }}
           >
             <Key size={16} />
             Get API Keys
-          </a>
-          <a
-            href="#platform-api"
+          </motion.a>
+          <motion.a
+            whileHover={{ scale: 1.02 }}
+            whileTap={{ scale: 0.98 }}
+            href="#simulation"
             onClick={(e) => {
               e.preventDefault();
               document.getElementById('simulation')?.scrollIntoView({ behavior: 'smooth' });
@@ -893,20 +927,21 @@ const aiResponse = await yourLLM.chat({
             style={{
               display: 'inline-flex',
               alignItems: 'center',
-              gap: '0.5rem',
-              padding: '0.75rem 1.5rem',
+              gap: 'clamp(0.375rem, 1.5vw, 0.5rem)',
+              padding: 'clamp(0.625rem, 2.5vw, 0.75rem) clamp(1rem, 4vw, 1.5rem)',
               backgroundColor: theme.colors.surface,
               color: theme.colors.text,
               border: `1px solid ${theme.colors.border}`,
               borderRadius: '0.5rem',
               textDecoration: 'none',
-              fontSize: theme.typography.fontSize.sm,
+              fontSize: 'clamp(0.8rem, 3vw, 0.9rem)',
               fontWeight: theme.typography.fontWeight.medium,
+              minHeight: '44px',
             }}
           >
             <Code size={16} />
             View API Reference
-          </a>
+          </motion.a>
         </div>
       </motion.section>
 
@@ -920,25 +955,37 @@ const aiResponse = await yourLLM.chat({
         style={{
           ...styles.glass.light,
           border: `1px solid ${theme.colors.border}`,
-          borderRadius: '1rem',
-          padding: theme.semanticSpacing.xl,
-          marginBottom: '2rem',
+          borderRadius: 'clamp(0.75rem, 3vw, 1rem)',
+          padding: 'clamp(1.25rem, 5vw, 2rem)',
+          marginBottom: 'clamp(1.5rem, 4vw, 2rem)',
         }}
       >
-        <h2 style={{ ...styles.typography.h2, color: theme.colors.text, marginBottom: '1rem' }}>
+        <h2 style={{ 
+          fontSize: 'clamp(1.25rem, 5vw, 1.75rem)',
+          fontWeight: theme.typography.fontWeight.bold,
+          color: theme.colors.text, 
+          marginBottom: 'clamp(0.75rem, 3vw, 1rem)',
+          lineHeight: 1.3,
+        }}>
           Base URL
         </h2>
-        <p style={{ ...styles.typography.body, color: theme.colors.textSecondary, marginBottom: '1rem' }}>
+        <p style={{ 
+          fontSize: 'clamp(0.85rem, 3vw, 1rem)',
+          color: theme.colors.textSecondary, 
+          marginBottom: 'clamp(0.75rem, 3vw, 1rem)',
+          lineHeight: 1.6,
+        }}>
           All API requests should be made to:
         </p>
         <div style={{
-          padding: '1rem 1.5rem',
+          padding: 'clamp(0.75rem, 3vw, 1rem) clamp(1rem, 4vw, 1.5rem)',
           backgroundColor: theme.colors.surface,
           borderRadius: '0.5rem',
           fontFamily: 'monospace',
-          fontSize: theme.typography.fontSize.lg,
+          fontSize: 'clamp(0.9rem, 3.5vw, 1.1rem)',
           color: theme.colors.primary,
           border: `1px solid ${theme.colors.border}`,
+          overflowX: 'auto',
         }}>
           https://api.dytto.app
         </div>
@@ -956,6 +1003,8 @@ const AuthenticationSection: React.FC = () => {
       id: 'oauth',
       name: 'OAuth 2.0 Client Credentials',
       icon: Shield,
+      color: '#3B82F6',
+      bgColor: 'rgba(59, 130, 246, 0.1)',
       description: 'For third-party platform integrations that need to access simulation APIs',
       usedFor: ['Simulation API', 'Research platforms', 'Enterprise integrations'],
       credentials: 'Client ID and Client Secret',
@@ -988,6 +1037,8 @@ const response = await fetch('https://api.dytto.app/v1/simulation-contexts/reque
       id: 'jwt',
       name: 'User JWT',
       icon: Key,
+      color: '#F59E0B',
+      bgColor: 'rgba(245, 158, 11, 0.1)',
       description: 'For user-consented context access where the user grants your app permission',
       usedFor: ['Persona Interaction API', 'Query Context API', 'User-facing applications'],
       credentials: 'JWT token from user authentication',
@@ -1013,6 +1064,8 @@ const response = await fetch('https://api.dytto.app/v1/personas/USER_ID/interact
       id: 'service-keys',
       name: 'Agent Service Key',
       icon: Zap,
+      color: '#10B981',
+      bgColor: 'rgba(16, 185, 129, 0.1)',
       description: 'For AI agents in the Dytto ecosystem that need persistent context access',
       usedFor: ['Agent Context API', 'Event Reporting', 'Push Notifications', 'Story Access'],
       credentials: 'API Key (starts with dyt_)',
@@ -1040,91 +1093,128 @@ const { content, user_id } = await response.json();`
         style={{
           ...styles.glass.light,
           border: `1px solid ${theme.colors.border}`,
-          borderRadius: '1rem',
-          padding: theme.semanticSpacing.xl,
-          marginBottom: '2rem',
+          borderRadius: 'clamp(0.75rem, 3vw, 1rem)',
+          padding: 'clamp(1.25rem, 5vw, 2rem)',
+          marginBottom: 'clamp(1.5rem, 4vw, 2rem)',
         }}
       >
-        <h2 style={{ ...styles.typography.h2, color: theme.colors.text, marginBottom: '1rem' }}>
+        <h2 style={{ 
+          fontSize: 'clamp(1.25rem, 5vw, 1.75rem)',
+          fontWeight: theme.typography.fontWeight.bold,
+          color: theme.colors.text, 
+          marginBottom: 'clamp(0.75rem, 3vw, 1rem)',
+          lineHeight: 1.3,
+        }}>
           Authentication Overview
         </h2>
-        <p style={{ ...styles.typography.body, color: theme.colors.textSecondary, marginBottom: '1.5rem' }}>
+        <p style={{ 
+          fontSize: 'clamp(0.85rem, 3vw, 1rem)',
+          color: theme.colors.textSecondary, 
+          marginBottom: 'clamp(1rem, 4vw, 1.5rem)',
+          lineHeight: 1.6,
+        }}>
           Dytto uses three authentication methods depending on your use case. All methods use 
           bearer tokens in the Authorization header.
         </p>
         
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          {authMethods.map((method) => (
-            <div
+        {/* Stats-style cards like FeedbackPage */}
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4">
+          {authMethods.map((method, index) => (
+            <motion.div
               key={method.id}
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.4, delay: index * 0.1 }}
+              whileHover={{ y: -2 }}
               style={{
-                padding: '1.25rem',
-                backgroundColor: theme.colors.surface,
+                padding: 'clamp(1rem, 4vw, 1.25rem)',
+                backgroundColor: method.bgColor,
                 borderRadius: '0.75rem',
-                border: `1px solid ${theme.colors.border}`,
+                border: `1px solid ${theme.utils.alpha(method.color, 0.3)}`,
+                textAlign: 'center',
               }}
             >
-              <div className="flex items-center gap-2 mb-3">
-                <method.icon size={20} style={{ color: theme.colors.primary }} />
-                <span style={{ 
-                  fontWeight: theme.typography.fontWeight.semibold,
-                  color: theme.colors.text,
-                  fontSize: theme.typography.fontSize.sm
-                }}>
-                  {method.name}
-                </span>
-              </div>
-              <p style={{ 
-                fontSize: theme.typography.fontSize.sm, 
-                color: theme.colors.textSecondary,
-                marginBottom: '0.75rem'
+              <method.icon 
+                style={{ 
+                  color: method.color, 
+                  margin: '0 auto', 
+                  marginBottom: 'clamp(0.5rem, 2vw, 0.75rem)' 
+                }} 
+                size={24} 
+              />
+              <div style={{ 
+                fontSize: 'clamp(0.8rem, 3vw, 0.9rem)', 
+                fontWeight: theme.typography.fontWeight.semibold,
+                color: theme.colors.text, 
+                marginBottom: 'clamp(0.25rem, 1vw, 0.5rem)',
+                lineHeight: 1.3,
               }}>
-                {method.description}
-              </p>
-              <div style={{ fontSize: theme.typography.fontSize.xs, color: theme.colors.textTertiary }}>
-                Used for: {method.usedFor.join(', ')}
+                {method.name}
               </div>
-            </div>
+              <div style={{ 
+                fontSize: 'clamp(0.7rem, 2.5vw, 0.75rem)', 
+                color: theme.colors.textSecondary,
+                lineHeight: 1.4,
+              }}>
+                {method.usedFor[0]}
+              </div>
+            </motion.div>
           ))}
         </div>
       </motion.section>
 
       {/* Individual Auth Methods */}
-      {authMethods.map((method) => (
+      {authMethods.map((method, index) => (
         <motion.section
           key={method.id}
           id={method.id}
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5 }}
+          transition={{ duration: 0.5, delay: index * 0.1 }}
           viewport={{ once: true }}
           style={{
             ...styles.glass.light,
             border: `1px solid ${theme.colors.border}`,
-            borderRadius: '1rem',
-            padding: theme.semanticSpacing.xl,
-            marginBottom: '2rem',
+            borderRadius: 'clamp(0.75rem, 3vw, 1rem)',
+            padding: 'clamp(1.25rem, 5vw, 2rem)',
+            marginBottom: 'clamp(1.5rem, 4vw, 2rem)',
           }}
         >
           <div className="flex items-center gap-3 mb-4">
-            <method.icon size={24} style={{ color: theme.colors.primary }} />
-            <h2 style={{ ...styles.typography.h3, color: theme.colors.text }}>
+            <div style={{
+              padding: '0.5rem',
+              backgroundColor: method.bgColor,
+              borderRadius: '0.5rem',
+            }}>
+              <method.icon size={20} style={{ color: method.color }} />
+            </div>
+            <h2 style={{ 
+              fontSize: 'clamp(1.1rem, 4.5vw, 1.5rem)',
+              fontWeight: theme.typography.fontWeight.semibold,
+              color: theme.colors.text,
+              lineHeight: 1.3,
+            }}>
               {method.name}
             </h2>
           </div>
           
-          <p style={{ ...styles.typography.body, color: theme.colors.textSecondary, marginBottom: '1.5rem' }}>
+          <p style={{ 
+            fontSize: 'clamp(0.85rem, 3vw, 1rem)',
+            color: theme.colors.textSecondary, 
+            marginBottom: 'clamp(1rem, 4vw, 1.5rem)',
+            lineHeight: 1.6,
+          }}>
             {method.description}
           </p>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4 mb-6">
             <div style={{
-              padding: '1rem',
+              padding: 'clamp(0.75rem, 3vw, 1rem)',
               backgroundColor: theme.colors.surface,
               borderRadius: '0.5rem',
             }}>
               <span style={{ 
-                fontSize: theme.typography.fontSize.xs, 
+                fontSize: 'clamp(0.65rem, 2.5vw, 0.75rem)', 
                 color: theme.colors.textTertiary,
                 textTransform: 'uppercase',
                 letterSpacing: '0.05em'
@@ -1134,18 +1224,20 @@ const { content, user_id } = await response.json();`
               <p style={{ 
                 color: theme.colors.text, 
                 fontWeight: theme.typography.fontWeight.medium,
-                marginTop: '0.25rem'
+                marginTop: '0.25rem',
+                fontSize: 'clamp(0.8rem, 3vw, 0.9rem)',
+                lineHeight: 1.4,
               }}>
                 {method.credentials}
               </p>
             </div>
             <div style={{
-              padding: '1rem',
+              padding: 'clamp(0.75rem, 3vw, 1rem)',
               backgroundColor: theme.colors.surface,
               borderRadius: '0.5rem',
             }}>
               <span style={{ 
-                fontSize: theme.typography.fontSize.xs, 
+                fontSize: 'clamp(0.65rem, 2.5vw, 0.75rem)', 
                 color: theme.colors.textTertiary,
                 textTransform: 'uppercase',
                 letterSpacing: '0.05em'
@@ -1155,7 +1247,9 @@ const { content, user_id } = await response.json();`
               <p style={{ 
                 color: theme.colors.text, 
                 fontWeight: theme.typography.fontWeight.medium,
-                marginTop: '0.25rem'
+                marginTop: '0.25rem',
+                fontSize: 'clamp(0.8rem, 3vw, 0.9rem)',
+                lineHeight: 1.4,
               }}>
                 {method.howToGet}
               </p>
@@ -1182,18 +1276,28 @@ const PlatformAPISection: React.FC = () => {
         whileInView={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
         viewport={{ once: true }}
-        style={{ marginBottom: '2rem' }}
+        style={{ marginBottom: 'clamp(1.5rem, 4vw, 2rem)' }}
       >
-        <h2 style={{ ...styles.typography.h2, color: theme.colors.text, marginBottom: '0.5rem' }}>
+        <h2 style={{ 
+          fontSize: 'clamp(1.25rem, 5vw, 1.75rem)',
+          fontWeight: theme.typography.fontWeight.bold,
+          color: theme.colors.text, 
+          marginBottom: 'clamp(0.5rem, 2vw, 0.75rem)',
+          lineHeight: 1.3,
+        }}>
           Platform API
         </h2>
-        <p style={{ ...styles.typography.body, color: theme.colors.textSecondary }}>
+        <p style={{ 
+          fontSize: 'clamp(0.85rem, 3vw, 1rem)',
+          color: theme.colors.textSecondary,
+          lineHeight: 1.6,
+        }}>
           The Platform API (v1) is designed for third-party integrations, research platforms, 
           and applications that need simulation or user-consented context access.
         </p>
       </motion.div>
 
-      {platformEndpoints.map((endpoint) => (
+      {platformEndpoints.map((endpoint, index) => (
         <EndpointCard key={endpoint.id} endpoint={endpoint} />
       ))}
     </div>
@@ -1213,18 +1317,28 @@ const AgentAPISection: React.FC = () => {
         whileInView={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
         viewport={{ once: true }}
-        style={{ marginBottom: '2rem' }}
+        style={{ marginBottom: 'clamp(1.5rem, 4vw, 2rem)' }}
       >
-        <h2 style={{ ...styles.typography.h2, color: theme.colors.text, marginBottom: '0.5rem' }}>
+        <h2 style={{ 
+          fontSize: 'clamp(1.25rem, 5vw, 1.75rem)',
+          fontWeight: theme.typography.fontWeight.bold,
+          color: theme.colors.text, 
+          marginBottom: 'clamp(0.5rem, 2vw, 0.75rem)',
+          lineHeight: 1.3,
+        }}>
           Agent API
         </h2>
-        <p style={{ ...styles.typography.body, color: theme.colors.textSecondary }}>
+        <p style={{ 
+          fontSize: 'clamp(0.85rem, 3vw, 1rem)',
+          color: theme.colors.textSecondary,
+          lineHeight: 1.6,
+        }}>
           The Agent API is for AI agents in the Dytto ecosystem. These endpoints provide 
           full context access, event reporting, and story retrieval capabilities.
         </p>
       </motion.div>
 
-      {agentEndpoints.map((endpoint) => (
+      {agentEndpoints.map((endpoint, index) => (
         <EndpointCard key={endpoint.id} endpoint={endpoint} />
       ))}
     </div>
@@ -1234,6 +1348,13 @@ const AgentAPISection: React.FC = () => {
 const SDKsSection: React.FC = () => {
   const { theme } = useTheme();
   const styles = useThemeStyles();
+
+  const sdks = [
+    { name: 'JavaScript/TypeScript', status: 'Coming Soon', icon: '🟡', color: '#F59E0B' },
+    { name: 'Python', status: 'Coming Soon', icon: '🐍', color: '#3B82F6' },
+    { name: 'Swift (iOS)', status: 'In Development', icon: '🍎', color: '#EF4444' },
+    { name: 'Kotlin (Android)', status: 'Planned', icon: '🤖', color: '#10B981' },
+  ];
 
   return (
     <motion.section
@@ -1245,54 +1366,70 @@ const SDKsSection: React.FC = () => {
       style={{
         ...styles.glass.light,
         border: `1px solid ${theme.colors.border}`,
-        borderRadius: '1rem',
-        padding: theme.semanticSpacing.xl,
-        marginBottom: '2rem',
+        borderRadius: 'clamp(0.75rem, 3vw, 1rem)',
+        padding: 'clamp(1.25rem, 5vw, 2rem)',
+        marginBottom: 'clamp(1.5rem, 4vw, 2rem)',
       }}
     >
-      <h2 style={{ ...styles.typography.h2, color: theme.colors.text, marginBottom: '1rem' }}>
+      <h2 style={{ 
+        fontSize: 'clamp(1.25rem, 5vw, 1.75rem)',
+        fontWeight: theme.typography.fontWeight.bold,
+        color: theme.colors.text, 
+        marginBottom: 'clamp(0.75rem, 3vw, 1rem)',
+        lineHeight: 1.3,
+      }}>
         SDKs & Tools
       </h2>
-      <p style={{ ...styles.typography.body, color: theme.colors.textSecondary, marginBottom: '1.5rem' }}>
+      <p style={{ 
+        fontSize: 'clamp(0.85rem, 3vw, 1rem)',
+        color: theme.colors.textSecondary, 
+        marginBottom: 'clamp(1rem, 4vw, 1.5rem)',
+        lineHeight: 1.6,
+      }}>
         Official SDKs are coming soon. In the meantime, the REST API is simple enough to use 
         directly with fetch or any HTTP client.
       </p>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        {[
-          { name: 'JavaScript/TypeScript', status: 'Coming Soon', icon: '🟡' },
-          { name: 'Python', status: 'Coming Soon', icon: '🐍' },
-          { name: 'Swift (iOS)', status: 'In Development', icon: '🍎' },
-          { name: 'Kotlin (Android)', status: 'Planned', icon: '🤖' },
-        ].map((sdk) => (
-          <div
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
+        {sdks.map((sdk, index) => (
+          <motion.div
             key={sdk.name}
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.4, delay: index * 0.1 }}
+            whileHover={{ y: -2 }}
             style={{
-              padding: '1rem',
+              padding: 'clamp(0.75rem, 3vw, 1rem)',
               backgroundColor: theme.colors.surface,
               borderRadius: '0.75rem',
               border: `1px solid ${theme.colors.border}`,
               display: 'flex',
               justifyContent: 'space-between',
               alignItems: 'center',
+              minHeight: '56px',
             }}
           >
             <div className="flex items-center gap-3">
-              <span style={{ fontSize: '1.25rem' }}>{sdk.icon}</span>
-              <span style={{ color: theme.colors.text, fontWeight: theme.typography.fontWeight.medium }}>
+              <span style={{ fontSize: 'clamp(1rem, 4vw, 1.25rem)' }}>{sdk.icon}</span>
+              <span style={{ 
+                color: theme.colors.text, 
+                fontWeight: theme.typography.fontWeight.medium,
+                fontSize: 'clamp(0.8rem, 3vw, 0.9rem)',
+              }}>
                 {sdk.name}
               </span>
             </div>
             <span style={{
-              fontSize: theme.typography.fontSize.xs,
+              fontSize: 'clamp(0.65rem, 2.5vw, 0.75rem)',
               color: theme.colors.textSecondary,
               backgroundColor: theme.colors.backgroundSecondary,
               padding: '0.25rem 0.75rem',
               borderRadius: '9999px',
+              whiteSpace: 'nowrap',
             }}>
               {sdk.status}
             </span>
-          </div>
+          </motion.div>
         ))}
       </div>
     </motion.section>
@@ -1324,109 +1461,112 @@ const RateLimitsSection: React.FC = () => {
       style={{
         ...styles.glass.light,
         border: `1px solid ${theme.colors.border}`,
-        borderRadius: '1rem',
-        padding: theme.semanticSpacing.xl,
-        marginBottom: '2rem',
+        borderRadius: 'clamp(0.75rem, 3vw, 1rem)',
+        padding: 'clamp(1.25rem, 5vw, 2rem)',
+        marginBottom: 'clamp(1.5rem, 4vw, 2rem)',
       }}
     >
-      <h2 style={{ ...styles.typography.h2, color: theme.colors.text, marginBottom: '1rem' }}>
+      <h2 style={{ 
+        fontSize: 'clamp(1.25rem, 5vw, 1.75rem)',
+        fontWeight: theme.typography.fontWeight.bold,
+        color: theme.colors.text, 
+        marginBottom: 'clamp(0.75rem, 3vw, 1rem)',
+        lineHeight: 1.3,
+      }}>
         Rate Limits
       </h2>
-      <p style={{ ...styles.typography.body, color: theme.colors.textSecondary, marginBottom: '1.5rem' }}>
-        Rate limits are applied per API key. If you exceed the limit, you'll receive a 
+      <p style={{ 
+        fontSize: 'clamp(0.85rem, 3vw, 1rem)',
+        color: theme.colors.textSecondary, 
+        marginBottom: 'clamp(1rem, 4vw, 1.5rem)',
+        lineHeight: 1.6,
+      }}>
+        Rate limits are applied per API key. If you exceed the limit, you'll receive a{' '}
         <code style={{ 
           backgroundColor: theme.colors.surface, 
           padding: '0.125rem 0.5rem', 
           borderRadius: '0.25rem',
-          marginLeft: '0.25rem'
+          fontSize: 'clamp(0.75rem, 2.5vw, 0.85rem)',
         }}>
           429 Too Many Requests
-        </code> response.
+        </code>{' '}
+        response.
       </p>
 
-      <div style={{ overflowX: 'auto' }}>
-        <table style={{ width: '100%', borderCollapse: 'collapse' }}>
-          <thead>
-            <tr style={{ borderBottom: `1px solid ${theme.colors.border}` }}>
-              <th style={{ 
-                textAlign: 'left', 
-                padding: '0.75rem 1rem',
-                color: theme.colors.textSecondary,
-                fontWeight: theme.typography.fontWeight.medium,
-                fontSize: theme.typography.fontSize.sm,
+      {/* Mobile-friendly cards instead of table */}
+      <div className="space-y-3">
+        {limits.map((row, idx) => (
+          <motion.div
+            key={row.endpoint}
+            initial={{ opacity: 0, x: -20 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.3, delay: idx * 0.05 }}
+            viewport={{ once: true }}
+            style={{
+              padding: 'clamp(0.75rem, 3vw, 1rem)',
+              backgroundColor: idx % 2 === 0 ? theme.colors.surface : 'transparent',
+              borderRadius: '0.5rem',
+              display: 'flex',
+              flexWrap: 'wrap',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+              gap: '0.5rem',
+            }}
+          >
+            <span style={{ 
+              color: theme.colors.text,
+              fontSize: 'clamp(0.8rem, 3vw, 0.9rem)',
+              fontWeight: theme.typography.fontWeight.medium,
+              flex: '1 1 50%',
+              minWidth: '150px',
+            }}>
+              {row.endpoint}
+            </span>
+            <div className="flex gap-3 flex-wrap">
+              <span style={{ 
+                color: theme.colors.primary,
+                fontSize: 'clamp(0.75rem, 2.5vw, 0.85rem)',
+                fontFamily: 'monospace',
+                backgroundColor: theme.utils.alpha(theme.colors.primary, 0.1),
+                padding: '0.25rem 0.5rem',
+                borderRadius: '0.25rem',
               }}>
-                Endpoint
-              </th>
-              <th style={{ 
-                textAlign: 'left', 
-                padding: '0.75rem 1rem',
+                {row.limit}
+              </span>
+              <span style={{ 
                 color: theme.colors.textSecondary,
-                fontWeight: theme.typography.fontWeight.medium,
-                fontSize: theme.typography.fontSize.sm,
+                fontSize: 'clamp(0.7rem, 2.5vw, 0.8rem)',
               }}>
-                Rate Limit
-              </th>
-              <th style={{ 
-                textAlign: 'left', 
-                padding: '0.75rem 1rem',
-                color: theme.colors.textSecondary,
-                fontWeight: theme.typography.fontWeight.medium,
-                fontSize: theme.typography.fontSize.sm,
-              }}>
-                Burst Limit
-              </th>
-            </tr>
-          </thead>
-          <tbody>
-            {limits.map((row, idx) => (
-              <tr 
-                key={row.endpoint}
-                style={{ 
-                  borderBottom: idx < limits.length - 1 ? `1px solid ${theme.colors.border}` : 'none',
-                  backgroundColor: idx % 2 === 0 ? 'transparent' : theme.colors.surface,
-                }}
-              >
-                <td style={{ 
-                  padding: '0.75rem 1rem',
-                  color: theme.colors.text,
-                  fontSize: theme.typography.fontSize.sm,
-                }}>
-                  {row.endpoint}
-                </td>
-                <td style={{ 
-                  padding: '0.75rem 1rem',
-                  color: theme.colors.primary,
-                  fontSize: theme.typography.fontSize.sm,
-                  fontFamily: 'monospace',
-                }}>
-                  {row.limit}
-                </td>
-                <td style={{ 
-                  padding: '0.75rem 1rem',
-                  color: theme.colors.textSecondary,
-                  fontSize: theme.typography.fontSize.sm,
-                }}>
-                  {row.burst}
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
+                {row.burst}
+              </span>
+            </div>
+          </motion.div>
+        ))}
       </div>
 
-      <div style={{
-        marginTop: '1.5rem',
-        padding: '1rem',
-        backgroundColor: theme.colors.surface,
-        borderRadius: '0.5rem',
-        borderLeft: `3px solid ${theme.colors.primary}`,
-      }}>
-        <p style={{ fontSize: theme.typography.fontSize.sm, color: theme.colors.textSecondary }}>
+      <motion.div
+        initial={{ opacity: 0, y: 10 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.4, delay: 0.3 }}
+        viewport={{ once: true }}
+        style={{
+          marginTop: 'clamp(1rem, 4vw, 1.5rem)',
+          padding: 'clamp(0.75rem, 3vw, 1rem)',
+          backgroundColor: theme.colors.surface,
+          borderRadius: '0.5rem',
+          borderLeft: `3px solid ${theme.colors.primary}`,
+        }}
+      >
+        <p style={{ 
+          fontSize: 'clamp(0.8rem, 3vw, 0.9rem)', 
+          color: theme.colors.textSecondary,
+          lineHeight: 1.5,
+        }}>
           <strong style={{ color: theme.colors.text }}>Need higher limits?</strong> Contact us at{' '}
           <a href="mailto:api@dytto.app" style={{ color: theme.colors.primary }}>api@dytto.app</a>
           {' '}to discuss enterprise rate limits.
         </p>
-      </div>
+      </motion.div>
     </motion.section>
   );
 };
@@ -1436,15 +1576,15 @@ const ErrorsSection: React.FC = () => {
   const styles = useThemeStyles();
 
   const errors = [
-    { code: '400', name: 'Bad Request', description: 'Invalid request body or parameters' },
-    { code: '401', name: 'Unauthorized', description: 'Missing or invalid authentication token' },
-    { code: '403', name: 'Forbidden', description: 'Valid token but insufficient permissions/scope' },
-    { code: '404', name: 'Not Found', description: 'Resource does not exist' },
-    { code: '409', name: 'Conflict', description: 'Request conflicts with current state (e.g., duplicate)' },
-    { code: '422', name: 'Unprocessable Entity', description: 'Request understood but semantically invalid' },
-    { code: '429', name: 'Too Many Requests', description: 'Rate limit exceeded — slow down' },
-    { code: '500', name: 'Internal Server Error', description: 'Something went wrong on our end' },
-    { code: '503', name: 'Service Unavailable', description: 'Temporary outage — retry with backoff' },
+    { code: '400', name: 'Bad Request', description: 'Invalid request body or parameters', color: '#F59E0B' },
+    { code: '401', name: 'Unauthorized', description: 'Missing or invalid authentication token', color: '#F59E0B' },
+    { code: '403', name: 'Forbidden', description: 'Valid token but insufficient permissions/scope', color: '#F59E0B' },
+    { code: '404', name: 'Not Found', description: 'Resource does not exist', color: '#F59E0B' },
+    { code: '409', name: 'Conflict', description: 'Request conflicts with current state', color: '#F59E0B' },
+    { code: '422', name: 'Unprocessable Entity', description: 'Request understood but semantically invalid', color: '#F59E0B' },
+    { code: '429', name: 'Too Many Requests', description: 'Rate limit exceeded — slow down', color: '#F59E0B' },
+    { code: '500', name: 'Internal Server Error', description: 'Something went wrong on our end', color: '#EF4444' },
+    { code: '503', name: 'Service Unavailable', description: 'Temporary outage — retry with backoff', color: '#EF4444' },
   ];
 
   return (
@@ -1457,20 +1597,34 @@ const ErrorsSection: React.FC = () => {
       style={{
         ...styles.glass.light,
         border: `1px solid ${theme.colors.border}`,
-        borderRadius: '1rem',
-        padding: theme.semanticSpacing.xl,
-        marginBottom: '2rem',
+        borderRadius: 'clamp(0.75rem, 3vw, 1rem)',
+        padding: 'clamp(1.25rem, 5vw, 2rem)',
+        marginBottom: 'clamp(1.5rem, 4vw, 2rem)',
       }}
     >
-      <h2 style={{ ...styles.typography.h2, color: theme.colors.text, marginBottom: '1rem' }}>
+      <h2 style={{ 
+        fontSize: 'clamp(1.25rem, 5vw, 1.75rem)',
+        fontWeight: theme.typography.fontWeight.bold,
+        color: theme.colors.text, 
+        marginBottom: 'clamp(0.75rem, 3vw, 1rem)',
+        lineHeight: 1.3,
+      }}>
         Error Codes
       </h2>
-      <p style={{ ...styles.typography.body, color: theme.colors.textSecondary, marginBottom: '1.5rem' }}>
-        All errors return a JSON body with an <code style={{ 
+      <p style={{ 
+        fontSize: 'clamp(0.85rem, 3vw, 1rem)',
+        color: theme.colors.textSecondary, 
+        marginBottom: 'clamp(1rem, 4vw, 1.5rem)',
+        lineHeight: 1.6,
+      }}>
+        All errors return a JSON body with an{' '}
+        <code style={{ 
           backgroundColor: theme.colors.surface, 
           padding: '0.125rem 0.5rem', 
-          borderRadius: '0.25rem'
-        }}>error</code> field describing what went wrong.
+          borderRadius: '0.25rem',
+          fontSize: 'clamp(0.75rem, 2.5vw, 0.85rem)',
+        }}>error</code>{' '}
+        field describing what went wrong.
       </p>
 
       <CodeBlock 
@@ -1485,15 +1639,19 @@ const ErrorsSection: React.FC = () => {
         title="Error Response Format"
       />
 
-      <div style={{ marginTop: '1.5rem' }}>
+      <div style={{ marginTop: 'clamp(1rem, 4vw, 1.5rem)' }} className="space-y-2">
         {errors.map((error, idx) => (
-          <div
+          <motion.div
             key={error.code}
+            initial={{ opacity: 0, x: -20 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.3, delay: idx * 0.03 }}
+            viewport={{ once: true }}
             style={{
               display: 'flex',
               alignItems: 'flex-start',
-              gap: '1rem',
-              padding: '1rem',
+              gap: 'clamp(0.75rem, 3vw, 1rem)',
+              padding: 'clamp(0.75rem, 3vw, 1rem)',
               backgroundColor: idx % 2 === 0 ? 'transparent' : theme.colors.surface,
               borderRadius: '0.5rem',
             }}
@@ -1501,28 +1659,30 @@ const ErrorsSection: React.FC = () => {
             <span style={{
               fontFamily: 'monospace',
               fontWeight: theme.typography.fontWeight.bold,
-              color: parseInt(error.code) >= 500 ? '#f85149' : 
-                     parseInt(error.code) >= 400 ? '#d29922' : theme.colors.primary,
-              minWidth: '3rem',
+              color: parseInt(error.code) >= 500 ? '#EF4444' : '#F59E0B',
+              minWidth: 'clamp(2.5rem, 8vw, 3rem)',
+              fontSize: 'clamp(0.8rem, 3vw, 0.9rem)',
             }}>
               {error.code}
             </span>
-            <div>
+            <div className="min-w-0 flex-1">
               <span style={{ 
                 color: theme.colors.text, 
-                fontWeight: theme.typography.fontWeight.medium 
+                fontWeight: theme.typography.fontWeight.medium,
+                fontSize: 'clamp(0.8rem, 3vw, 0.9rem)',
               }}>
                 {error.name}
               </span>
               <p style={{ 
                 color: theme.colors.textSecondary, 
-                fontSize: theme.typography.fontSize.sm,
-                marginTop: '0.25rem'
+                fontSize: 'clamp(0.75rem, 2.5vw, 0.85rem)',
+                marginTop: '0.25rem',
+                lineHeight: 1.4,
               }}>
                 {error.description}
               </p>
             </div>
-          </div>
+          </motion.div>
         ))}
       </div>
     </motion.section>
@@ -1590,62 +1750,147 @@ const DocsPage: React.FC = () => {
 
   const activeSectionGroup = getSectionGroup(activeSection);
 
+  // Stats for hero section
+  const stats = [
+    { icon: Server, label: 'Endpoints', value: Object.keys(endpoints).length },
+    { icon: Key, label: 'Auth Methods', value: 3 },
+    { icon: Cpu, label: 'API Version', value: 'v1' },
+  ];
+
   return (
     <div style={styles.bg.primary} className="min-h-screen">
       <Navbar />
       
       {/* Hero Section */}
-      <section style={{ paddingTop: '8rem', paddingBottom: '3rem' }}>
-        <div className="max-w-7xl mx-auto px-4 sm:px-6">
+      <section className="pt-24 sm:pt-32 pb-6 sm:pb-8 px-4 sm:px-6">
+        <div className="max-w-7xl mx-auto">
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8 }}
+            className="text-center mb-6 sm:mb-8"
+          >
+            <h1 
+              style={{
+                color: theme.colors.text,
+                fontSize: 'clamp(1.75rem, 6vw, 3rem)',
+                fontWeight: theme.typography.fontWeight.bold,
+                lineHeight: '1.2',
+                marginBottom: theme.semanticSpacing.sm,
+              }}
+            >
+              API{' '}
+              <motion.span 
+                key={`docs-gradient-${theme.mode}`}
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ duration: 0.3 }}
+                style={{
+                  background: `linear-gradient(135deg, ${theme.colors.primary}, ${theme.colors.accent})`,
+                  WebkitBackgroundClip: 'text',
+                  WebkitTextFillColor: 'transparent',
+                  backgroundClip: 'text',
+                  fontWeight: theme.typography.fontWeight.semibold,
+                  display: 'inline-block',
+                }}
+              >
+                Documentation
+              </motion.span>
+            </h1>
+            <p 
+              style={{
+                color: theme.colors.textSecondary,
+                fontSize: 'clamp(0.875rem, 3vw, 1.125rem)',
+                lineHeight: '1.6',
+                maxWidth: '48rem',
+                margin: '0 auto',
+              }}
+            >
+              Everything you need to integrate Dytto's personal context API into your application.
+            </p>
+          </motion.div>
+
+          {/* Stats Cards */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
-            className="text-center"
+            transition={{ duration: 0.6, delay: 0.2 }}
+            className="grid grid-cols-3 gap-3 sm:gap-6 max-w-lg mx-auto mb-6"
           >
-            <h1 style={{ 
-              ...styles.typography.h1, 
-              color: theme.colors.text,
-              marginBottom: theme.semanticSpacing.md 
-            }}>
-              Documentation
-            </h1>
-            <p style={{ 
-              ...styles.typography.bodyLarge, 
-              color: theme.colors.textSecondary,
-              maxWidth: '48rem',
-              margin: '0 auto'
-            }}>
-              Everything you need to integrate Dytto's personal context API into your application.
-            </p>
+            {stats.map((stat, index) => (
+              <motion.div
+                key={index}
+                whileHover={{ y: -2 }}
+                style={{
+                  ...styles.glass.light,
+                  border: `1px solid ${theme.colors.border}`,
+                  borderRadius: '0.75rem',
+                  padding: 'clamp(0.75rem, 3vw, 1rem)',
+                  textAlign: 'center',
+                }}
+              >
+                <stat.icon 
+                  style={{ 
+                    color: theme.colors.primary, 
+                    margin: '0 auto', 
+                    marginBottom: 'clamp(0.25rem, 2vw, 0.5rem)' 
+                  }} 
+                  size={20} 
+                />
+                <div style={{ 
+                  fontSize: 'clamp(1rem, 4vw, 1.5rem)', 
+                  fontWeight: theme.typography.fontWeight.bold,
+                  color: theme.colors.text, 
+                  marginBottom: 'clamp(0.125rem, 1vw, 0.25rem)' 
+                }}>
+                  {stat.value}
+                </div>
+                <div style={{ 
+                  fontSize: 'clamp(0.625rem, 2.5vw, 0.75rem)', 
+                  color: theme.colors.textSecondary 
+                }}>
+                  {stat.label}
+                </div>
+              </motion.div>
+            ))}
           </motion.div>
         </div>
       </section>
 
       {/* Mobile Menu Toggle */}
-      <div className="lg:hidden sticky top-20 z-30 px-4 py-3" style={{ backgroundColor: theme.colors.background }}>
-        <button
+      <div 
+        className="lg:hidden sticky top-20 z-30 px-4 py-3" 
+        style={{ backgroundColor: theme.colors.background }}
+      >
+        <motion.button
+          whileHover={{ scale: 1.01 }}
+          whileTap={{ scale: 0.99 }}
           onClick={() => setMobileMenuOpen(true)}
           className="flex items-center gap-2 w-full"
           style={{
-            padding: '0.75rem 1rem',
+            padding: 'clamp(0.75rem, 3vw, 1rem)',
             backgroundColor: theme.colors.surface,
             border: `1px solid ${theme.colors.border}`,
-            borderRadius: '0.5rem',
+            borderRadius: '0.75rem',
             color: theme.colors.text,
             cursor: 'pointer',
+            minHeight: '48px',
           }}
         >
           <Menu size={18} />
-          <span style={{ fontWeight: theme.typography.fontWeight.medium }}>
+          <span style={{ 
+            fontWeight: theme.typography.fontWeight.medium,
+            fontSize: 'clamp(0.875rem, 3vw, 1rem)',
+          }}>
             Navigation
           </span>
-        </button>
+          <ArrowRight size={16} style={{ marginLeft: 'auto', color: theme.colors.textSecondary }} />
+        </motion.button>
       </div>
 
       {/* Main Content Area */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 pb-16">
-        <div className="flex gap-8">
+        <div className="flex gap-6 lg:gap-8">
           {/* Sidebar */}
           <Sidebar 
             activeSection={activeSection} 
@@ -1656,13 +1901,23 @@ const DocsPage: React.FC = () => {
 
           {/* Content */}
           <main className="flex-1 min-w-0">
-            {(activeSectionGroup === 'getting-started') && <GettingStartedSection />}
-            {(activeSectionGroup === 'authentication') && <AuthenticationSection />}
-            {(activeSectionGroup === 'platform-api') && <PlatformAPISection />}
-            {(activeSectionGroup === 'agent-api') && <AgentAPISection />}
-            {(activeSectionGroup === 'sdks') && <SDKsSection />}
-            {(activeSectionGroup === 'rate-limits') && <RateLimitsSection />}
-            {(activeSectionGroup === 'errors') && <ErrorsSection />}
+            <AnimatePresence mode="wait">
+              <motion.div
+                key={activeSectionGroup}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -20 }}
+                transition={{ duration: 0.3 }}
+              >
+                {(activeSectionGroup === 'getting-started') && <GettingStartedSection />}
+                {(activeSectionGroup === 'authentication') && <AuthenticationSection />}
+                {(activeSectionGroup === 'platform-api') && <PlatformAPISection />}
+                {(activeSectionGroup === 'agent-api') && <AgentAPISection />}
+                {(activeSectionGroup === 'sdks') && <SDKsSection />}
+                {(activeSectionGroup === 'rate-limits') && <RateLimitsSection />}
+                {(activeSectionGroup === 'errors') && <ErrorsSection />}
+              </motion.div>
+            </AnimatePresence>
           </main>
         </div>
       </div>
