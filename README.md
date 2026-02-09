@@ -33,7 +33,7 @@ The blog page (`/blog`) is designed to work even without a full Supabase backend
 
 ## Analytics Tracking
 
-This project incorporates an enhanced analytics utility (`src/utils/analytics.ts`) to comprehensively track user interactions and engagement on the landing page. This utility provides insights into:
+This project incorporates an enhanced analytics utility (`src/utils/analytics.ts`) to comprehensively track user interactions and engagement on the landing page. This utility integrates with both Google Analytics and Mixpanel, providing insights into:
 
 -   **Page Load Performance:** Tracks metrics like page load time and First Contentful Paint.
 -   **Scroll Depth:** Monitors how far users scroll down the page (at 25%, 50%, 75%, and 90% intervals).
