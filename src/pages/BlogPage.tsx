@@ -184,9 +184,17 @@ const BlogPage: React.FC = () => {
     fetchPosts(searchQuery, tag);
   };
 
-  // Format date
-  const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString('en-US', {
+  // Format date (with null safety - falls back to current date if null)
+  const formatDate = (dateString: string | null | undefined) => {
+    if (!dateString) {
+      return 'Date unavailable';
+    }
+    const date = new Date(dateString);
+    // Check for invalid date (NaN) or epoch (Dec 31 1969)
+    if (isNaN(date.getTime()) || date.getTime() === 0) {
+      return 'Date unavailable';
+    }
+    return date.toLocaleDateString('en-US', {
       year: 'numeric',
       month: 'long',
       day: 'numeric'
@@ -267,7 +275,7 @@ const BlogPage: React.FC = () => {
                 <div className="flex items-center gap-2">
                   <Calendar style={{ color: theme.colors.textSecondary }} size={16} />
                   <span style={{ color: theme.colors.textSecondary, fontSize: theme.typography.fontSize.sm }}>
-                    {formatDate(selectedPost.published_at)}
+                    {formatDate(selectedPost.published_at || selectedPost.created_at)}
                   </span>
                 </div>
               </div>
@@ -531,7 +539,7 @@ const BlogPage: React.FC = () => {
                           color: theme.colors.textSecondary, 
                           fontSize: theme.typography.fontSize.xs 
                         }}>
-                          {formatDate(post.published_at)}
+                          {formatDate(post.published_at || post.created_at)}
                         </span>
                       </div>
                       <div className="flex items-center gap-2">

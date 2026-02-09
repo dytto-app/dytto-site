@@ -1,5 +1,6 @@
-import React from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import React, { useEffect } from 'react';
+import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
+import { trackPage } from '@ayaan/analytics';
 import { ThemeProvider } from './components/ThemeProvider';
 import { AuthProvider } from './components/AuthProvider';
 import WaitlistLandingPage from './pages/WaitlistLandingPage';
@@ -12,11 +13,37 @@ import PhilosophyDashboard from './pages/PhilosophyDashboard';
 import LoginPage from './pages/LoginPage';
 import ApiKeysPage from './pages/ApiKeysPage';
 
+// Page tracking component
+function PageTracker() {
+  const location = useLocation();
+  
+  useEffect(() => {
+    // Map paths to page names
+    const pageNames: Record<string, string> = {
+      '/': 'Home',
+      '/waitlist': 'Waitlist',
+      '/api': 'API',
+      '/docs': 'Documentation',
+      '/feedback': 'Feedback',
+      '/blog': 'Blog',
+      '/demo': 'Demo',
+      '/login': 'Login',
+      '/settings/api-keys': 'API Keys',
+    };
+    
+    const pageName = pageNames[location.pathname] || location.pathname;
+    trackPage(pageName, { path: location.pathname });
+  }, [location]);
+  
+  return null;
+}
+
 function App() {
   return (
     <ThemeProvider defaultMode="light">
       <AuthProvider>
         <Router>
+          <PageTracker />
           <Routes>
             <Route path="/" element={<AppLandingPage />} />
             <Route path="/waitlist" element={<WaitlistLandingPage />} />

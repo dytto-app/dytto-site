@@ -1,7 +1,10 @@
 /**
  * Enhanced Analytics Utility for Landing Page Event Tracking
  * Provides comprehensive tracking for user interactions, scroll depth, exit intent, and more
+ * Integrates with both Google Analytics and Mixpanel (via shared analytics)
  */
+
+import { track as mixpanelTrack, trackError as mixpanelTrackError } from '@ayaan/analytics';
 
 declare global {
   interface Window {
@@ -87,20 +90,24 @@ class Analytics {
    * Track custom events with enhanced parameters
    */
   trackEvent(eventData: EventData) {
-    if (typeof window === 'undefined' || !window.gtag) return;
-
     const enhancedParams = {
       event_category: eventData.category,
       event_label: eventData.label,
       value: eventData.value,
-      page_title: document.title,
-      page_location: window.location.href,
+      page_title: typeof document !== 'undefined' ? document.title : undefined,
+      page_location: typeof window !== 'undefined' ? window.location.href : undefined,
       ...this.getUTMParams(),
       session_duration: Math.round((Date.now() - this.sessionStart) / 1000),
       ...eventData.custom_parameters,
     };
 
-    window.gtag('event', eventData.action, enhancedParams);
+    // Send to Google Analytics
+    if (typeof window !== 'undefined' && window.gtag) {
+      window.gtag('event', eventData.action, enhancedParams);
+    }
+
+    // Send to Mixpanel
+    mixpanelTrack(eventData.action, enhancedParams);
   }
 
   /**
@@ -303,6 +310,7 @@ class Analytics {
    * Track errors and issues
    */
   trackError(errorType: string, errorMessage: string, context?: string) {
+    // Send to Google Analytics via trackEvent
     this.trackEvent({
       action: 'error',
       category: 'technical',
@@ -310,9 +318,15 @@ class Analytics {
       custom_parameters: {
         error_message: errorMessage,
         error_context: context,
-        user_agent: navigator.userAgent,
+        user_agent: typeof navigator !== 'undefined' ? navigator.userAgent : undefined,
         timestamp: new Date().toISOString(),
       },
+    });
+
+    // Also send to Mixpanel's dedicated error tracking
+    mixpanelTrackError(errorMessage, {
+      error_type: errorType,
+      error_context: context,
     });
   }
 
