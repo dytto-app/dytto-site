@@ -47,6 +47,13 @@ This project incorporates an enhanced analytics utility (`src/utils/analytics.ts
 
 The analytics system also captures UTM parameters for improved attribution and calculates session duration.
 
+## SEO Configuration
+
+To improve search engine indexing and visibility for dytto.app, the following files have been added:
+
+-   `public/robots.txt`: Directs web crawlers on which pages to crawl or not to crawl, and specifies the location of the sitemap.
+-   `public/sitemap.xml`: Provides a list of all public pages on the site, helping search engines to discover and index them more efficiently.
+
 ## Available Scripts
 
 -   `npm run dev`: Starts the development server.
