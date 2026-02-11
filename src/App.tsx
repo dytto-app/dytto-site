@@ -12,6 +12,7 @@ import BlogPage from './pages/BlogPage';
 import PhilosophyDashboard from './pages/PhilosophyDashboard';
 import LoginPage from './pages/LoginPage';
 import ApiKeysPage from './pages/ApiKeysPage';
+import PrivacyPage from './pages/PrivacyPage';
 
 // Page tracking component
 function PageTracker() {
@@ -29,6 +30,7 @@ function PageTracker() {
       '/demo': 'Demo',
       '/login': 'Login',
       '/settings/api-keys': 'API Keys',
+      '/privacy': 'Privacy Policy',
     };
     
     const pageName = pageNames[location.pathname] || location.pathname;
@@ -56,6 +58,7 @@ function App() {
             <Route path="/demo" element={<PhilosophyDashboard />} />
             <Route path="/login" element={<LoginPage />} />
             <Route path="/settings/api-keys" element={<ApiKeysPage />} />
+            <Route path="/privacy" element={<PrivacyPage />} />
           </Routes>
         </Router>
       </AuthProvider>
