@@ -47,6 +47,22 @@ This project incorporates an enhanced analytics utility (`src/utils/analytics.ts
 
 The analytics system also captures UTM parameters for improved attribution and calculates session duration.
 
+## Site Structure and Key Pages
+
+The Dytto site is organized into several key pages, each serving a specific purpose:
+
+-   **Home (`/`)**: The main landing page, showcasing Dytto's features and offerings.
+-   **API Landing Page (`/api`)**: Dedicated page for developers, detailing Dytto's API.
+-   **App Landing Page (`/app`)**: Information specific to the Dytto application.
+-   **Blog (`/blog`)**: Features articles and updates from Dytto.
+-   **Documentation (`/docs`)**: Comprehensive guides and references.
+-   **Feedback (`/feedback`)**: Page for users to submit feedback.
+-   **Login (`/login`)**: User authentication page.
+-   **API Keys (`/settings/api-keys`)**: User settings for managing API keys.
+-   **Philosophy Dashboard (`/demo`)**: A demonstration or philosophical overview.
+-   **Privacy Policy (`/privacy`)**: Details Dytto's data collection, usage, and user rights.
+-   **Waitlist (`/waitlist`)**: Page for users to sign up for early access.
+
 ## Available Scripts
 
 -   `npm run dev`: Starts the development server.
