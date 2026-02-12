@@ -5,7 +5,7 @@ import {
   Key, Plus, X, Copy, Check, Trash2, AlertCircle, 
   Loader, Clock, Activity, Shield, ChevronRight,
   Eye, Database, Search, MapPin, Calendar, Heart,
-  Users, Briefcase, Settings, Zap
+  Users, Briefcase, Settings, Zap, Download
 } from 'lucide-react';
 import { useAuth } from '../components/AuthProvider';
 import { useTheme } from '../components/ThemeProvider';
@@ -144,6 +144,37 @@ const ApiKeysPage: React.FC = () => {
       fetchKeys();
     } catch (err) {
       console.error('Failed to revoke key:', err);
+    }
+  };
+
+  const downloadSkillMd = async (keyId: string, keyName: string) => {
+    if (!session?.access_token) return;
+    
+    try {
+      const response = await fetch(
+        `https://dytto.onrender.com/api/keys/${keyId}/skill.md`,
+        {
+          headers: {
+            'Authorization': `Bearer ${session.access_token}`,
+          },
+        }
+      );
+      
+      if (response.ok) {
+        const blob = await response.blob();
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `${keyName.replace(/[^a-zA-Z0-9-_]/g, '-')}-SKILL.md`;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        window.URL.revokeObjectURL(url);
+      } else {
+        console.error('Failed to download SKILL.md');
+      }
+    } catch (err) {
+      console.error('Failed to download SKILL.md:', err);
     }
   };
 
@@ -531,6 +562,29 @@ const ApiKeysPage: React.FC = () => {
                       {/* Actions */}
                       {key.is_active && (
                         <div className="flex sm:flex-col gap-2 flex-shrink-0">
+                          <motion.button
+                            whileHover={{ scale: 1.05 }}
+                            whileTap={{ scale: 0.95 }}
+                            onClick={() => downloadSkillMd(key.id, key.name)}
+                            style={{
+                              display: 'flex',
+                              alignItems: 'center',
+                              gap: '0.375rem',
+                              padding: '0.5rem 0.75rem',
+                              backgroundColor: theme.utils.alpha(theme.colors.primary, 0.1),
+                              color: theme.colors.primary,
+                              border: `1px solid ${theme.utils.alpha(theme.colors.primary, 0.3)}`,
+                              borderRadius: '0.5rem',
+                              fontSize: 'clamp(0.75rem, 2.5vw, 0.8rem)',
+                              fontWeight: theme.typography.fontWeight.medium,
+                              cursor: 'pointer',
+                              minHeight: '36px',
+                              transition: 'all 0.2s',
+                            }}
+                          >
+                            <Download size={14} />
+                            SKILL.md
+                          </motion.button>
                           <motion.button
                             whileHover={{ scale: 1.05 }}
                             whileTap={{ scale: 0.95 }}
