@@ -1,10 +1,13 @@
 # Dytto API Documentation Review
-**Last Updated:** 2026-02-05
+**Last Updated:** 2026-02-12
 **Reviewer:** Maya
 
 ## ✅ Updates Made This Cycle
 
-### 1. Created `src/components/api/APIDocumentation.tsx`
+### 1. Added Personalized API Docs (SKILL.md) to DocsPage.tsx
+New section in the documentation explaining how to download personalized `SKILL.md` files based on API key scopes.
+
+### 2. Created `src/components/api/APIDocumentation.tsx`
 New comprehensive API reference component with:
 - All Platform API endpoints (/v1/*)
 - All Agent API endpoints (/api/agent/*)
@@ -96,6 +99,7 @@ import APIDocumentation from '../components/api/APIDocumentation';
 
 - `src/components/api/APIDocumentation.tsx` — NEW
 - `src/components/APIShowcase.tsx` — UPDATED
+- `src/pages/DocsPage.tsx` — UPDATED
 - `API_REVIEW.md` — UPDATED
 
 ---

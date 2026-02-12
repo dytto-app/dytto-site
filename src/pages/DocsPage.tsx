@@ -344,6 +344,7 @@ const sidebarSections = [
       { id: 'oauth', title: 'OAuth 2.0' },
       { id: 'jwt', title: 'User JWT' },
       { id: 'service-keys', title: 'Service Keys' },
+      { id: 'skill-md', title: 'Personalized API Docs' },
     ]
   },
   {
@@ -1689,6 +1690,90 @@ const ErrorsSection: React.FC = () => {
   );
 };
 
+const SkillMdSection: React.FC = () => {
+  const { theme } = useTheme();
+  const styles = useThemeStyles();
+
+  return (
+    <motion.section
+      id="skill-md"
+      initial={{ opacity: 0, y: 20 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.5 }}
+      viewport={{ once: true }}
+      style={{
+        ...styles.glass.light,
+        border: `1px solid ${theme.colors.border}`,
+        borderRadius: 'clamp(0.75rem, 3vw, 1rem)',
+        padding: 'clamp(1.25rem, 5vw, 2rem)',
+        marginBottom: 'clamp(1.5rem, 4vw, 2rem)',
+      }}
+    >
+      <h2 style={{ 
+        fontSize: 'clamp(1.25rem, 5vw, 1.75rem)',
+        fontWeight: theme.typography.fontWeight.bold,
+        color: theme.colors.text, 
+        marginBottom: 'clamp(0.75rem, 3vw, 1rem)',
+        lineHeight: 1.3,
+      }}>
+        Personalized API Documentation (SKILL.md)
+      </h2>
+      <p style={{ 
+        fontSize: 'clamp(0.85rem, 3vw, 1rem)',
+        color: theme.colors.textSecondary, 
+        marginBottom: 'clamp(1rem, 4vw, 1.5rem)',
+        lineHeight: 1.6,
+      }}>
+        Dytto provides personalized API documentation in the form of a `SKILL.md` file. 
+        This documentation is dynamically generated based on the specific scopes and permissions 
+        granted to your API key, ensuring you only see the endpoints and functionalities 
+        relevant to your integration.
+      </p>
+
+      <h3 style={{ 
+        fontSize: 'clamp(1rem, 4vw, 1.25rem)',
+        fontWeight: theme.typography.fontWeight.semibold,
+        color: theme.colors.text, 
+        marginBottom: 'clamp(0.5rem, 2vw, 0.75rem)',
+        marginTop: 'clamp(1.5rem, 5vw, 2rem)',
+        lineHeight: 1.3,
+      }}>
+        How to Download
+      </h3>
+      <p style={{ 
+        fontSize: 'clamp(0.85rem, 3vw, 1rem)',
+        color: theme.colors.textSecondary, 
+        marginBottom: 'clamp(1rem, 4vw, 1.5rem)',
+        lineHeight: 1.6,
+      }}>
+        You can download the `SKILL.md` file for any of your API keys directly from the 
+        <motion.a 
+          whileHover={{ scale: 1.02 }}
+          whileTap={{ scale: 0.98 }}
+          href="/apikeys"
+          style={{
+            color: theme.colors.primary,
+            textDecoration: 'underline',
+            marginLeft: '0.3rem',
+            display: 'inline-flex',
+            alignItems: 'center',
+            gap: '0.25rem',
+          }}
+        >
+          API Keys page <ExternalLink size={14} />
+        </motion.a>.
+        Simply navigate to your API Keys, select the key you wish to generate documentation for, 
+        and click the "Download SKILL.md" button.
+      </p>
+
+      <CodeBlock 
+        code={`# SKILL.md for My_Agent_Key\n\n## Endpoints Accessible:\n\n### GET /api/agent/context\n- Description: Fetch full user context for an AI agent\n- Authentication: Agent Service Key\n- Scope: agent:read_context\n\n### POST /api/agent/events\n- Description: Agents report events that feed into the user's daily story\n- Authentication: Agent Service Key\n- Scope: agent:write_events\n`}
+        title="Example SKILL.md Content"
+      />
+    </motion.section>
+  );
+};
+
 // ============================================================
 // Main DocsPage Component
 // ============================================================
@@ -1910,7 +1995,7 @@ const DocsPage: React.FC = () => {
                 transition={{ duration: 0.3 }}
               >
                 {(activeSectionGroup === 'getting-started') && <GettingStartedSection />}
-                {(activeSectionGroup === 'authentication') && <AuthenticationSection />}
+                {(activeSectionGroup === 'authentication') && (activeSection === 'skill-md' ? <SkillMdSection /> : <AuthenticationSection />)}
                 {(activeSectionGroup === 'platform-api') && <PlatformAPISection />}
                 {(activeSectionGroup === 'agent-api') && <AgentAPISection />}
                 {(activeSectionGroup === 'sdks') && <SDKsSection />}
