@@ -326,7 +326,7 @@ const authMethods = [
     icon: Zap,
     description: "For AI agents in the Dytto ecosystem",
     endpoints: ["/api/agent/*"],
-    howTo: "Request agent credentials, include as Bearer token in Authorization header"
+    howTo: "Agent Service Keys are generated via the Dytto Developer Portal. When creating a new key, the 'observe' scope is included by default to enable richer context. You can restrict the key to read-only access, which removes all write scopes (e.g., 'observe', 'context:write'). A key with write access (including 'observe') helps build richer context for your agents."
   }
 ];
 
