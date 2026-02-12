@@ -23,6 +23,14 @@ Fixed code examples:
 
 ---
 
+### 3. Updated Agent Service Key Documentation in `src/components/api/APIDocumentation.tsx`
+Improved "Agent Service Key" section to detail:
+- Default inclusion of 'observe' scope for richer context.
+- Functionality of the "Restrict to read-only" toggle and its impact on write scopes.
+- Clarified messaging regarding the benefits of write access for context building.
+
+---
+
 ## API Endpoints Documented
 
 ### Platform API (v1) — Third-party integrations
