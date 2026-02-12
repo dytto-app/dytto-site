@@ -57,8 +57,21 @@ const ApiKeysPage: React.FC = () => {
   // Create key form state
   const [keyName, setKeyName] = useState('');
   const [selectedScopes, setSelectedScopes] = useState<string[]>(['observe', 'context:read']);
+  const [readOnlyMode, setReadOnlyMode] = useState(false);
   const [expiresInDays, setExpiresInDays] = useState<number | null>(null);
   const [creating, setCreating] = useState(false);
+  
+  // Handle read-only toggle
+  const toggleReadOnlyMode = () => {
+    if (!readOnlyMode) {
+      // Switching TO read-only: remove write scopes
+      setSelectedScopes(prev => prev.filter(s => s !== 'observe' && s !== 'context:write'));
+    } else {
+      // Switching FROM read-only: add observe back
+      setSelectedScopes(prev => [...prev, 'observe']);
+    }
+    setReadOnlyMode(!readOnlyMode);
+  };
 
   useEffect(() => {
     if (!authLoading && !user) {
@@ -847,6 +860,57 @@ const ApiKeysPage: React.FC = () => {
                       />
                     </div>
 
+                    {/* Read-only toggle */}
+                    <div style={{ 
+                      marginBottom: theme.semanticSpacing.md,
+                      padding: 'clamp(0.75rem, 3vw, 1rem)',
+                      borderRadius: '0.75rem',
+                      backgroundColor: readOnlyMode 
+                        ? theme.utils.alpha(theme.colors.warning, 0.1)
+                        : theme.utils.alpha(theme.colors.success, 0.1),
+                      border: `1px solid ${readOnlyMode 
+                        ? theme.utils.alpha(theme.colors.warning, 0.3)
+                        : theme.utils.alpha(theme.colors.success, 0.3)}`,
+                    }}>
+                      <label style={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: theme.semanticSpacing.sm,
+                        cursor: 'pointer',
+                      }}>
+                        <input
+                          type="checkbox"
+                          checked={readOnlyMode}
+                          onChange={toggleReadOnlyMode}
+                          style={{
+                            width: '18px',
+                            height: '18px',
+                            accentColor: theme.colors.warning,
+                            cursor: 'pointer',
+                          }}
+                        />
+                        <div>
+                          <span style={{
+                            color: theme.colors.text,
+                            fontWeight: theme.typography.fontWeight.medium,
+                            fontSize: 'clamp(0.875rem, 3vw, 0.95rem)',
+                          }}>
+                            Restrict to read-only
+                          </span>
+                          <p style={{
+                            color: theme.colors.textSecondary,
+                            fontSize: 'clamp(0.7rem, 2.5vw, 0.8rem)',
+                            margin: 0,
+                            marginTop: '2px',
+                          }}>
+                            {readOnlyMode 
+                              ? "Agent cannot push observations. Less context for you."
+                              : "Agent can push observations. Recommended — helps build richer context."}
+                          </p>
+                        </div>
+                      </label>
+                    </div>
+
                     {/* Scopes */}
                     <div style={{ marginBottom: theme.semanticSpacing.lg }}>
                       <label style={{
@@ -856,10 +920,10 @@ const ApiKeysPage: React.FC = () => {
                         display: 'block',
                         fontSize: 'clamp(0.875rem, 3vw, 1rem)',
                       }}>
-                        Scopes
+                        Data Access
                       </label>
                       <div className="grid grid-cols-2 gap-2">
-                        {AVAILABLE_SCOPES.map((scope) => (
+                        {AVAILABLE_SCOPES.filter(s => s.id !== 'observe' && s.id !== 'context:write').map((scope) => (
                           <motion.button
                             key={scope.id}
                             type="button"
