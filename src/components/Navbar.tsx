@@ -1,15 +1,29 @@
 import React, { useState, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Menu, X, Sun, Moon } from 'lucide-react';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useTheme } from './ThemeProvider';
 import { useThemeStyles } from '../hooks/useThemeStyles';
+import { useAuth } from './AuthProvider';
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const { theme, mode, toggleMode } = useTheme();
   const styles = useThemeStyles();
   const location = useLocation();
+  const navigate = useNavigate();
+  const { user } = useAuth();
+
+  const handleCTAClick = () => {
+    const ctaText = getCTAText();
+    if (ctaText === 'Get API Key') {
+      // Navigate to login if not authenticated, otherwise to API keys
+      navigate(user ? '/settings/api-keys' : '/login');
+    } else if (ctaText === 'Download App') {
+      // Link to app store or waitlist
+      window.open('https://apps.apple.com/app/dytto', '_blank');
+    }
+  };
 
   const isAPIPage = location.pathname === '/api';
   const isDocsPage = location.pathname.startsWith('/docs');
@@ -292,6 +306,9 @@ const Navbar = () => {
             }}
           >
             <motion.button
+              onClick={handleCTAClick}
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
               style={{
                 backgroundColor: theme.colors.primary,
                 color: theme.colors.background,
@@ -621,6 +638,10 @@ const Navbar = () => {
                     initial={{ opacity: 0, x: -20 }}
                     animate={{ opacity: 1, x: 0 }}
                     transition={{ delay: 0.7 }}
+                    onClick={() => {
+                      setIsOpen(false);
+                      handleCTAClick();
+                    }}
                     style={{
                       width: '100%',
                       backgroundColor: theme.colors.primary,

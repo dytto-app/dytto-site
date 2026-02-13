@@ -1,12 +1,20 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { Brain, Code, Sparkles, ArrowRight } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 import { useTheme } from '../ThemeProvider';
 import { useThemeStyles } from '../../hooks/useThemeStyles';
+import { useAuth } from '../AuthProvider';
 
 const APIHero = () => {
   const { theme } = useTheme();
   const styles = useThemeStyles();
+  const navigate = useNavigate();
+  const { user } = useAuth();
+
+  const handleGetApiKey = () => {
+    navigate(user ? '/settings/api-keys' : '/login');
+  };
 
   return (
     <section className="relative min-h-screen flex items-center justify-center overflow-hidden pt-24 sm:pt-20 px-4 sm:px-6">
@@ -186,6 +194,7 @@ const APIHero = () => {
           className="flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4 mb-12 sm:mb-16 px-4"
         >
           <motion.button
+            onClick={handleGetApiKey}
             whileHover={{ scale: 1.02, y: -2 }}
             whileTap={{ scale: 0.98 }}
             style={{

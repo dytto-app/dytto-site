@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Code, Play, Copy, Check } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 import { useTheme } from './ThemeProvider';
 import { useThemeStyles } from '../hooks/useThemeStyles';
+import { useAuth } from './AuthProvider';
 
 const codeExamples = {
   simulation: `// Generate anonymized user personas for research
@@ -104,6 +106,12 @@ const APIShowcase = () => {
   const [copied, setCopied] = useState(false);
   const { theme } = useTheme();
   const styles = useThemeStyles();
+  const navigate = useNavigate();
+  const { user } = useAuth();
+
+  const handleGetApiKey = () => {
+    navigate(user ? '/settings/api-keys' : '/login');
+  };
 
   const copyToClipboard = () => {
     navigator.clipboard.writeText(codeExamples[activeTab]);
@@ -369,6 +377,7 @@ const APIShowcase = () => {
                 Ready to start building?
               </div>
               <button 
+                onClick={handleGetApiKey}
                 style={{
                   ...styles.button.primary,
                   width: '100%',

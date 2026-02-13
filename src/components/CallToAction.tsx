@@ -1,13 +1,17 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { ArrowRight, Code, Book, MessageCircle } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 import { useTheme } from './ThemeProvider';
 import { useThemeStyles } from '../hooks/useThemeStyles';
+import { useAuth } from './AuthProvider';
 import analytics from '../utils/analytics';
 
 const CallToAction = () => {
   const { theme } = useTheme();
   const styles = useThemeStyles();
+  const navigate = useNavigate();
+  const { user } = useAuth();
 
   return (
     <section style={styles.bg.primary} className="py-32 relative overflow-hidden">
@@ -158,9 +162,9 @@ const CallToAction = () => {
                   
                   // Navigation logic
                   if (item.action === 'Get API Key') {
-                    window.location.href = '/waitlist';
+                    navigate(user ? '/settings/api-keys' : '/login');
                   } else if (item.action === 'View Documentation') {
-                    window.location.href = '/api';
+                    navigate('/docs');
                   } else if (item.action === 'Join Discord') {
                     window.open('https://discord.gg/dytto', '_blank');
                   }
