@@ -26,9 +26,12 @@ interface ApiKey {
   created_at: string;
 }
 
+// Dytto brand teal
+const DYTTO_PRIMARY = '#4A9B9B';
+
 const AVAILABLE_SCOPES = [
-  { id: 'observe', label: 'Observe', description: 'Push observations to context', icon: Eye, color: '#3B82F6' },
-  { id: 'context:read', label: 'Read Context', description: 'Read full context profile', icon: Database, color: '#10B981' },
+  { id: 'observe', label: 'Observe', description: 'Push observations to context', icon: Eye, color: DYTTO_PRIMARY },
+  { id: 'context:read', label: 'Read Context', description: 'Read full context profile', icon: Database, color: DYTTO_PRIMARY },
   { id: 'context:write', label: 'Write Context', description: 'Write to context', icon: Database, color: '#8B5CF6' },
   { id: 'patterns:read', label: 'Read Patterns', description: 'Access behavioral patterns', icon: Activity, color: '#F59E0B' },
   { id: 'stories:read', label: 'Read Stories', description: 'Access daily stories', icon: Calendar, color: '#EC4899' },
@@ -658,12 +661,12 @@ const ApiKeysPage: React.FC = () => {
               transition={{ type: 'spring', damping: 25 }}
               style={{
                 position: 'fixed',
-                top: '50%',
+                top: '1rem',
                 left: '50%',
-                transform: 'translate(-50%, -50%)',
+                transform: 'translateX(-50%)',
                 width: 'calc(100% - 2rem)',
                 maxWidth: '32rem',
-                maxHeight: '90vh',
+                maxHeight: 'calc(100vh - 2rem)',
                 overflowY: 'auto',
                 zIndex: 51,
                 ...styles.glass.medium,
