@@ -243,7 +243,8 @@ const PhilosophyDashboard: React.FC = () => {
                                   marginBottom: theme.semanticSpacing.xs,
                                 }}
                               >
-                                {new Date(storyDate).toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}
+                                {/* Parse YYYY-MM-DD as local date, not UTC */}
+                                {new Date(storyDate + 'T12:00:00').toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}
                               </h2>
                               <div className="flex items-center gap-4">
                                 <div className="flex items-center gap-2">
@@ -254,7 +255,7 @@ const PhilosophyDashboard: React.FC = () => {
                                       fontSize: theme.typography.fontSize.sm,
                                     }}
                                   >
-                                    {new Date(storyDate).toLocaleDateString()}
+                                    {new Date(storyDate + 'T12:00:00').toLocaleDateString()}
                                   </span>
                                 </div>
                                 {story.mood && (
@@ -427,7 +428,7 @@ const PhilosophyDashboard: React.FC = () => {
                               fontSize: theme.typography.fontSize.xs,
                             }}
                           >
-                            {new Date(storyDate).toLocaleDateString()}
+                            {new Date(storyDate + 'T12:00:00').toLocaleDateString()}
                           </span>
                         </div>
                         <div
