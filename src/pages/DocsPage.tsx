@@ -318,6 +318,401 @@ const { results } = await response.json();`,
     "relevance": 0.89
   }]
 }`
+  },
+
+  agentSocial: {
+    id: 'agent-social',
+    title: "Get Relationships",
+    description: "Fetch user's relationships, optionally filtered to overdue contacts",
+    method: "GET",
+    path: "/api/agent/social",
+    auth: "Agent Service Key",
+    category: "agent",
+    rateLimit: "60 requests / 60 seconds",
+    example: `const response = await fetch(
+  'https://api.dytto.app/api/agent/social?user_id=USER_UUID&overdue=true',
+  { headers: { 'Authorization': 'Bearer YOUR_AGENT_SERVICE_KEY' } }
+);
+
+const { relationships } = await response.json();`,
+    response: `{
+  "success": true,
+  "relationships": [{
+    "id": "rel-uuid",
+    "name": "Mom",
+    "meeting_frequency": "weekly",
+    "last_interaction_at": "2026-02-01T...",
+    "days_since_contact": 14,
+    "overdue": true
+  }]
+}`
+  },
+
+  agentPlaces: {
+    id: 'agent-places',
+    title: "Search Places",
+    description: "Search nearby places using Google Places API",
+    method: "GET",
+    path: "/api/agent/places",
+    auth: "Agent Service Key",
+    category: "agent",
+    rateLimit: "30 requests / 60 seconds",
+    example: `const response = await fetch(
+  'https://api.dytto.app/api/agent/places?lat=42.37&lon=-71.11&query=coffee&radius=1000',
+  { headers: { 'Authorization': 'Bearer YOUR_AGENT_SERVICE_KEY' } }
+);
+
+const { places } = await response.json();`,
+    response: `{
+  "success": true,
+  "places": [{
+    "name": "Tatte Bakery",
+    "rating": 4.6,
+    "types": ["cafe", "bakery"],
+    "address": "1352 Massachusetts Ave",
+    "distance": "0.3 mi",
+    "open_now": true
+  }]
+}`
+  },
+
+  // ─── Observe API ─────────────────────────────────────────────
+  observe: {
+    id: 'observe',
+    title: "Observe (Low-Effort Ingestion)",
+    description: "Accept any unstructured input and extract facts automatically",
+    method: "POST",
+    path: "/api/v1/observe",
+    auth: "API Key (scope: observe or context:write)",
+    category: "observe",
+    rateLimit: "60 requests / 60 seconds",
+    example: `const response = await fetch('https://api.dytto.app/api/v1/observe', {
+  method: 'POST',
+  headers: {
+    'Authorization': 'Bearer dyt_your_api_key',
+    'Content-Type': 'application/json'
+  },
+  body: JSON.stringify({
+    data: "User mentioned their sister Ananya lives in the UK and does neuroscience research",
+    source: "maya"  // optional: identify your agent
+  })
+});
+
+const { facts_extracted, stored } = await response.json();`,
+    response: `{
+  "success": true,
+  "facts_extracted": [
+    {
+      "text": "User has a sister named Ananya",
+      "categories": ["family"],
+      "confidence": 0.95,
+      "entities": ["Ananya"]
+    },
+    {
+      "text": "Ananya lives in the UK",
+      "categories": ["family", "places"],
+      "confidence": 0.9,
+      "entities": ["Ananya", "UK"]
+    }
+  ],
+  "facts_stored": 2,
+  "facts_deduplicated": 0,
+  "stored": true,
+  "processing_time_ms": 1234
+}`
+  },
+
+  observeBatch: {
+    id: 'observe-batch',
+    title: "Observe Batch",
+    description: "Process multiple observations at once (max 10 per request)",
+    method: "POST",
+    path: "/api/v1/observe/batch",
+    auth: "API Key (scope: observe or context:write)",
+    category: "observe",
+    rateLimit: "20 requests / 60 seconds",
+    example: `const response = await fetch('https://api.dytto.app/api/v1/observe/batch', {
+  method: 'POST',
+  headers: {
+    'Authorization': 'Bearer dyt_your_api_key',
+    'Content-Type': 'application/json'
+  },
+  body: JSON.stringify({
+    observations: [
+      { data: "User prefers quiet rides", source: "robotaxi" },
+      { data: "Temperature set to 68°F", source: "smart_home" }
+    ]
+  })
+});`,
+    response: `{
+  "success": true,
+  "results": [
+    { "index": 0, "success": true, "facts_extracted": 1, "facts_stored": 1 },
+    { "index": 1, "success": true, "facts_extracted": 1, "facts_stored": 1 }
+  ],
+  "total_facts_extracted": 2,
+  "total_facts_stored": 2
+}`
+  },
+
+  // ─── Facts API ───────────────────────────────────────────────
+  factsQuery: {
+    id: 'facts-query',
+    title: "Query Facts",
+    description: "Query user facts with scope-based filtering and optional semantic search",
+    method: "POST",
+    path: "/api/v1/facts/query",
+    auth: "API Key or User JWT",
+    category: "facts",
+    rateLimit: "60 requests / 60 seconds",
+    example: `const response = await fetch('https://api.dytto.app/api/v1/facts/query', {
+  method: 'POST',
+  headers: {
+    'Authorization': 'Bearer dyt_your_api_key',
+    'Content-Type': 'application/json'
+  },
+  body: JSON.stringify({
+    query: "What are their food preferences?",  // optional semantic search
+    limit: 20
+  })
+});
+
+const { facts, scope_applied } = await response.json();`,
+    response: `{
+  "facts": [
+    {
+      "id": "fact-uuid",
+      "text": "Prefers vegetarian food",
+      "categories": ["food", "preferences"],
+      "confidence": 0.92,
+      "similarity": 0.87
+    }
+  ],
+  "total_found": 5,
+  "filtered_by_scope": 2,
+  "scope_applied": ["food", "preferences"],
+  "query_time_ms": 45
+}`
+  },
+
+  factsCategories: {
+    id: 'facts-categories',
+    title: "List Fact Categories",
+    description: "List all available fact categories and scope mappings",
+    method: "GET",
+    path: "/api/v1/facts/categories",
+    auth: "API Key or User JWT",
+    category: "facts",
+    rateLimit: "120 requests / 60 seconds",
+    example: `const response = await fetch('https://api.dytto.app/api/v1/facts/categories', {
+  headers: { 'Authorization': 'Bearer dyt_your_api_key' }
+});
+
+const { categories, scopes } = await response.json();`,
+    response: `{
+  "categories": [
+    { "name": "family", "description": "Family members and relationships" },
+    { "name": "preferences", "description": "Likes, dislikes, personal choices" },
+    { "name": "places", "description": "Locations — home, work, frequently visited" }
+  ],
+  "scopes": {
+    "transportation": ["transportation", "preferences", "places", "schedule"],
+    "health": ["health", "lifestyle", "preferences"]
+  }
+}`
+  },
+
+  // ─── Scoped Context API ──────────────────────────────────────
+  contextScope: {
+    id: 'context-scope',
+    title: "Scoped Context",
+    description: "Task-based context retrieval — send task, get only relevant context",
+    method: "POST",
+    path: "/api/context/scope",
+    auth: "API Key or User JWT",
+    category: "context",
+    rateLimit: "60 requests / 60 seconds",
+    example: `const response = await fetch('https://api.dytto.app/api/context/scope', {
+  method: 'POST',
+  headers: {
+    'Authorization': 'Bearer dyt_your_api_key',
+    'Content-Type': 'application/json'
+  },
+  body: JSON.stringify({
+    task: "Drive user home from work, optimize route and climate",
+    agent_type: "robotaxi",
+    max_tokens: 2000,
+    categories: ["location", "preferences"]  // optional hints
+  })
+});`,
+    response: `{
+  "context": {
+    "relevant_facts": [
+      { "category": "places", "fact": "Lives on Harvard St, Cambridge, MA" },
+      { "category": "preferences", "fact": "Prefers temperature at 68°F" }
+    ],
+    "patterns": [
+      { "category": "schedule", "pattern": "Usually leaves work at 5:30 PM" }
+    ],
+    "preferences": ["Likes quiet rides", "Prefers scenic routes"]
+  },
+  "scoping_reasoning": "places (matched: home, address); preferences (matched: prefer)",
+  "token_count": 450,
+  "categories_used": ["places", "transportation", "preferences"],
+  "task_received": "Drive user home from work..."
+}`
+  },
+
+  contextNow: {
+    id: 'context-now',
+    title: "Context Now (Real-time)",
+    description: "Pre-digested 'here's today' snapshot for quick agent bootstrapping",
+    method: "GET",
+    path: "/api/context/now",
+    auth: "API Key or User JWT",
+    category: "context",
+    rateLimit: "60 requests / 60 seconds",
+    example: `const response = await fetch('https://api.dytto.app/api/context/now', {
+  headers: { 'Authorization': 'Bearer dyt_your_api_key' }
+});
+
+const snapshot = await response.json();`,
+    response: `{
+  "timestamp": "2026-02-15T09:30:00-05:00",
+  "user_id": "uuid",
+  "context_summary": "Ayaan is a software engineer in Cambridge, MA...",
+  "todays_activities": [],
+  "upcoming_schedule": [],
+  "patterns": {
+    "temporal": ["Usually wakes at 8am on weekdays"],
+    "locations": ["Home", "Office", "Tatte Bakery"],
+    "activities": ["Gym 3x/week"]
+  },
+  "preferences": ["Prefers quiet mornings"]
+}`
+  },
+
+  // ─── API Keys Management ─────────────────────────────────────
+  keysCreate: {
+    id: 'keys-create',
+    title: "Create API Key",
+    description: "Create a new scoped API key for third-party agent access",
+    method: "POST",
+    path: "/api/keys",
+    auth: "User JWT",
+    category: "keys",
+    rateLimit: "10 requests / 60 seconds",
+    example: `const response = await fetch('https://api.dytto.app/api/keys', {
+  method: 'POST',
+  headers: {
+    'Authorization': 'Bearer USER_JWT_TOKEN',
+    'Content-Type': 'application/json'
+  },
+  body: JSON.stringify({
+    name: "My Robotaxi Agent",
+    scopes: ["location", "preferences", "schedule"],
+    expires_in_days: 90,
+    rate_limit_per_minute: 60,
+    metadata: {
+      agent_type: "robotaxi",
+      description: "Waymo integration"
+    }
+  })
+});
+
+// ⚠️ The full key is only shown ONCE!
+const { key, key_id } = await response.json();`,
+    response: `{
+  "success": true,
+  "key": "dyt_a1b2c3d4e5f6g7h8i9j0k1l2m3n4o5p6",
+  "key_id": "uuid",
+  "key_prefix": "dyt_a1b2c3",
+  "name": "My Robotaxi Agent",
+  "scopes": ["location", "preferences", "schedule"],
+  "expires_at": "2026-05-15T...",
+  "warning": "⚠️ Save this key securely! It will NOT be shown again."
+}`
+  },
+
+  keysList: {
+    id: 'keys-list',
+    title: "List API Keys",
+    description: "List all your API keys (keys are shown as prefixes only)",
+    method: "GET",
+    path: "/api/keys",
+    auth: "User JWT",
+    category: "keys",
+    rateLimit: "60 requests / 60 seconds",
+    example: `const response = await fetch('https://api.dytto.app/api/keys', {
+  headers: { 'Authorization': 'Bearer USER_JWT_TOKEN' }
+});
+
+const { keys } = await response.json();`,
+    response: `{
+  "success": true,
+  "keys": [{
+    "id": "uuid",
+    "name": "My Robotaxi Agent",
+    "key_prefix": "dyt_a1b2c3",
+    "scopes": ["location", "preferences", "schedule"],
+    "is_active": true,
+    "last_used_at": "2026-02-15T08:30:00Z",
+    "use_count": 1234,
+    "expires_at": "2026-05-15T..."
+  }],
+  "count": 1
+}`
+  },
+
+  keysRevoke: {
+    id: 'keys-revoke',
+    title: "Revoke API Key",
+    description: "Revoke an API key to immediately disable access",
+    method: "DELETE",
+    path: "/api/keys/{key_id}",
+    auth: "User JWT",
+    category: "keys",
+    rateLimit: "30 requests / 60 seconds",
+    example: `const response = await fetch('https://api.dytto.app/api/keys/KEY_UUID', {
+  method: 'DELETE',
+  headers: {
+    'Authorization': 'Bearer USER_JWT_TOKEN',
+    'Content-Type': 'application/json'
+  },
+  body: JSON.stringify({
+    reason: "No longer needed"  // optional
+  })
+});`,
+    response: `{
+  "success": true,
+  "message": "API key KEY_UUID has been revoked"
+}`
+  },
+
+  keysScopes: {
+    id: 'keys-scopes',
+    title: "List Available Scopes",
+    description: "Get all available scopes for API key creation",
+    method: "GET",
+    path: "/api/keys/scopes",
+    auth: "None (public)",
+    category: "keys",
+    rateLimit: "120 requests / 60 seconds",
+    example: `const response = await fetch('https://api.dytto.app/api/keys/scopes');
+const { scopes, descriptions } = await response.json();`,
+    response: `{
+  "scopes": [
+    "location", "schedule", "preferences", "relationships",
+    "work", "health", "lifestyle", "financial", "food", "travel",
+    "context:read", "patterns:read", "stories:read", "search:execute", "observe"
+  ],
+  "descriptions": {
+    "location": "Access to location data (home, work, frequent places)",
+    "preferences": "Access to user preferences and settings",
+    "context:read": "Read full context narrative",
+    "observe": "Push observations to extract facts"
+  }
+}`
   }
 };
 
@@ -347,6 +742,44 @@ const sidebarSections = [
     ]
   },
   {
+    id: 'api-keys',
+    title: 'API Keys',
+    icon: Key,
+    items: [
+      { id: 'keys-scopes', title: 'Available Scopes' },
+      { id: 'keys-create', title: 'Create Key' },
+      { id: 'keys-list', title: 'List Keys' },
+      { id: 'keys-revoke', title: 'Revoke Key' },
+    ]
+  },
+  {
+    id: 'observe-api',
+    title: 'Observe API',
+    icon: Zap,
+    items: [
+      { id: 'observe', title: 'Observe (Low-Effort)' },
+      { id: 'observe-batch', title: 'Batch Observe' },
+    ]
+  },
+  {
+    id: 'context-api',
+    title: 'Context API',
+    icon: Cpu,
+    items: [
+      { id: 'context-scope', title: 'Scoped Context' },
+      { id: 'context-now', title: 'Context Now' },
+    ]
+  },
+  {
+    id: 'facts-api',
+    title: 'Facts API',
+    icon: FileText,
+    items: [
+      { id: 'facts-query', title: 'Query Facts' },
+      { id: 'facts-categories', title: 'List Categories' },
+    ]
+  },
+  {
     id: 'platform-api',
     title: 'Platform API',
     icon: Server,
@@ -367,6 +800,8 @@ const sidebarSections = [
       { id: 'agent-notify', title: 'Push Notification' },
       { id: 'agent-stories', title: 'Fetch Stories' },
       { id: 'agent-search', title: 'Search Stories' },
+      { id: 'agent-social', title: 'Get Relationships' },
+      { id: 'agent-places', title: 'Search Places' },
     ]
   },
   {
@@ -1334,11 +1769,183 @@ const AgentAPISection: React.FC = () => {
           lineHeight: 1.6,
         }}>
           The Agent API is for AI agents in the Dytto ecosystem. These endpoints provide 
-          full context access, event reporting, and story retrieval capabilities.
+          full context access, event reporting, story retrieval, relationships, and places search.
         </p>
       </motion.div>
 
       {agentEndpoints.map((endpoint, index) => (
+        <EndpointCard key={endpoint.id} endpoint={endpoint} />
+      ))}
+    </div>
+  );
+};
+
+const APIKeysSection: React.FC = () => {
+  const { theme } = useTheme();
+  const styles = useThemeStyles();
+
+  const keysEndpoints = Object.values(endpoints).filter(ep => ep.category === 'keys');
+
+  return (
+    <div>
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5 }}
+        viewport={{ once: true }}
+        style={{ marginBottom: 'clamp(1.5rem, 4vw, 2rem)' }}
+      >
+        <h2 style={{ 
+          fontSize: 'clamp(1.25rem, 5vw, 1.75rem)',
+          fontWeight: theme.typography.fontWeight.bold,
+          color: theme.colors.text, 
+          marginBottom: 'clamp(0.5rem, 2vw, 0.75rem)',
+          lineHeight: 1.3,
+        }}>
+          API Keys Management
+        </h2>
+        <p style={{ 
+          fontSize: 'clamp(0.85rem, 3vw, 1rem)',
+          color: theme.colors.textSecondary,
+          lineHeight: 1.6,
+        }}>
+          Create and manage scoped API keys for third-party agents. Keys are prefixed with{' '}
+          <code style={{ 
+            backgroundColor: theme.colors.surface, 
+            padding: '0.125rem 0.5rem', 
+            borderRadius: '0.25rem',
+            fontSize: 'clamp(0.75rem, 2.5vw, 0.85rem)',
+          }}>dyt_</code>{' '}
+          and can be scoped to specific categories of user context.
+        </p>
+      </motion.div>
+
+      {keysEndpoints.map((endpoint, index) => (
+        <EndpointCard key={endpoint.id} endpoint={endpoint} />
+      ))}
+    </div>
+  );
+};
+
+const ObserveAPISection: React.FC = () => {
+  const { theme } = useTheme();
+  const styles = useThemeStyles();
+
+  const observeEndpoints = Object.values(endpoints).filter(ep => ep.category === 'observe');
+
+  return (
+    <div>
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5 }}
+        viewport={{ once: true }}
+        style={{ marginBottom: 'clamp(1.5rem, 4vw, 2rem)' }}
+      >
+        <h2 style={{ 
+          fontSize: 'clamp(1.25rem, 5vw, 1.75rem)',
+          fontWeight: theme.typography.fontWeight.bold,
+          color: theme.colors.text, 
+          marginBottom: 'clamp(0.5rem, 2vw, 0.75rem)',
+          lineHeight: 1.3,
+        }}>
+          Observe API
+        </h2>
+        <p style={{ 
+          fontSize: 'clamp(0.85rem, 3vw, 1rem)',
+          color: theme.colors.textSecondary,
+          lineHeight: 1.6,
+        }}>
+          Low-effort context ingestion for agents. Send any unstructured data — logs, transcripts, 
+          notes, JSON — and Dytto automatically extracts, categorizes, and stores facts.
+          Design principle: <strong>Low effort = high adoption</strong>.
+        </p>
+      </motion.div>
+
+      {observeEndpoints.map((endpoint, index) => (
+        <EndpointCard key={endpoint.id} endpoint={endpoint} />
+      ))}
+    </div>
+  );
+};
+
+const ContextAPISection: React.FC = () => {
+  const { theme } = useTheme();
+  const styles = useThemeStyles();
+
+  const contextEndpoints = Object.values(endpoints).filter(ep => ep.category === 'context');
+
+  return (
+    <div>
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5 }}
+        viewport={{ once: true }}
+        style={{ marginBottom: 'clamp(1.5rem, 4vw, 2rem)' }}
+      >
+        <h2 style={{ 
+          fontSize: 'clamp(1.25rem, 5vw, 1.75rem)',
+          fontWeight: theme.typography.fontWeight.bold,
+          color: theme.colors.text, 
+          marginBottom: 'clamp(0.5rem, 2vw, 0.75rem)',
+          lineHeight: 1.3,
+        }}>
+          Context API
+        </h2>
+        <p style={{ 
+          fontSize: 'clamp(0.85rem, 3vw, 1rem)',
+          color: theme.colors.textSecondary,
+          lineHeight: 1.6,
+        }}>
+          Smart context retrieval endpoints. Instead of fetching everything, describe your task 
+          and get only the context you need — reducing token usage and improving relevance.
+        </p>
+      </motion.div>
+
+      {contextEndpoints.map((endpoint, index) => (
+        <EndpointCard key={endpoint.id} endpoint={endpoint} />
+      ))}
+    </div>
+  );
+};
+
+const FactsAPISection: React.FC = () => {
+  const { theme } = useTheme();
+  const styles = useThemeStyles();
+
+  const factsEndpoints = Object.values(endpoints).filter(ep => ep.category === 'facts');
+
+  return (
+    <div>
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5 }}
+        viewport={{ once: true }}
+        style={{ marginBottom: 'clamp(1.5rem, 4vw, 2rem)' }}
+      >
+        <h2 style={{ 
+          fontSize: 'clamp(1.25rem, 5vw, 1.75rem)',
+          fontWeight: theme.typography.fontWeight.bold,
+          color: theme.colors.text, 
+          marginBottom: 'clamp(0.5rem, 2vw, 0.75rem)',
+          lineHeight: 1.3,
+        }}>
+          Facts API
+        </h2>
+        <p style={{ 
+          fontSize: 'clamp(0.85rem, 3vw, 1rem)',
+          color: theme.colors.textSecondary,
+          lineHeight: 1.6,
+        }}>
+          Query structured facts about users with automatic scope-based filtering. 
+          Your API key's scopes determine which facts you can access — agents only see 
+          facts matching their permissions.
+        </p>
+      </motion.div>
+
+      {factsEndpoints.map((endpoint, index) => (
         <EndpointCard key={endpoint.id} endpoint={endpoint} />
       ))}
     </div>
@@ -1449,6 +2056,12 @@ const RateLimitsSection: React.FC = () => {
     { endpoint: 'Push Notification', limit: '10 req/min', burst: '3 concurrent' },
     { endpoint: 'Fetch Stories', limit: '60 req/min', burst: '10 concurrent' },
     { endpoint: 'Search Stories', limit: '30 req/min', burst: '5 concurrent' },
+    { endpoint: 'Observe', limit: '60 req/min', burst: '10 concurrent' },
+    { endpoint: 'Observe Batch', limit: '20 req/min', burst: '5 concurrent' },
+    { endpoint: 'Facts Query', limit: '60 req/min', burst: '10 concurrent' },
+    { endpoint: 'Scoped Context', limit: '60 req/min', burst: '10 concurrent' },
+    { endpoint: 'Context Now', limit: '60 req/min', burst: '15 concurrent' },
+    { endpoint: 'Create API Key', limit: '10 req/min', burst: '3 concurrent' },
   ];
 
   return (
@@ -1911,6 +2524,10 @@ const DocsPage: React.FC = () => {
               >
                 {(activeSectionGroup === 'getting-started') && <GettingStartedSection />}
                 {(activeSectionGroup === 'authentication') && <AuthenticationSection />}
+                {(activeSectionGroup === 'api-keys') && <APIKeysSection />}
+                {(activeSectionGroup === 'observe-api') && <ObserveAPISection />}
+                {(activeSectionGroup === 'context-api') && <ContextAPISection />}
+                {(activeSectionGroup === 'facts-api') && <FactsAPISection />}
                 {(activeSectionGroup === 'platform-api') && <PlatformAPISection />}
                 {(activeSectionGroup === 'agent-api') && <AgentAPISection />}
                 {(activeSectionGroup === 'sdks') && <SDKsSection />}
