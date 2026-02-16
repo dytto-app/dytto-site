@@ -1,0 +1,22 @@
+# Netlify configuration for Dytto landing site
+
+[build]
+  command = "npm run build"
+  publish = "dist"
+
+# Ensure static files are served with correct MIME types
+[[headers]]
+  for = "/robots.txt"
+  [headers.values]
+    Content-Type = "text/plain"
+
+[[headers]]
+  for = "/sitemap.xml"
+  [headers.values]
+    Content-Type = "application/xml"
+
+# SPA fallback - only applies when no file exists at the path
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200

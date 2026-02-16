@@ -1,2 +1,4 @@
 # Netlify redirects for SPA routing
+# NOTE: Netlify serves existing files BEFORE applying these rules
+# The catch-all is for client-side routing (SPA)
 /*    /index.html   200
