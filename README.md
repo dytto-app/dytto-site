@@ -47,6 +47,14 @@ This project incorporates an enhanced analytics utility (`src/utils/analytics.ts
 
 The analytics system also captures UTM parameters for improved attribution and calculates session duration.
 
+## Deployment
+
+This site is deployed on [Netlify](https://www.netlify.com/). The `netlify.toml` file in the project root configures the deployment, including:
+-   **Build Command**: `npm run build`
+-   **Publish Directory**: `dist`
+-   **Header Rules**: Ensures `robots.txt` is served as `text/plain` and `sitemap.xml` as `application/xml`.
+-   **Redirect Rules**: Handles client-side routing (SPA fallback) by redirecting all unmatched paths to `/index.html` with a 200 status.
+
 ## Available Scripts
 
 -   `npm run dev`: Starts the development server.
