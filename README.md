@@ -53,3 +53,7 @@ The analytics system also captures UTM parameters for improved attribution and c
 -   `npm run build`: Builds the application for production.
 -   `npm run lint`: Lints the project files.
 -   `npm run preview`: Previews the production build locally.
+
+## Deployment
+
+This project is configured for deployment on Netlify. Redirects and Single Page Application (SPA) routing are handled via the `public/_redirects` file. This file is automatically copied to the build output directory (`dist/`) during the build process, ensuring proper routing and asset handling on Netlify.
