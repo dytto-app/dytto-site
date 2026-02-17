@@ -1,6 +1,3 @@
-# SEO static files - serve as-is (identity redirect prevents SPA catch)
-/robots.txt   /robots.txt   200
-/sitemap.xml  /sitemap.xml  200
-
-# SPA fallback for client-side routing (no force flag = won't override existing files)
+# SPA fallback - existing files (robots.txt, sitemap.xml, images) are served directly
+# The /* rule only applies when no file exists at the path
 /*    /index.html   200
