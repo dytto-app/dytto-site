@@ -18,4 +18,4 @@
     Cache-Control = "public, max-age=3600"
 
 # Redirects are handled by public/_redirects file
-# See _redirects for SPA fallback and static file handling
+# See _redirects for SPA fallback; static files are served by default
