@@ -53,3 +53,7 @@ The analytics system also captures UTM parameters for improved attribution and c
 -   `npm run build`: Builds the application for production.
 -   `npm run lint`: Lints the project files.
 -   `npm run preview`: Previews the production build locally.
+
+## Deployment with Netlify
+
+This project is configured for deployment on Netlify. The `netlify.toml` file contains specific build settings and redirect rules. Notably, it includes explicit redirects and headers for `robots.txt` and `sitemap.xml` to ensure these static SEO files are served correctly, bypassing the single-page application (SPA) wildcard rewrite. This guarantees proper indexing and SEO functionality.
