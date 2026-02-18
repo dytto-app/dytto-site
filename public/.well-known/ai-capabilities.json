@@ -46,8 +46,8 @@
       "id": "simulation",
       "name": "Persona Simulation",
       "description": "Generate synthetic personas for research and testing",
-      "endpoint": "https://sample.space/api",
-      "documentation": "https://sample.space",
+      "endpoint": "https://sampl.space/api",
+      "documentation": "https://sampl.space",
       "use_case": "academic_research"
     }
   ],

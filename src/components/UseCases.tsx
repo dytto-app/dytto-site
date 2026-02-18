@@ -29,10 +29,10 @@ const useCases = [
     metrics: {
       'Personas': '3,505',
       'Studies': '4 live',
-      'Demo': 'sample.space'
+      'Demo': 'sampl.space'
     },
     gradient: 'from-blue-500 to-purple-600',
-    demoUrl: 'https://sample.space'
+    demoUrl: 'https://sampl.space'
   },
   {
     id: 'ecommerce',
