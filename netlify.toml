@@ -4,6 +4,33 @@
   command = "npm run build"
   publish = "dist"
 
+# REDIRECTS (netlify.toml redirects processed BEFORE _redirects)
+# The key is status = 200 without force - this proxies but respects existing files
+# However, for absolute certainty, we DON'T catch these files with the SPA wildcard
+
+# CRITICAL: Explicit 200 redirects for SEO files BEFORE the SPA catch-all
+# These must come first in the file
+[[redirects]]
+  from = "/robots.txt"
+  to = "/robots.txt"
+  status = 200
+
+[[redirects]]
+  from = "/sitemap.xml"
+  to = "/sitemap.xml"
+  status = 200
+
+[[redirects]]
+  from = "/.well-known/*"
+  to = "/.well-known/:splat"
+  status = 200
+
+# SPA fallback - catches all other routes for client-side routing
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
+
 # Headers for static files (applied after redirects)
 [[headers]]
   for = "/robots.txt"
@@ -24,6 +51,3 @@
     Content-Type = "application/json; charset=utf-8"
     Cache-Control = "public, max-age=3600"
     Access-Control-Allow-Origin = "*"
-
-# Redirects are handled by public/_redirects file
-# See _redirects for SPA fallback and static file handling
