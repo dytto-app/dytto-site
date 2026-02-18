@@ -1,3 +1,6 @@
+# Static files served directly (before SPA fallback)
+/.well-known/*  /.well-known/:splat  200
+
 # SPA fallback - existing files (robots.txt, sitemap.xml, images) are served directly
 # The /* rule only applies when no file exists at the path
 /*    /index.html   200

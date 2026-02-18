@@ -19,19 +19,20 @@ const useCases = [
     icon: Users,
     title: 'Academic Research',
     subtitle: 'Social & Behavioral Studies',
-    description: 'Generate diverse, anonymized user personas for research studies without compromising privacy.',
+    description: 'Run social science experiments with synthetic personas derived from real demographic data. Replicate classic studies or design new ones.',
     features: [
-      'Demographically diverse simulation agents',
+      '3,500+ GSS-derived synthetic personas',
       'Configurable personality traits and behaviors',
-      'Ethical data collection and anonymization',
-      'Statistical validity and reproducibility'
+      'Classic study replications (Milgram, Asch, etc.)',
+      'Statistical validation against published results'
     ],
     metrics: {
-      'Research Studies': '500+',
-      'Generated Personas': '50K+',
-      'Universities': '25+'
+      'Personas': '3,505',
+      'Studies': '4 live',
+      'Demo': 'sample.space'
     },
-    gradient: 'from-blue-500 to-purple-600'
+    gradient: 'from-blue-500 to-purple-600',
+    demoUrl: 'https://sample.space'
   },
   {
     id: 'ecommerce',
@@ -405,21 +406,42 @@ const UseCases = () => {
                   </div>
                 </div>
 
-                <motion.button
-                  whileHover={{ scale: 1.02 }}
-                  whileTap={{ scale: 0.98 }}
-                  style={{
-                    ...styles.button.primary,
-                    display: 'inline-flex',
-                    alignItems: 'center',
-                    gap: theme.semanticSpacing.sm,
-                    width: '100%',
-                    justifyContent: 'center',
-                  }}
-                >
-                  <span>Explore This Use Case</span>
-                  <ArrowRight size={20} />
-                </motion.button>
+                {activeCase.demoUrl ? (
+                  <motion.a
+                    href={activeCase.demoUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    whileHover={{ scale: 1.02 }}
+                    whileTap={{ scale: 0.98 }}
+                    style={{
+                      ...styles.button.primary,
+                      display: 'inline-flex',
+                      alignItems: 'center',
+                      gap: theme.semanticSpacing.sm,
+                      width: '100%',
+                      justifyContent: 'center',
+                      textDecoration: 'none',
+                    }}
+                  >
+                    <span>Try Live Demo →</span>
+                  </motion.a>
+                ) : (
+                  <motion.button
+                    whileHover={{ scale: 1.02 }}
+                    whileTap={{ scale: 0.98 }}
+                    style={{
+                      ...styles.button.primary,
+                      display: 'inline-flex',
+                      alignItems: 'center',
+                      gap: theme.semanticSpacing.sm,
+                      width: '100%',
+                      justifyContent: 'center',
+                    }}
+                  >
+                    <span>Explore This Use Case</span>
+                    <ArrowRight size={20} />
+                  </motion.button>
+                )}
               </motion.div>
             </AnimatePresence>
           </div>
