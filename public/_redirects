@@ -1,6 +1,11 @@
-# Static files served directly (before SPA fallback)
+# SEO static files - identity redirects ensure these match BEFORE the wildcard
+# Without these, the SPA fallback catches them and serves index.html
+/robots.txt   /robots.txt   200
+/sitemap.xml  /sitemap.xml  200
+
+# Static well-known files for agent discovery
 /.well-known/*  /.well-known/:splat  200
 
-# SPA fallback - existing files (robots.txt, sitemap.xml, images) are served directly
-# The /* rule only applies when no file exists at the path
+# SPA fallback for client-side routing
+# Note: this would catch static files if not for the explicit rules above
 /*    /index.html   200
