@@ -53,3 +53,7 @@ The analytics system also captures UTM parameters for improved attribution and c
 -   `npm run build`: Builds the application for production.
 -   `npm run lint`: Lints the project files.
 -   `npm run preview`: Previews the production build locally.
+
+## Analytics
+
+This site uses Google Analytics to collect anonymous usage data. The tracking code is embedded directly in `index.html`.
