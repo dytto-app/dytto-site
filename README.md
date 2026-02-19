@@ -47,6 +47,18 @@ This project incorporates an enhanced analytics utility (`src/utils/analytics.ts
 
 The analytics system also captures UTM parameters for improved attribution and calculates session duration.
 
+## Netlify Deployment and Redirects
+
+This project is deployed on Netlify. It utilizes a `public/_redirects` file to manage routing, especially for Single Page Application (SPA) fallback and ensuring critical static files are served correctly.
+
+**Key Redirects Information:**
+
+-   **SEO Files (`robots.txt`, `sitemap.xml`):** These files are crucial for search engine optimization and must be served as static files, bypassing the SPA's client-side routing. The `public/_redirects` file uses `200!` rules (e.g., `/robots.txt /robots.txt 200!`) to explicitly force Netlify to serve these files directly from their paths, preventing them from being caught by the SPA fallback rule. The `200!` (with a bang) ensures the file is served as-is, even when a SPA wildcard might otherwise intercept it.
+
+-   **SPA Fallback:** The `/* /index.html 200` rule (placed at the end of `public/_redirects`) handles the SPA routing. It ensures that any request not matching a specific file or an explicit redirect rule will fall back to serving `index.html`, allowing the client-side router to take over.
+
+For more details on Netlify redirects, refer to the Netlify documentation.
+
 ## Available Scripts
 
 -   `npm run dev`: Starts the development server.
