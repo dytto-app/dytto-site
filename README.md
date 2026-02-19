@@ -52,4 +52,14 @@ The analytics system also captures UTM parameters for improved attribution and c
 -   `npm run dev`: Starts the development server.
 -   `npm run build`: Builds the application for production.
 -   `npm run lint`: Lints the project files.
--   `npm run preview`: Previews the production build locally.
+- `npm run preview`: Previews the production build locally.
+
+## Deployment to Netlify
+
+This project is configured for deployment on Netlify. Key deployment configurations are managed in:
+
+-   `netlify.toml`: Contains build settings and global headers (e.g., for `robots.txt`, `sitemap.xml`, and `ai-capabilities.json`). It explicitly avoids defining redirects to ensure static assets are served correctly.
+-   `public/_redirects`: Handles Single-Page Application (SPA) routing by redirecting all unmatched paths to `index.html` with a 200 status code, ensuring client-side routing works as expected after static files are checked.
+
+This separation ensures proper precedence for static files and correct SPA fallback behavior.
+
