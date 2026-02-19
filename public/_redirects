@@ -1,0 +1,12 @@
+# Netlify _redirects for SPA routing
+# 
+# The fix: Use "200" with explicit static file checks.
+# Netlify processes redirects AFTER checking for static assets.
+# If robots.txt exists in dist/, it should serve before this kicks in.
+#
+# If that still fails, the nuclear option is using Netlify Edge Functions,
+# but let's try the simple approach first.
+#
+# Also: Remove any conflicting netlify.toml redirect rules!
+
+/* /index.html 200

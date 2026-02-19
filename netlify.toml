@@ -4,32 +4,15 @@
   command = "npm run build"
   publish = "dist"
 
-# REDIRECTS (netlify.toml redirects processed BEFORE _redirects)
-# The key is status = 200 without force - this proxies but respects existing files
-# However, for absolute certainty, we DON'T catch these files with the SPA wildcard
-
-# CRITICAL: Explicit 200 redirects for SEO files BEFORE the SPA catch-all
-# These must come first in the file
-[[redirects]]
-  from = "/robots.txt"
-  to = "/robots.txt"
-  status = 200
-
-[[redirects]]
-  from = "/sitemap.xml"
-  to = "/sitemap.xml"
-  status = 200
-
-[[redirects]]
-  from = "/.well-known/*"
-  to = "/.well-known/:splat"
-  status = 200
-
-# SPA fallback - catches all other routes for client-side routing
-[[redirects]]
-  from = "/*"
-  to = "/index.html"
-  status = 200
+# IMPORTANT: No redirects needed for static files!
+# Netlify serves static files from dist/ before processing redirects.
+# The issue was the wildcard /* with force=false still overriding.
+# 
+# Solution: Use a more specific wildcard that excludes static files,
+# OR rely on Netlify's default behavior with no explicit redirect.
+# 
+# Actually, the simplest fix is NO wildcard at all - use _redirects
+# file with proper ordering, since netlify.toml wildcards can be buggy.
 
 # Headers for static files (applied after redirects)
 [[headers]]
