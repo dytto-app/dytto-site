@@ -1,13 +1,1 @@
-# Netlify _redirects for SPA routing
-# CRITICAL: Explicit identity rules for static files BEFORE the wildcard!
-# The 200! (with bang) forces serve-as-is even with SPA routing.
-
-# SEO files - must serve as static
-/robots.txt /robots.txt 200!
-/sitemap.xml /sitemap.xml 200!
-
-# Agent discovery
-/.well-known/* /.well-known/:splat 200!
-
-# SPA fallback - MUST BE LAST
-/* /index.html 200
+# Redirects handled in netlify.toml

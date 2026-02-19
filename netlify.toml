@@ -4,33 +4,26 @@
   command = "npm run build"
   publish = "dist"
 
-# IMPORTANT: No redirects needed for static files!
-# Netlify serves static files from dist/ before processing redirects.
-# The issue was the wildcard /* with force=false still overriding.
-# 
-# Solution: Use a more specific wildcard that excludes static files,
-# OR rely on Netlify's default behavior with no explicit redirect.
-# 
-# Actually, the simplest fix is NO wildcard at all - use _redirects
-# file with proper ordering, since netlify.toml wildcards can be buggy.
-
-# Headers for static files (applied after redirects)
+# Headers for Content-Type (in case Netlify misdetects)
 [[headers]]
   for = "/robots.txt"
   [headers.values]
-    Content-Type = "text/plain; charset=utf-8"
-    Cache-Control = "public, max-age=3600"
+    Content-Type = "text/plain"
 
 [[headers]]
-  for = "/sitemap.xml"
+  for = "/sitemap.xml"  
   [headers.values]
-    Content-Type = "application/xml; charset=utf-8"
-    Cache-Control = "public, max-age=3600"
+    Content-Type = "application/xml"
 
-# Agent discovery - machine-readable capabilities
 [[headers]]
-  for = "/.well-known/ai-capabilities.json"
+  for = "/.well-known/*"
   [headers.values]
-    Content-Type = "application/json; charset=utf-8"
-    Cache-Control = "public, max-age=3600"
+    Content-Type = "application/json"
     Access-Control-Allow-Origin = "*"
+
+# SPA routing - DO NOT use force=true
+# Static files in dist/ are served automatically BEFORE this kicks in
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
