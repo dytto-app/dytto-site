@@ -53,3 +53,12 @@ The analytics system also captures UTM parameters for improved attribution and c
 -   `npm run build`: Builds the application for production.
 -   `npm run lint`: Lints the project files.
 -   `npm run preview`: Previews the production build locally.
+
+## Deployment and SEO Configuration
+
+This project utilizes Netlify Edge Functions to serve `robots.txt` and `sitemap.xml` directly. This approach ensures these critical SEO files are processed before any redirect rules, resolving potential crawling issues.
+
+-   `/robots.txt` is served by `netlify/edge-functions/robots.ts`.
+-   `/sitemap.xml` is served by `netlify/edge-functions/sitemap.ts`.
+
+These Edge Functions bypass traditional redirect-based serving mechanisms and provide explicit control over the content and headers for these files.
