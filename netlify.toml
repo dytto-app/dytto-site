@@ -21,8 +21,27 @@
     Content-Type = "application/json"
     Access-Control-Allow-Origin = "*"
 
-# SPA routing - DO NOT use force=true
-# Static files in dist/ are served automatically BEFORE this kicks in
+# CRITICAL: Explicit identity redirects for SEO files BEFORE the SPA wildcard!
+# Netlify processes redirects in order — first match wins.
+# Without these, /* catches /robots.txt and serves index.html.
+
+[[redirects]]
+  from = "/robots.txt"
+  to = "/robots.txt"
+  status = 200
+
+[[redirects]]
+  from = "/sitemap.xml"
+  to = "/sitemap.xml"
+  status = 200
+
+[[redirects]]
+  from = "/.well-known/*"
+  to = "/.well-known/:splat"
+  status = 200
+
+# SPA routing - MUST BE LAST
+# Static files in dist/ are served when matched by identity redirects above
 [[redirects]]
   from = "/*"
   to = "/index.html"
