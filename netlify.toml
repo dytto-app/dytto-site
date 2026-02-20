@@ -4,44 +4,24 @@
   command = "npm run build"
   publish = "dist"
 
-# Headers for Content-Type (in case Netlify misdetects)
-[[headers]]
-  for = "/robots.txt"
-  [headers.values]
-    Content-Type = "text/plain"
+# Edge Functions handle SEO files directly (bypasses redirect issues)
+[[edge_functions]]
+  function = "robots"
+  path = "/robots.txt"
 
-[[headers]]
-  for = "/sitemap.xml"  
-  [headers.values]
-    Content-Type = "application/xml"
+[[edge_functions]]
+  function = "sitemap"
+  path = "/sitemap.xml"
 
+# Headers
 [[headers]]
   for = "/.well-known/*"
   [headers.values]
     Content-Type = "application/json"
     Access-Control-Allow-Origin = "*"
 
-# CRITICAL: Explicit identity redirects for SEO files BEFORE the SPA wildcard!
-# Netlify processes redirects in order — first match wins.
-# Without these, /* catches /robots.txt and serves index.html.
-
-[[redirects]]
-  from = "/robots.txt"
-  to = "/robots.txt"
-  status = 200
-
-[[redirects]]
-  from = "/sitemap.xml"
-  to = "/sitemap.xml"
-  status = 200
-
-[[redirects]]
-  from = "/.well-known/*"
-  to = "/.well-known/:splat"
-  status = 200
-
-# SPA routing - MUST BE LAST
-# Static files in dist/ are served when matched by identity redirects above
+# SPA routing - catch all for client-side routing
+# Edge functions for SEO files are processed BEFORE this redirect
 [[redirects]]
   from = "/*"
   to = "/index.html"
