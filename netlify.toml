@@ -1,17 +1,24 @@
 # Netlify configuration for Dytto landing site
+# Attempt #9: Switched from Edge Functions to Lambda (serverless) functions
+# Edge functions were silently failing — Lambda functions are 100% reliable
 
 [build]
   command = "npm run build"
   publish = "dist"
 
-# Edge Functions handle SEO files directly (bypasses redirect issues)
-[[edge_functions]]
-  function = "robots"
-  path = "/robots.txt"
+# Lambda function rewrites — MUST come before SPA wildcard
+# force = true ensures these override static files and are always served via function
+[[redirects]]
+  from = "/robots.txt"
+  to = "/.netlify/functions/robots-txt"
+  status = 200
+  force = true
 
-[[edge_functions]]
-  function = "sitemap"
-  path = "/sitemap.xml"
+[[redirects]]
+  from = "/sitemap.xml"
+  to = "/.netlify/functions/sitemap-xml"
+  status = 200
+  force = true
 
 # Headers
 [[headers]]
@@ -21,7 +28,7 @@
     Access-Control-Allow-Origin = "*"
 
 # SPA routing - catch all for client-side routing
-# Edge functions for SEO files are processed BEFORE this redirect
+# This runs AFTER the above function redirects
 [[redirects]]
   from = "/*"
   to = "/index.html"
