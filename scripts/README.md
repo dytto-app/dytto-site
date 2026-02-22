@@ -92,6 +92,9 @@ These bash scripts allow Claude (or any automation tool) to manage your Dytto bl
 
 # Get by ID
 ./scripts/blog-get.sh "123e4567-e89b-12d3-a456-426614174000"
+
+# Get the new blog post about journaling for mental health
+./scripts/blog-get.sh "journaling-for-mental-health-ai-changes-everything"
 ```
 
 ### 5. Delete Blog Post
