@@ -1,8 +1,10 @@
 # Netlify configuration for Dytto landing site
-# Fix #10: Remove all force-redirect nonsense.
-# robots.txt and sitemap.xml exist in public/ → Vite copies to dist/ → Netlify serves directly.
+# Fix #11: Remove all legacy edge-function and lambda-function files.
+# Those auto-discovered functions were intercepting /robots.txt and /sitemap.xml
+# and (when crashing or misconfigured) causing Netlify Edge to cache HTML responses.
+# Now: robots.txt and sitemap.xml in public/ → Vite copies to dist/ → Netlify serves directly.
 # The /* SPA wildcard WITHOUT force=true does NOT override existing static files.
-# Simpler is better. Stop fighting Netlify.
+# No functions. No edge functions. Just static files. Keep it simple.
 
 [build]
   command = "npm run build"

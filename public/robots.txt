@@ -9,3 +9,5 @@ Sitemap: https://dytto.app/sitemap.xml
 
 # Crawl-delay for polite crawling
 Crawl-delay: 1
+
+# Last updated: 2026-02-23
