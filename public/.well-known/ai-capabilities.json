@@ -1,0 +1,91 @@
+{
+  "$schema": "https://dytto.app/.well-known/ai-capabilities-schema.json",
+  "name": "Dytto",
+  "description": "Personal context API for AI agents. Access user preferences, patterns, and behavioral context with consent.",
+  "version": "1.0.0",
+  "homepage": "https://dytto.app",
+  "documentation": "https://dytto.app/docs",
+  "api_base": "https://dytto.onrender.com",
+  "health_endpoint": "https://dytto.onrender.com/health",
+  "openapi_spec": "https://dytto.onrender.com/openapi.json",
+  "mcp_server": "https://github.com/AyaanSP/dytto-mcp-server",
+  "capabilities": [
+    {
+      "id": "context_read",
+      "name": "Read User Context",
+      "description": "Access user's behavioral patterns, preferences, locations, and lifestyle context",
+      "endpoint": "/api/mcp/context",
+      "auth": "oauth2",
+      "scopes": ["context:read"]
+    },
+    {
+      "id": "context_write",
+      "name": "Store Context",
+      "description": "Store new facts and observations about the user",
+      "endpoint": "/api/mcp/update-context",
+      "auth": "oauth2",
+      "scopes": ["context:write"]
+    },
+    {
+      "id": "search",
+      "name": "Semantic Search",
+      "description": "Search user's context history with natural language queries",
+      "endpoint": "/v1/search",
+      "auth": "api_key",
+      "scopes": ["search:execute"]
+    },
+    {
+      "id": "patterns",
+      "name": "Behavioral Patterns",
+      "description": "Access synthesized behavioral patterns and routines",
+      "endpoint": "/v1/patterns",
+      "auth": "api_key",
+      "scopes": ["patterns:read"]
+    },
+    {
+      "id": "simulation",
+      "name": "Persona Simulation",
+      "description": "Generate synthetic personas for research and testing",
+      "endpoint": "https://sampl.space/api",
+      "documentation": "https://sampl.space",
+      "use_case": "academic_research"
+    }
+  ],
+  "authentication": {
+    "oauth2": {
+      "authorization_url": "https://dytto.app/oauth/authorize",
+      "token_url": "https://dytto.onrender.com/oauth/token",
+      "scopes": {
+        "context:read": "Read user context and preferences",
+        "context:write": "Store new facts about the user",
+        "patterns:read": "Access behavioral patterns",
+        "search:execute": "Search context history",
+        "observe": "Passive context observation"
+      }
+    },
+    "api_key": {
+      "header": "Authorization",
+      "format": "Bearer {api_key}",
+      "obtain": "https://dytto.app/settings/api-keys"
+    }
+  },
+  "pricing": {
+    "model": "usage_based",
+    "free_tier": {
+      "requests_per_month": 1000,
+      "features": ["context_read", "search"]
+    },
+    "paid": {
+      "url": "https://dytto.app/pricing"
+    }
+  },
+  "contact": {
+    "support": "support@dytto.app",
+    "developer": "https://github.com/AyaanSP"
+  },
+  "trust": {
+    "privacy_policy": "https://dytto.app/privacy",
+    "data_residency": "US",
+    "certifications": []
+  }
+}
