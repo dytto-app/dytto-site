@@ -1,6 +1,6 @@
 import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
-import { initAnalytics } from '@ayaan/analytics';
+import { initAnalytics } from './utils/mixpanel';
 import App from './App.tsx';
 import './index.css';
 

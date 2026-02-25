@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
-import { trackPage } from '@ayaan/analytics';
+import { trackPage } from './utils/mixpanel';
 import { ThemeProvider } from './components/ThemeProvider';
 import { AuthProvider } from './components/AuthProvider';
 import WaitlistLandingPage from './pages/WaitlistLandingPage';
