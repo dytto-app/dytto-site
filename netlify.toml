@@ -1,16 +1,14 @@
-# Netlify configuration for Dytto landing site
-# Fix #11: Remove all legacy edge-function and lambda-function files.
-# Those auto-discovered functions were intercepting /robots.txt and /sitemap.xml
-# and (when crashing or misconfigured) causing Netlify Edge to cache HTML responses.
-# Now: robots.txt and sitemap.xml in public/ → Vite copies to dist/ → Netlify serves directly.
-# The /* SPA wildcard WITHOUT force=true does NOT override existing static files.
-# No functions. No edge functions. Just static files. Keep it simple.
-
 [build]
   command = "npm run build"
-  publish = "dist"
+  publish = ".next"
 
-# Headers for static SEO files
+[build.environment]
+  NODE_VERSION = "20"
+
+[[plugins]]
+  package = "@netlify/plugin-nextjs"
+
+# Headers for SEO files
 [[headers]]
   for = "/robots.txt"
   [headers.values]
@@ -23,16 +21,8 @@
     Content-Type = "application/xml; charset=utf-8"
     Cache-Control = "public, max-age=3600"
 
-# Headers for .well-known
 [[headers]]
-  for = "/.well-known/*"
+  for = "/llms.txt"
   [headers.values]
-    Content-Type = "application/json"
-    Access-Control-Allow-Origin = "*"
-
-# SPA routing - catch all for client-side routing
-# NO force=true here — static files like robots.txt/sitemap.xml are served directly
-[[redirects]]
-  from = "/*"
-  to = "/index.html"
-  status = 200
+    Content-Type = "text/plain; charset=utf-8"
+    Cache-Control = "public, max-age=21600"

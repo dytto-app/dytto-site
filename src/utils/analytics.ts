@@ -1,10 +1,39 @@
+'use client';
+
 /**
  * Enhanced Analytics Utility for Landing Page Event Tracking
  * Provides comprehensive tracking for user interactions, scroll depth, exit intent, and more
  * Integrates with both Google Analytics and Mixpanel (via shared analytics)
  */
 
-import { track as mixpanelTrack, trackError as mixpanelTrackError } from '@ayaan/analytics';
+// Mixpanel — direct integration (bypasses @ayaan/analytics to avoid SSR issues)
+// mixpanel-browser requires window/document, so all calls are guarded with typeof window check
+const MIXPANEL_TOKEN = 'a15e150aa4fe879ffb226695b5f0a567';
+let mixpanelInitialized = false;
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const getMixpanel = (): any | null => {
+  if (typeof window === 'undefined') return null;
+  try {
+    // eslint-disable-next-line @typescript-eslint/no-require-imports
+    const mp = require('mixpanel-browser');
+    if (!mixpanelInitialized) {
+      mp.init(MIXPANEL_TOKEN, { track_pageview: false, persistence: 'localStorage' });
+      mixpanelInitialized = true;
+    }
+    return mp;
+  } catch {
+    return null;
+  }
+};
+
+const mixpanelTrack = (event: string, props?: Record<string, unknown>) => {
+  try { getMixpanel()?.track(event, props); } catch { /* noop */ }
+};
+
+const mixpanelTrackError = (error: Error) => {
+  try { getMixpanel()?.track('Error', { message: error.message, stack: error.stack }); } catch { /* noop */ }
+};
 
 declare global {
   interface Window {

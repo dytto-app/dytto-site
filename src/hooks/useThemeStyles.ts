@@ -1,12 +1,13 @@
+'use client';
+
 import { useMemo } from 'react';
-import { useTheme } from '../components/ThemeProvider';
+import { useTheme } from '@/components/shared/ThemeProvider';
 
 // Hook for generating theme-aware styles
 export const useThemeStyles = () => {
   const { theme } = useTheme();
-  
+
   return useMemo(() => ({
-    // Background styles
     bg: {
       primary: { backgroundColor: theme.colors.background },
       secondary: { backgroundColor: theme.colors.backgroundSecondary },
@@ -14,22 +15,16 @@ export const useThemeStyles = () => {
       surface: { backgroundColor: theme.colors.surface },
       surfaceSecondary: { backgroundColor: theme.colors.surfaceSecondary },
     },
-    
-    // Text styles
     text: {
       primary: { color: theme.colors.text },
       secondary: { color: theme.colors.textSecondary },
       tertiary: { color: theme.colors.textTertiary },
       accent: { color: theme.colors.primary },
     },
-    
-    // Border styles
     border: {
       default: { borderColor: theme.colors.border },
       secondary: { borderColor: theme.colors.borderSecondary },
     },
-    
-    // Button styles
     button: {
       primary: {
         backgroundColor: theme.colors.primary,
@@ -66,8 +61,6 @@ export const useThemeStyles = () => {
         cursor: 'pointer',
       },
     },
-    
-    // Card styles
     card: {
       default: {
         backgroundColor: theme.colors.surface,
@@ -89,17 +82,9 @@ export const useThemeStyles = () => {
         padding: theme.semanticSpacing.lg,
       },
     },
-    
-    // Glass morphism utilities
     glass: theme.glassEffects,
-    
-    // Shadow utilities
     shadow: theme.shadows,
-    
-    // Spacing utilities
     spacing: theme.semanticSpacing,
-    
-    // Typography utilities
     typography: theme.textStyles,
   }), [theme]);
 };
