@@ -380,7 +380,7 @@ const { places } = await response.json();`,
   observe: {
     id: 'observe',
     title: "Observe (Low-Effort Ingestion)",
-    description: "Accept any unstructured input and extract facts automatically",
+    description: "Accept any unstructured input and extract facts automatically. Use async=true for fire-and-forget mode.",
     method: "POST",
     path: "/api/v1/observe",
     auth: "API Key (scope: observe or context:write)",
@@ -394,7 +394,8 @@ const { places } = await response.json();`,
   },
   body: JSON.stringify({
     data: "User mentioned their sister Ananya lives in the UK and does neuroscience research",
-    source: "maya"  // optional: identify your agent
+    source: "maya",     // optional: identify your agent
+    async: false        // optional: true = fire-and-forget (202 response), false = wait for extraction
   })
 });
 
@@ -419,7 +420,10 @@ const { facts_extracted, stored } = await response.json();`,
   "facts_deduplicated": 0,
   "stored": true,
   "processing_time_ms": 1234
-}`
+}
+
+// With async=true, returns immediately:
+// { "success": true, "async": true, "message": "Observation queued for background processing" }`
   },
 
   observeBatch: {
@@ -713,6 +717,226 @@ const { scopes, descriptions } = await response.json();`,
     "observe": "Push observations to extract facts"
   }
 }`
+  },
+
+  // ─── Context Search Stream (NEW) ─────────────────────────────
+  contextSearchStream: {
+    id: 'context-search-stream',
+    title: "Search Context (Streaming)",
+    description: "SSE streaming synthesis — first token in <1s, full synthesis in 5-10s",
+    method: "POST",
+    path: "/api/context/search/stream",
+    auth: "API Key or User JWT",
+    category: "context",
+    rateLimit: "30 requests / 60 seconds",
+    example: `const response = await fetch('https://api.dytto.app/api/context/search/stream', {
+  method: 'POST',
+  headers: {
+    'Authorization': 'Bearer dyt_your_api_key',
+    'Content-Type': 'application/json'
+  },
+  body: JSON.stringify({
+    query: "What did I do last week?"
+  })
+});
+
+// Read SSE stream
+const reader = response.body.getReader();
+const decoder = new TextDecoder();
+
+while (true) {
+  const { done, value } = await reader.read();
+  if (done) break;
+  
+  const text = decoder.decode(value);
+  const events = text.split('\\n\\n');
+  for (const event of events) {
+    if (event.startsWith('data: ')) {
+      const data = JSON.parse(event.slice(6));
+      if (data.token) process.stdout.write(data.token);
+      if (data.type === 'done') console.log('\\nSources:', data.sources);
+    }
+  }
+}`,
+    response: `// SSE Events:
+data: {"type": "retrieval_done", "story_count": 7}
+data: {"token": "Based"}
+data: {"token": " on"}
+data: {"token": " your"}
+...
+data: {"type": "done", "sources": ["2026-02-18", "2026-02-19", ...]}`
+  },
+
+  // ─── Entity API (NEW) ─────────────────────────────────────────
+  entitySearch: {
+    id: 'entity-search',
+    title: "Find Entities",
+    description: "Search for people, pets, places, and objects in the user's life",
+    method: "GET",
+    path: "/api/entities",
+    auth: "User JWT",
+    category: "entities",
+    rateLimit: "60 requests / 60 seconds",
+    example: `const response = await fetch(
+  'https://api.dytto.app/api/entities?q=Eula&type=pet',
+  { headers: { 'Authorization': 'Bearer USER_JWT' } }
+);
+
+const { entities, count } = await response.json();`,
+    response: `{
+  "entities": [{
+    "id": "uuid",
+    "canonical_name": "Eula",
+    "entity_type": "pet",
+    "first_seen_at": "2026-01-15T...",
+    "mention_count": 47,
+    "aliases": ["the cat", "fluffy"]
+  }],
+  "count": 1
+}`
+  },
+
+  entityQuery: {
+    id: 'entity-query',
+    title: "Entity Query (MCP)",
+    description: "Natural language queries about entities — 'How old is Eula?'",
+    method: "GET",
+    path: "/api/mcp/entity-query",
+    auth: "User JWT",
+    category: "entities",
+    rateLimit: "30 requests / 60 seconds",
+    example: `const response = await fetch(
+  'https://api.dytto.app/api/mcp/entity-query?q=How%20old%20is%20Eula',
+  { headers: { 'Authorization': 'Bearer USER_JWT' } }
+);
+
+const { suggested_answer, results } = await response.json();`,
+    response: `{
+  "query": "How old is Eula",
+  "entities_found": 1,
+  "results": [{
+    "entity": { "canonical_name": "Eula", "entity_type": "pet" },
+    "facts": [
+      { "attribute_key": "birthday", "value": "2020-03-15" },
+      { "attribute_key": "species", "value": "cat" }
+    ]
+  }],
+  "suggested_answer": "Eula was born on March 15, 2020, making her about 6 years old."
+}`
+  },
+
+  // ─── Knowledge Gaps (NEW) ─────────────────────────────────────
+  knowledgeGaps: {
+    id: 'knowledge-gaps',
+    title: "Knowledge Gaps",
+    description: "Surface context items the user hasn't mentioned this session",
+    method: "GET",
+    path: "/v1/personas/{persona_id}/knowledge-gaps",
+    auth: "User JWT",
+    category: "platform",
+    rateLimit: "20 requests / 60 seconds",
+    example: `const response = await fetch(
+  'https://api.dytto.app/v1/personas/USER_ID/knowledge-gaps?context=We%20discussed%20work%20today&limit=5',
+  { headers: { 'Authorization': 'Bearer USER_JWT' } }
+);
+
+const { unmentioned_items } = await response.json();`,
+    response: `{
+  "persona_id": "uuid",
+  "unmentioned_items": [
+    {
+      "category": "relationship",
+      "item": "Mom: no contact in 14 days",
+      "urgency": "high",
+      "why_relevant": "Close relationship, weekly contact pattern"
+    },
+    {
+      "category": "project",
+      "item": "Dytto API docs update",
+      "urgency": "medium",
+      "why_relevant": "Active project mentioned 3 days ago"
+    }
+  ],
+  "items_surfaced": 2
+}`
+  },
+
+  // ─── Context Staleness (NEW) ──────────────────────────────────
+  contextStaleness: {
+    id: 'context-staleness',
+    title: "Context Staleness",
+    description: "Detect temporal claims that may be outdated (graduation, job changes)",
+    method: "GET",
+    path: "/v1/context/staleness",
+    auth: "User JWT",
+    category: "platform",
+    rateLimit: "5 requests / 300 seconds",
+    example: `const response = await fetch('https://api.dytto.app/v1/context/staleness', {
+  headers: { 'Authorization': 'Bearer USER_JWT' }
+});
+
+const { stale_claims, total_stale } = await response.json();`,
+    response: `{
+  "stale_claims": [{
+    "claim": "MS graduation December 2025",
+    "predicted_date": "2025-12-19",
+    "days_since_predicted": 67,
+    "confidence_level": "unverified",
+    "hedge": "Expected to graduate December 2025 — verify if completed",
+    "update_suggestion": "Confirm: Did the graduation happen as planned?"
+  }],
+  "total_stale": 1,
+  "checked_at": "2026-02-25T10:30:00Z"
+}`
+  },
+
+  // ─── Agent Story Dates ────────────────────────────────────────
+  agentStoryDates: {
+    id: 'agent-story-dates',
+    title: "Story Dates",
+    description: "Get recent story dates for calendar views",
+    method: "GET",
+    path: "/api/agent/stories/dates",
+    auth: "Agent Service Key",
+    category: "agent",
+    rateLimit: "60 requests / 60 seconds",
+    example: `const response = await fetch(
+  'https://api.dytto.app/api/agent/stories/dates?user_id=USER_UUID&days=30',
+  { headers: { 'Authorization': 'Bearer YOUR_AGENT_SERVICE_KEY' } }
+);
+
+const { dates, count } = await response.json();`,
+    response: `{
+  "success": true,
+  "dates": ["2026-02-25", "2026-02-24", "2026-02-22", ...],
+  "count": 28
+}`
+  },
+
+  // ─── Fact by ID ───────────────────────────────────────────────
+  factById: {
+    id: 'fact-by-id',
+    title: "Get Fact by ID",
+    description: "Retrieve a specific fact with full details",
+    method: "GET",
+    path: "/api/v1/facts/{fact_id}",
+    auth: "API Key or User JWT",
+    category: "facts",
+    rateLimit: "120 requests / 60 seconds",
+    example: `const response = await fetch('https://api.dytto.app/api/v1/facts/FACT_UUID', {
+  headers: { 'Authorization': 'Bearer dyt_your_api_key' }
+});
+
+const fact = await response.json();`,
+    response: `{
+  "id": "uuid",
+  "text": "Prefers quiet rides with temperature at 68°F",
+  "categories": ["preferences", "transportation"],
+  "confidence": 0.92,
+  "source": "observation",
+  "entities": ["Uber"],
+  "created_at": "2026-02-08T02:45:00Z"
+}`
   }
 };
 
@@ -768,6 +992,7 @@ const sidebarSections = [
     items: [
       { id: 'context-scope', title: 'Scoped Context' },
       { id: 'context-now', title: 'Context Now' },
+      { id: 'context-search-stream', title: 'Search (Streaming)' },
     ]
   },
   {
@@ -777,6 +1002,16 @@ const sidebarSections = [
     items: [
       { id: 'facts-query', title: 'Query Facts' },
       { id: 'facts-categories', title: 'List Categories' },
+      { id: 'fact-by-id', title: 'Get Fact by ID' },
+    ]
+  },
+  {
+    id: 'entities-api',
+    title: 'Entities API',
+    icon: Cpu,
+    items: [
+      { id: 'entity-search', title: 'Find Entities' },
+      { id: 'entity-query', title: 'Entity Query (MCP)' },
     ]
   },
   {
@@ -788,6 +1023,8 @@ const sidebarSections = [
       { id: 'interact', title: 'Persona Interaction' },
       { id: 'interact-simple', title: 'Simple Interaction' },
       { id: 'query-context', title: 'Query Context' },
+      { id: 'knowledge-gaps', title: 'Knowledge Gaps' },
+      { id: 'context-staleness', title: 'Context Staleness' },
     ]
   },
   {
@@ -799,6 +1036,7 @@ const sidebarSections = [
       { id: 'agent-events', title: 'Report Events' },
       { id: 'agent-notify', title: 'Push Notification' },
       { id: 'agent-stories', title: 'Fetch Stories' },
+      { id: 'agent-story-dates', title: 'Story Dates' },
       { id: 'agent-search', title: 'Search Stories' },
       { id: 'agent-social', title: 'Get Relationships' },
       { id: 'agent-places', title: 'Search Places' },
@@ -1952,6 +2190,48 @@ const FactsAPISection: React.FC = () => {
   );
 };
 
+const EntitiesAPISection: React.FC = () => {
+  const { theme } = useTheme();
+  const styles = useThemeStyles();
+
+  const entitiesEndpoints = Object.values(endpoints).filter(ep => ep.category === 'entities');
+
+  return (
+    <div>
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5 }}
+        viewport={{ once: true }}
+        style={{ marginBottom: 'clamp(1.5rem, 4vw, 2rem)' }}
+      >
+        <h2 style={{ 
+          fontSize: 'clamp(1.25rem, 5vw, 1.75rem)',
+          fontWeight: theme.typography.fontWeight.bold,
+          color: theme.colors.text, 
+          marginBottom: 'clamp(0.5rem, 2vw, 0.75rem)',
+          lineHeight: 1.3,
+        }}>
+          Entities API
+        </h2>
+        <p style={{ 
+          fontSize: 'clamp(0.85rem, 3vw, 1rem)',
+          color: theme.colors.textSecondary,
+          lineHeight: 1.6,
+        }}>
+          Query and manage entities in a user's life — people, pets, places, objects, and organizations. 
+          The Entity Query endpoint enables natural language questions like "How old is Eula?" 
+          with answers grounded in extracted facts.
+        </p>
+      </motion.div>
+
+      {entitiesEndpoints.map((endpoint, index) => (
+        <EndpointCard key={endpoint.id} endpoint={endpoint} />
+      ))}
+    </div>
+  );
+};
+
 const SDKsSection: React.FC = () => {
   const { theme } = useTheme();
   const styles = useThemeStyles();
@@ -2051,16 +2331,22 @@ const RateLimitsSection: React.FC = () => {
     { endpoint: 'Simulation API', limit: '10 req/min', burst: '5 concurrent' },
     { endpoint: 'Persona Interaction', limit: '30 req/min', burst: '10 concurrent' },
     { endpoint: 'Query Context', limit: '20 req/min', burst: '5 concurrent' },
+    { endpoint: 'Knowledge Gaps', limit: '20 req/min', burst: '5 concurrent' },
+    { endpoint: 'Context Staleness', limit: '5 req/5min', burst: '1 concurrent' },
     { endpoint: 'Agent Context', limit: '60 req/min', burst: '15 concurrent' },
     { endpoint: 'Report Events', limit: '100 req/min', burst: '20 concurrent' },
     { endpoint: 'Push Notification', limit: '10 req/min', burst: '3 concurrent' },
     { endpoint: 'Fetch Stories', limit: '60 req/min', burst: '10 concurrent' },
+    { endpoint: 'Story Dates', limit: '60 req/min', burst: '10 concurrent' },
     { endpoint: 'Search Stories', limit: '30 req/min', burst: '5 concurrent' },
     { endpoint: 'Observe', limit: '60 req/min', burst: '10 concurrent' },
     { endpoint: 'Observe Batch', limit: '20 req/min', burst: '5 concurrent' },
     { endpoint: 'Facts Query', limit: '60 req/min', burst: '10 concurrent' },
     { endpoint: 'Scoped Context', limit: '60 req/min', burst: '10 concurrent' },
     { endpoint: 'Context Now', limit: '60 req/min', burst: '15 concurrent' },
+    { endpoint: 'Context Search Stream', limit: '30 req/min', burst: '5 concurrent' },
+    { endpoint: 'Entity Search', limit: '60 req/min', burst: '10 concurrent' },
+    { endpoint: 'Entity Query (MCP)', limit: '30 req/min', burst: '5 concurrent' },
     { endpoint: 'Create API Key', limit: '10 req/min', burst: '3 concurrent' },
   ];
 
@@ -2528,6 +2814,7 @@ const DocsPage: React.FC = () => {
                 {(activeSectionGroup === 'observe-api') && <ObserveAPISection />}
                 {(activeSectionGroup === 'context-api') && <ContextAPISection />}
                 {(activeSectionGroup === 'facts-api') && <FactsAPISection />}
+                {(activeSectionGroup === 'entities-api') && <EntitiesAPISection />}
                 {(activeSectionGroup === 'platform-api') && <PlatformAPISection />}
                 {(activeSectionGroup === 'agent-api') && <AgentAPISection />}
                 {(activeSectionGroup === 'sdks') && <SDKsSection />}

@@ -6,103 +6,70 @@ import { useTheme } from './ThemeProvider';
 import { useThemeStyles } from '../hooks/useThemeStyles';
 import { useAuth } from './AuthProvider';
 
-const codeExamples = {
-  simulation: `// Generate anonymized user personas for research
-// Auth: OAuth 2.0 with scope "simulation:generate_profiles"
-const response = await fetch('https://api.dytto.app/v1/simulation-contexts/request', {
+const codeExamples: Record<string, string> = {
+  observe: `// Push observations to learn about your user (low effort!)
+// Auth: API Key with scope "observe"
+const response = await fetch('https://api.dytto.app/api/v1/observe', {
   method: 'POST',
   headers: {
-    'Authorization': 'Bearer YOUR_OAUTH_ACCESS_TOKEN',
+    'Authorization': 'Bearer dyt_your_api_key',
     'Content-Type': 'application/json'
   },
   body: JSON.stringify({
-    experiment_id: "user_research_2026",
-    num_agents_requested: 50,
-    anonymization_level: "high",
-    profile_criteria: [{
-      count: 50,
-      demographics_desired: {
-        age_group: ["25-34", "35-44"],
-        location_type: ["urban"]
-      }
-    }],
-    requested_profile_fields: {
-      dytto_standard_demographics: { age: true, education_level_derived: true },
-      dytto_standard_narrative_summary: { include: true, length: "medium" },
-      custom_fields: [{
-        field_name: "tech_adoption_score",
-        description_for_llm: "Rate user's technology adoption tendency 1-10",
-        desired_format: "integer"
-      }]
-    }
+    data: "User mentioned their sister Ananya lives in the UK",
+    source: "my-agent"  // identify your agent
   })
 });
 
-const { generated_agent_profiles, status } = await response.json();`,
+const { facts_extracted, stored } = await response.json();
+// facts_extracted: [
+//   { "text": "User has a sister named Ananya", "categories": ["family"] },
+//   { "text": "Ananya lives in the UK", "categories": ["family", "places"] }
+// ]`,
 
-  interaction: `// Make Dytto respond AS a user persona
-// Auth: User JWT (user must consent to your app)
-const response = await fetch('https://api.dytto.app/v1/personas/USER_ID/interact', {
+  scope: `// Get only the context relevant to your task
+// Auth: API Key with domain scopes (location, preferences, etc.)
+const response = await fetch('https://api.dytto.app/api/context/scope', {
   method: 'POST',
   headers: {
-    'Authorization': 'Bearer USER_JWT_TOKEN',
+    'Authorization': 'Bearer dyt_your_api_key',
     'Content-Type': 'application/json'
   },
   body: JSON.stringify({
-    prompt: {
-      type: "freeform_chat",
-      instruction: "What restaurants do you like?",
-      scenario: "An AI assistant is helping find dinner options"
-    },
-    output_directives: {
-      format: "text",
-      include_rationale: false
-    },
-    session_id: "optional-for-multi-turn",
-    save_history: true
+    task: "Drive user home from work, optimize route and climate",
+    agent_type: "robotaxi",
+    max_tokens: 2000
   })
 });
 
-const { parsed_response, session_id, dytto_metadata } = await response.json();
-// Response is grounded in the user's real context, preferences, and history`,
+const { context, categories_used, token_count } = await response.json();
+// context.relevant_facts: [{ category: "places", fact: "Lives in Cambridge, MA" }]
+// context.preferences: ["Prefers quiet rides", "Temperature at 68°F"]`,
 
-  context: `// Query specific aspects of user context
-// Auth: User JWT (user must consent to your app)
-const response = await fetch('https://api.dytto.app/v1/personas/USER_ID/query-context', {
-  method: 'POST',
+  context: `// Fetch full user context for your AI agent
+// Auth: API Key with scope "context:read"
+const response = await fetch('https://api.dytto.app/api/agent/context?user_id=USER_UUID', {
   headers: {
-    'Authorization': 'Bearer USER_JWT_TOKEN',
-    'Content-Type': 'application/json'
-  },
-  body: JSON.stringify({
-    context_query: {
-      requested_elements: [
-        {
-          element_type: "answer_specific_question",
-          question_for_llm: "What are the user's main life goals?",
-          desired_format: "string"
-        },
-        {
-          element_type: "derived_mood_over_time",
-          period: "last_30_days"
-        },
-        {
-          element_type: "custom_inference",
-          field_name: "work_schedule",
-          description_for_llm: "Describe user's typical work schedule",
-          desired_format: "string"
-        }
-      ],
-      purpose_of_query: "Personalized coaching recommendations"
-    }
-  })
+    'Authorization': 'Bearer dyt_your_api_key'
+  }
 });
 
-const { retrieved_context_elements, access_metadata } = await response.json();`
+const { content, user_id } = await response.json();
+// content: "Ayaan is a software engineer in Cambridge, MA..."
+
+// Use in your AI's system prompt:
+const aiResponse = await yourLLM.chat({
+  messages: [
+    { role: 'system', content: \`User context: \${content}\` },
+    { role: 'user', content: 'Recommend a coffee shop nearby' }
+  ]
+});`
 };
 
+type TabId = 'observe' | 'scope' | 'context';
+
 const APIShowcase = () => {
-  const [activeTab, setActiveTab] = useState('simulation');
+  const [activeTab, setActiveTab] = useState<TabId>('observe');
   const [copied, setCopied] = useState(false);
   const { theme } = useTheme();
   const styles = useThemeStyles();
@@ -119,10 +86,10 @@ const APIShowcase = () => {
     setTimeout(() => setCopied(false), 2000);
   };
 
-  const tabs = [
-    { id: 'simulation', label: 'Simulation Agents', description: 'Generate anonymized user profiles for research' },
-    { id: 'interaction', label: 'Persona Interaction', description: 'Intelligent responses from context-aware personas' },
-    { id: 'context', label: 'Context Query', description: 'Access specific aspects of user context with consent' }
+  const tabs: { id: TabId; label: string; description: string }[] = [
+    { id: 'observe', label: 'Observe API', description: 'Push any data, Dytto extracts facts automatically' },
+    { id: 'scope', label: 'Scoped Context', description: 'Task-based retrieval — only relevant context' },
+    { id: 'context', label: 'Agent Context', description: 'Full context for AI-powered personalization' }
   ];
 
   return (
