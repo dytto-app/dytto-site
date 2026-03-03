@@ -55,10 +55,10 @@ const LoginPageClient: React.FC = () => {
         } else {
           // Redirect to OAuth flow or default to API keys page
           if (redirectUrl) {
-            // Pass access token for cross-domain OAuth flow
+            // Pass access token for cross-domain OAuth flow (URL-encode the token)
             const token = data?.session?.access_token;
             const sep = redirectUrl.includes('?') ? '&' : '?';
-            window.location.href = token ? `${redirectUrl}${sep}access_token=${token}` : redirectUrl;
+            window.location.href = token ? `${redirectUrl}${sep}access_token=${encodeURIComponent(token)}` : redirectUrl;
           } else {
             navigate('/settings/api-keys');
           }
