@@ -1,7 +1,7 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { Twitter, Mail, MessageCircle, Instagram } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import { Link } from '@/lib/navigation-compat';
 import { useTheme } from './ThemeProvider';
 import { useThemeStyles } from '../hooks/useThemeStyles';
 
