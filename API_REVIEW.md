@@ -153,7 +153,7 @@
 
 | Method | Token Format | Use Case |
 |--------|--------------|----------|
-| OAuth 2.0 Client Credentials | Bearer token from `/oauth/token` | Platform API (simulation) |
+| OAuth 2.0 Client Credentials | Bearer token from `/oauth/token` | Platform API (simulation). The login/signup flow also supports a `?redirect=<URL>` query parameter for initiating OAuth authorization after successful authentication. |
 | User JWT | Bearer token from Supabase auth | Consumer app, user-consented access |
 | Agent Service Key | `dyt_...` API key | Agent API, Observe, Facts, Context |
 
