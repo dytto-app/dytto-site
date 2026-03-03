@@ -49,13 +49,16 @@ const LoginPageClient: React.FC = () => {
           setMessage('Check your email to confirm your account, then come back and sign in!');
         }
       } else {
-        const { error } = await signIn(email, password);
+        const { error, data } = await signIn(email, password);
         if (error) {
           setError(error.message);
         } else {
           // Redirect to OAuth flow or default to API keys page
           if (redirectUrl) {
-            window.location.href = redirectUrl;
+            // Pass access token for cross-domain OAuth flow
+            const token = data?.session?.access_token;
+            const sep = redirectUrl.includes('?') ? '&' : '?';
+            window.location.href = token ? `${redirectUrl}${sep}access_token=${token}` : redirectUrl;
           } else {
             navigate('/settings/api-keys');
           }
