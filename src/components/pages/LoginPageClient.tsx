@@ -1,7 +1,8 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate, Link } from '@/lib/navigation-compat';
+import { useSearchParams } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Mail, Lock, ArrowLeft, CheckCircle, AlertCircle, Loader, UserPlus, LogIn } from 'lucide-react';
 import { useAuth } from '@/components/shared/AuthProvider';
@@ -21,6 +22,10 @@ const LoginPageClient: React.FC = () => {
   const [message, setMessage] = useState('');
   const { signIn, signUp } = useAuth();
   const navigate = useNavigate();
+  const searchParams = useSearchParams();
+  
+  // Get redirect URL from query params (for OAuth flow)
+  const redirectUrl = searchParams.get('redirect');
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -30,18 +35,30 @@ const LoginPageClient: React.FC = () => {
 
     try {
       if (isSignUp) {
-        const { error } = await signUp(email, password);
+        const { error, data } = await signUp(email, password);
         if (error) {
           setError(error.message);
+        } else if (data?.session) {
+          // Auto-confirmed (no email verification required)
+          if (redirectUrl) {
+            window.location.href = redirectUrl;
+          } else {
+            navigate('/settings/api-keys');
+          }
         } else {
-          setMessage('Check your email for the confirmation link!');
+          setMessage('Check your email to confirm your account, then come back and sign in!');
         }
       } else {
         const { error } = await signIn(email, password);
         if (error) {
           setError(error.message);
         } else {
-          navigate('/settings/api-keys');
+          // Redirect to OAuth flow or default to API keys page
+          if (redirectUrl) {
+            window.location.href = redirectUrl;
+          } else {
+            navigate('/settings/api-keys');
+          }
         }
       }
     } catch (err) {
