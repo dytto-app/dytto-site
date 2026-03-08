@@ -1,0 +1,13 @@
+# Dytto - AI Journaling App
+# https://dytto.app
+
+User-agent: *
+Allow: /
+
+# Sitemap
+Sitemap: https://dytto.app/sitemap.xml
+
+# Crawl-delay for polite crawling
+Crawl-delay: 1
+
+# Last updated: 2026-02-24
