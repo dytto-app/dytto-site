@@ -14,25 +14,93 @@
   </url>
   <url>
     <loc>https://dytto.app/blog</loc>
-    <lastmod>2026-03-07</lastmod>
+    <lastmod>2026-03-09</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
+  <!-- Developer/API Blog Posts (high SEO value) -->
   <url>
-    <loc>https://dytto.app/blog/ai-journaling-apps-revolutionizing-daily-reflection-2026</loc>
-    <lastmod>2026-02-11</lastmod>
+    <loc>https://dytto.app/blog/how-to-validate-startup-ideas-quickly</loc>
+    <lastmod>2026-03-04</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://dytto.app/blog/ai-memory-api-comparison-2025</loc>
+    <lastmod>2026-03-04</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://dytto.app/blog/how-to-run-a-focus-group-with-ai</loc>
+    <lastmod>2026-02-28</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://dytto.app/blog/how-to-add-context-to-ai-agents</loc>
+    <lastmod>2026-02-27</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://dytto.app/blog/beyond-chat-history-life-memory-vs-conversation-memory</loc>
+    <lastmod>2026-02-27</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://dytto.app/blog/ai-survey-methodology</loc>
+    <lastmod>2026-02-26</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://dytto.app/blog/how-to-test-product-ideas-without-users</loc>
+    <lastmod>2026-02-26</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://dytto.app/blog/context-aware-ai-agents</loc>
+    <lastmod>2026-02-25</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://dytto.app/blog/why-ai-assistants-have-no-memory</loc>
+    <lastmod>2026-02-24</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://dytto.app/blog/market-research-without-focus-groups</loc>
+    <lastmod>2026-02-24</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://dytto.app/blog/personal-context-api-for-ai</loc>
+    <lastmod>2026-02-24</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <!-- Consumer/Journaling Blog Posts -->
+  <url>
+    <loc>https://dytto.app/blog/journaling-for-mental-health-ai-changes-everything</loc>
+    <lastmod>2026-02-22</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://dytto.app/blog/what-is-life-logging-automatic-memory-capture</loc>
-    <lastmod>2026-02-12</lastmod>
+    <loc>https://dytto.app/blog/why-your-ai-assistant-has-amnesia</loc>
+    <lastmod>2026-02-21</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://dytto.app/blog/privacy-first-ai-journaling</loc>
-    <lastmod>2026-02-15</lastmod>
+    <loc>https://dytto.app/blog/why-traditional-journaling-fails-how-ai-fixes-it</loc>
+    <lastmod>2026-02-20</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
@@ -43,11 +111,36 @@
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://dytto.app/blog/why-traditional-journaling-fails-how-ai-fixes-it</loc>
-    <lastmod>2026-02-20</lastmod>
+    <loc>https://dytto.app/blog/privacy-first-ai-journaling</loc>
+    <lastmod>2026-02-15</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
+  <url>
+    <loc>https://dytto.app/blog/what-is-life-logging-automatic-memory-capture</loc>
+    <lastmod>2026-02-12</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://dytto.app/blog/ai-journaling-apps-revolutionizing-daily-reflection-2026</loc>
+    <lastmod>2026-02-11</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://dytto.app/blog/how-to-journal-for-personal-growth-retrieval-missing-step</loc>
+    <lastmod>2026-02-23</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://dytto.app/blog/what-is-passive-journaling</loc>
+    <lastmod>2026-02-04</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <!-- Static Pages -->
   <url>
     <loc>https://dytto.app/api</loc>
     <lastmod>2026-02-23</lastmod>
@@ -71,29 +164,5 @@
     <lastmod>2026-02-23</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
-  </url>
-  <url>
-    <loc>https://dytto.app/blog/journaling-for-mental-health-ai-changes-everything</loc>
-    <lastmod>2026-02-23</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://dytto.app/blog/why-your-ai-assistant-has-amnesia</loc>
-    <lastmod>2026-02-21</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://dytto.app/blog/how-to-journal-for-personal-growth-retrieval-missing-step</loc>
-    <lastmod>2026-02-23</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://dytto.app/blog/beyond-chat-history-life-memory-vs-conversation-memory</loc>
-    <lastmod>2026-02-27</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
   </url>
 </urlset>
