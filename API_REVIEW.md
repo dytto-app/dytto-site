@@ -1,42 +1,57 @@
 # Dytto API Documentation Review
-**Last Updated:** 2026-03-01
+**Last Updated:** 2026-03-15
 **Reviewer:** Maya (Automated bi-weekly cron)
 
-## ✅ Updates Made This Cycle (March 1, 2026)
+## ✅ Updates Made This Cycle (March 15, 2026)
 
-### Major Additions to DocsPage.tsx
+### Observe API Updates
 
-1. **Context Search Stream** (`POST /api/context/search/stream`)
-   - ✅ NEW: SSE streaming synthesis endpoint for real-time context search
-   - First token in <1s, full synthesis in 5-10s
-   - Use for chat UI, not for agents (agents should use fast=true mode)
+1. **`ttl_hours` Parameter for Volatile Facts** (#209)
+   - ✅ NEW: Added `ttl_hours` parameter documentation to Observe endpoint
+   - Allows setting temporary facts that auto-expire (1-8760 hours)
+   - Response now includes `ttl_hours` and `expires_at` when TTL is specified
+   - Use cases: Twitter auth state (24h), service status (24h), calendar events (12h)
 
-2. **Entity API Section** (NEW)
-   - ✅ `GET /api/entities` — Find entities by name/type
-   - ✅ `GET /api/mcp/entity-query` — Natural language entity queries ("How old is Eula?")
-   - Enables agents to answer factual questions about people/pets/places in user's life
+2. **`async` Parameter Clarification**
+   - ✅ Updated docs to show both async (default) and sync response formats
+   - Async mode returns 202 with "Observation queued" message
+   - Sync mode (async=false) returns full extracted facts
 
-3. **Platform API Updates**
-   - ✅ `GET /v1/personas/{id}/knowledge-gaps` — Surface context items user hasn't mentioned
-   - ✅ `GET /v1/context/staleness` — Detect temporal claims that may be outdated
+### Facts API Additions
 
-4. **Agent API Addition**
-   - ✅ `GET /api/agent/stories/dates` — Get recent story dates for calendar views
+1. **Get Fact by ID** (`GET /api/v1/facts/{fact_id}`)
+   - ✅ NEW: Added endpoint documentation
+   - Retrieve a specific fact by its UUID
+   - Returns full fact details including entities and created_at
 
-5. **Facts API Addition**
-   - ✅ `GET /api/v1/facts/{fact_id}` — Get specific fact by ID (was noted as missing)
+### Entity API Section (NEW)
 
-6. **Observe API Update**
-   - ✅ Updated documentation to include `async=true` parameter for fire-and-forget mode
+Added complete Entity API documentation with 5 endpoints:
 
-### APIShowcase.tsx Redesign
-- Replaced simulation/persona examples with more developer-friendly examples:
-  - **Observe API** — Low-effort fact ingestion
-  - **Scoped Context** — Task-based context retrieval
-  - **Agent Context** — Full context for AI personalization
+1. **Find Entities** (`GET /api/entities`)
+   - ✅ NEW: Search entities by name with optional type filtering
+   - Query params: `q` (required), `type` (optional)
 
-### Rate Limits Updated
-- Added limits for all new endpoints (Entity Query, Context Search Stream, etc.)
+2. **Get Entity** (`GET /api/entities/{entity_id}`)
+   - ✅ NEW: Get entity with all facts and relationships
+   - Returns full entity profile with attributes
+
+3. **Get Entity Facts** (`GET /api/entities/{entity_id}/facts`)
+   - ✅ NEW: Get all facts about a specific entity
+   - Query params: `key` (filter by attribute), `include_historical`
+
+4. **Search Entities** (`GET /api/entities/search`)
+   - ✅ NEW: Semantic search across entities
+   - Returns similarity scores and top facts
+
+5. **Natural Language Query** (`GET /api/mcp/entity-query`)
+   - ✅ NEW: Ask factual questions in natural language
+   - Returns suggested answer based on entity facts
+
+### Sidebar Navigation
+
+- ✅ Added "Get Fact by ID" to Facts API section
+- ✅ Added new "Entity API" section with all 5 endpoints
 
 ---
 
@@ -56,7 +71,7 @@
 
 | Endpoint | Method | Auth | Status |
 |----------|--------|------|--------|
-| `/api/v1/observe` | POST | API Key (observe scope) | ✅ Documented (with async param) |
+| `/api/v1/observe` | POST | API Key (observe scope) | ✅ Documented (with async + ttl_hours params) |
 | `/api/v1/observe/batch` | POST | API Key (observe scope) | ✅ Documented |
 
 ### Facts API — `/api/v1/facts/*`
@@ -65,20 +80,20 @@
 |----------|--------|------|--------|
 | `/api/v1/facts/query` | POST | API Key or JWT | ✅ Documented |
 | `/api/v1/facts/categories` | GET | API Key or JWT | ✅ Documented |
-| `/api/v1/facts/{fact_id}` | GET | API Key or JWT | ✅ Documented (NEW) |
+| `/api/v1/facts/{fact_id}` | GET | API Key or JWT | ✅ Documented (NEW this cycle) |
 
-### Entity API — `/api/entities/*` (NEW)
+### Entity API — `/api/entities/*`
 
 | Endpoint | Method | Auth | Status |
 |----------|--------|------|--------|
-| `/api/entities` | GET | User JWT | ✅ Documented |
-| `/api/entities/{id}` | GET | User JWT | ⚠️ Exists, not documented |
-| `/api/entities/{id}/facts` | GET | User JWT | ⚠️ Exists, not documented |
-| `/api/entities/search` | GET | User JWT | ⚠️ Exists, not documented |
-| `/api/mcp/entity-query` | GET | User JWT | ✅ Documented |
-| `/api/entities/by-type/{type}` | GET | User JWT | ⚠️ Exists, not documented |
-| `/api/entity-gaps` | GET | User JWT | ⚠️ Exists (PM agent), not documented |
-| `/api/entity-gaps/{id}/resolve` | POST | User JWT | ⚠️ Exists (PM agent), not documented |
+| `/api/entities` | GET | User JWT | ✅ Documented (NEW this cycle) |
+| `/api/entities/{id}` | GET | User JWT | ✅ Documented (NEW this cycle) |
+| `/api/entities/{id}/facts` | GET | User JWT | ✅ Documented (NEW this cycle) |
+| `/api/entities/search` | GET | User JWT | ✅ Documented (NEW this cycle) |
+| `/api/mcp/entity-query` | GET | User JWT | ✅ Documented (NEW this cycle) |
+| `/api/entities/by-type/{type}` | GET | User JWT | ⚠️ Exists, not documented (lower priority) |
+| `/api/entity-gaps` | GET | User JWT | ❌ Internal (PM agent only) |
+| `/api/entity-gaps/{id}/resolve` | POST | User JWT | ❌ Internal (PM agent only) |
 
 ### Context API — `/api/context/*`
 
@@ -93,7 +108,7 @@
 | `/api/context/scope` | POST | API Key or JWT | ✅ Documented |
 | `/api/context/now` | GET | API Key or JWT | ✅ Documented |
 | `/api/context/search` | POST | API Key or JWT | ❌ Consumer app (use fast=true for agents) |
-| `/api/context/search/stream` | POST | API Key or JWT | ✅ Documented (NEW) |
+| `/api/context/search/stream` | POST | API Key or JWT | ✅ Documented |
 | `/api/context/initialize` | POST | User JWT | ❌ Consumer app |
 | `/api/context/process` | POST | User JWT | ❌ Internal |
 
@@ -105,8 +120,8 @@
 | `/v1/personas/{id}/interact` | POST | User JWT | ✅ Documented |
 | `/v1/personas/{id}/interact/simple` | POST | User JWT | ✅ Documented |
 | `/v1/personas/{id}/query-context` | POST | User JWT | ✅ Documented |
-| `/v1/personas/{id}/knowledge-gaps` | GET | User JWT | ✅ Documented (NEW) |
-| `/v1/context/staleness` | GET | User JWT | ✅ Documented (NEW) |
+| `/v1/personas/{id}/knowledge-gaps` | GET | User JWT | ✅ Documented |
+| `/v1/context/staleness` | GET | User JWT | ✅ Documented |
 
 ### Agent API — `/api/agent/*`
 
@@ -116,7 +131,7 @@
 | `/api/agent/events` | GET/POST | Service Key | ✅ Documented |
 | `/api/agent/notify` | POST | Service Key | ✅ Documented |
 | `/api/agent/stories` | GET | Service Key | ✅ Documented |
-| `/api/agent/stories/dates` | GET | Service Key | ✅ Documented (NEW) |
+| `/api/agent/stories/dates` | GET | Service Key | ✅ Documented |
 | `/api/agent/stories/search` | GET | Service Key | ✅ Documented |
 | `/api/agent/social` | GET | Service Key | ✅ Documented |
 | `/api/agent/places` | GET | Service Key | ✅ Documented |
@@ -188,38 +203,33 @@
 
 ## Recommendations for Next Cycle
 
-1. **Document Entity CRUD endpoints** — `/api/entities/{id}`, `/api/entities/{id}/facts`, `/api/entities/by-type/{type}`
+1. **Document `/api/keys/{key_id}/skill.md`** — Generates personalized SKILL.md files for agent developers
 
-2. **Document `/api/keys/{key_id}/skill.md`** — Generates personalized SKILL.md files for agent developers
+2. **Document `/api/entities/by-type/{type}`** — List entities by type (lower priority, but useful)
 
 3. **Consider documenting `/api/stories/dates`** for consumer apps — useful for calendar integration
 
-4. **Fix TypeScript errors in DocsPage.tsx** — The `endpoint.scope` property access causes TS errors because not all endpoints have a scope field
+4. **Add Python SDK examples** — Show requests library usage alongside fetch
 
 5. **Consider interactive API playground** — Let devs test endpoints directly from docs
-
-6. **Add Python SDK examples** — Show requests library usage alongside fetch
 
 ---
 
 ## Files Changed This Cycle
 
-- `src/pages/DocsPage.tsx` — Added 7 new endpoints, new Entities API section
-- `src/components/APIShowcase.tsx` — Redesigned with agent-focused examples
+- `src/components/pages/DocsPageClient.tsx` — Added ttl_hours to Observe, added Facts get, added full Entity API section (6 new endpoints total)
 - `API_REVIEW.md` — Updated
 
 ---
 
 ## TypeScript Note
 
-Pre-existing TS errors exist in DocsPage.tsx and DocsPageClient.tsx:
+Pre-existing TS errors exist in DocsPageClient.tsx and DocsPageClient.tsx:
 - `endpoint.scope` property access errors (not all endpoints have scope field)
-- `react-router-dom` module not found errors
-
-These are unrelated to documentation content and should be fixed separately.
+- These are unrelated to documentation content and should be fixed separately.
 
 ---
 
 ## Next Run
 
-Scheduled: March 15, 2026 at 4:00 AM (bi-weekly cron)
+Scheduled: March 29, 2026 at 4:00 AM (bi-weekly cron)

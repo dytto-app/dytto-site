@@ -381,7 +381,7 @@ const { places } = await response.json();`,
   observe: {
     id: 'observe',
     title: "Observe (Low-Effort Ingestion)",
-    description: "Accept any unstructured input and extract facts automatically",
+    description: "Accept any unstructured input and extract facts automatically. Supports volatile facts with TTL.",
     method: "POST",
     path: "/api/v1/observe",
     auth: "API Key (scope: observe or context:write)",
@@ -395,12 +395,15 @@ const { places } = await response.json();`,
   },
   body: JSON.stringify({
     data: "User mentioned their sister Ananya lives in the UK and does neuroscience research",
-    source: "maya"  // optional: identify your agent
+    source: "maya",    // optional: identify your agent
+    ttl_hours: 24,     // optional: volatile fact (expires after N hours, 1-8760)
+    async: true        // optional: fire-and-forget mode (default: true)
   })
 });
 
 const { facts_extracted, stored } = await response.json();`,
-    response: `{
+    response: `// Synchronous response (async=false):
+{
   "success": true,
   "facts_extracted": [
     {
@@ -408,18 +411,21 @@ const { facts_extracted, stored } = await response.json();`,
       "categories": ["family"],
       "confidence": 0.95,
       "entities": ["Ananya"]
-    },
-    {
-      "text": "Ananya lives in the UK",
-      "categories": ["family", "places"],
-      "confidence": 0.9,
-      "entities": ["Ananya", "UK"]
     }
   ],
-  "facts_stored": 2,
+  "facts_stored": 1,
   "facts_deduplicated": 0,
   "stored": true,
-  "processing_time_ms": 1234
+  "processing_time_ms": 1234,
+  "ttl_hours": 24,                    // only if ttl_hours was specified
+  "expires_at": "2026-03-16T04:00:00" // only if ttl_hours was specified
+}
+
+// Async response (async=true, default):
+{
+  "success": true,
+  "async": true,
+  "message": "Observation queued for background processing"
 }`
   },
 
@@ -520,6 +526,175 @@ const { categories, scopes } = await response.json();`,
     "transportation": ["transportation", "preferences", "places", "schedule"],
     "health": ["health", "lifestyle", "preferences"]
   }
+}`
+  },
+
+  factsGet: {
+    id: 'facts-get',
+    title: "Get Fact by ID",
+    description: "Retrieve a specific fact by its ID",
+    method: "GET",
+    path: "/api/v1/facts/{fact_id}",
+    auth: "API Key or User JWT",
+    category: "facts",
+    rateLimit: "120 requests / 60 seconds",
+    example: `const response = await fetch('https://api.dytto.app/api/v1/facts/FACT_UUID', {
+  headers: { 'Authorization': 'Bearer dyt_your_api_key' }
+});
+
+const fact = await response.json();`,
+    response: `{
+  "id": "fact-uuid",
+  "text": "Prefers quiet rides",
+  "categories": ["preferences", "transportation"],
+  "confidence": 0.9,
+  "source": "observation",
+  "entities": ["Uber"],
+  "created_at": "2026-02-08T02:45:00Z"
+}`
+  },
+
+  // ─── Entity API ──────────────────────────────────────────────
+  entityFind: {
+    id: 'entity-find',
+    title: "Find Entities",
+    description: "Find entities by name with optional type filtering",
+    method: "GET",
+    path: "/api/entities",
+    auth: "User JWT",
+    category: "entity",
+    rateLimit: "60 requests / 60 seconds",
+    example: `const response = await fetch(
+  'https://api.dytto.app/api/entities?q=Eula&type=pet',
+  { headers: { 'Authorization': 'Bearer USER_JWT_TOKEN' } }
+);
+
+const { entities, count } = await response.json();`,
+    response: `{
+  "entities": [{
+    "id": "entity-uuid",
+    "name": "Eula",
+    "entity_type": "pet",
+    "mention_count": 42,
+    "created_at": "2026-01-15T..."
+  }],
+  "count": 1
+}`
+  },
+
+  entityGet: {
+    id: 'entity-get',
+    title: "Get Entity",
+    description: "Get a specific entity with all its facts and relationships",
+    method: "GET",
+    path: "/api/entities/{entity_id}",
+    auth: "User JWT",
+    category: "entity",
+    rateLimit: "60 requests / 60 seconds",
+    example: `const response = await fetch(
+  'https://api.dytto.app/api/entities/ENTITY_UUID',
+  { headers: { 'Authorization': 'Bearer USER_JWT_TOKEN' } }
+);
+
+const entity = await response.json();`,
+    response: `{
+  "id": "entity-uuid",
+  "name": "Eula",
+  "entity_type": "pet",
+  "attributes": {
+    "birthday": "2020-03-15",
+    "species": "cat",
+    "color": "orange"
+  },
+  "facts": [
+    { "text": "Eula is Ayaan's cat", "confidence": 0.95 },
+    { "text": "Eula was born on March 15, 2020", "confidence": 0.9 }
+  ],
+  "mention_count": 42
+}`
+  },
+
+  entityFacts: {
+    id: 'entity-facts',
+    title: "Get Entity Facts",
+    description: "Get all facts about a specific entity",
+    method: "GET",
+    path: "/api/entities/{entity_id}/facts",
+    auth: "User JWT",
+    category: "entity",
+    rateLimit: "60 requests / 60 seconds",
+    example: `const response = await fetch(
+  'https://api.dytto.app/api/entities/ENTITY_UUID/facts?key=birthday',
+  { headers: { 'Authorization': 'Bearer USER_JWT_TOKEN' } }
+);
+
+const { facts, count } = await response.json();`,
+    response: `{
+  "facts": [{
+    "id": "fact-uuid",
+    "attribute_key": "birthday",
+    "attribute_value": "2020-03-15",
+    "confidence": 0.95,
+    "source": "story",
+    "is_current": true,
+    "created_at": "2026-01-20T..."
+  }],
+  "count": 1
+}`
+  },
+
+  entitySearch: {
+    id: 'entity-search',
+    title: "Search Entities",
+    description: "Semantic search across all entities",
+    method: "GET",
+    path: "/api/entities/search",
+    auth: "User JWT",
+    category: "entity",
+    rateLimit: "30 requests / 60 seconds",
+    example: `const response = await fetch(
+  'https://api.dytto.app/api/entities/search?q=my+orange+cat&limit=5',
+  { headers: { 'Authorization': 'Bearer USER_JWT_TOKEN' } }
+);
+
+const { results } = await response.json();`,
+    response: `{
+  "results": [{
+    "entity": {
+      "id": "entity-uuid",
+      "name": "Eula",
+      "entity_type": "pet"
+    },
+    "similarity": 0.87,
+    "top_facts": ["Eula is an orange cat", "Eula is Ayaan's cat"]
+  }],
+  "count": 1
+}`
+  },
+
+  entityQuery: {
+    id: 'entity-query',
+    title: "Natural Language Query",
+    description: "Ask factual questions about entities in natural language",
+    method: "GET",
+    path: "/api/mcp/entity-query",
+    auth: "User JWT",
+    category: "entity",
+    rateLimit: "30 requests / 60 seconds",
+    example: `const response = await fetch(
+  'https://api.dytto.app/api/mcp/entity-query?q=How+old+is+Eula',
+  { headers: { 'Authorization': 'Bearer USER_JWT_TOKEN' } }
+);
+
+const { suggested_answer, results } = await response.json();`,
+    response: `{
+  "query": "How old is Eula",
+  "entities_found": 1,
+  "results": [{
+    "entity": { "name": "Eula", "type": "pet" },
+    "facts": [{ "text": "Eula was born on March 15, 2020" }]
+  }],
+  "suggested_answer": "Eula was born on March 15, 2020, making her about 6 years old."
 }`
   },
 
@@ -778,6 +953,19 @@ const sidebarSections = [
     items: [
       { id: 'facts-query', title: 'Query Facts' },
       { id: 'facts-categories', title: 'List Categories' },
+      { id: 'facts-get', title: 'Get Fact by ID' },
+    ]
+  },
+  {
+    id: 'entity-api',
+    title: 'Entity API',
+    icon: Cpu,
+    items: [
+      { id: 'entity-find', title: 'Find Entities' },
+      { id: 'entity-get', title: 'Get Entity' },
+      { id: 'entity-facts', title: 'Get Entity Facts' },
+      { id: 'entity-search', title: 'Search Entities' },
+      { id: 'entity-query', title: 'Natural Language Query' },
     ]
   },
   {
