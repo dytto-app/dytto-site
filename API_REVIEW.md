@@ -191,7 +191,7 @@ Added complete Entity API documentation with 5 endpoints:
 
 | Method | Token Format | Use Case |
 |--------|--------------|----------|
-| OAuth 2.0 Client Credentials | Bearer token from `/oauth/token` | Platform API (simulation) |
+| OAuth 2.0 Client Credentials | Bearer token from `/oauth/token` | Platform API (simulation), and for cross-domain authentication redirects |
 | User JWT | Bearer token from Supabase auth | Consumer app, user-consented access |
 | Agent Service Key | `dyt_...` API key | Agent API, Observe, Facts, Context |
 
